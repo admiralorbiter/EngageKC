@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Media List</title>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.5.0/dist/htmx.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Media List</h1>
+        <a href="{% url 'upload_media' %}" class="btn btn-primary mb-3">Upload Media</a>
+        <div class="row">
+            {% for media in medias %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        {% if media.media_type == 'video' %}
+                            <video class="card-img-top" controls>
+                                <source src="{{ media.video_file.url }}" type="video/mp4">
+                            </video>
+                        {% elif media.media_type == 'image' %}
+                            <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ media.title }}</h5>
+                            <p class="card-text">{{ media.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,17 +1,17 @@
 from django.shortcuts import render, redirect
-from .models import Video
-from .forms import VideoForm
+from .models import Media
+from .forms import MediaForm
 
-def video_list(request):
-    videos = Video.objects.all()
-    return render(request, 'video_app/video_list.html', {'videos': videos})
+def media_list(request):
+    medias = Media.objects.all()
+    return render(request, 'video_app/media_list.html', {'medias': medias})
 
-def upload_video(request):
+def upload_media(request):
     if request.method == 'POST':
-        form = VideoForm(request.POST, request.FILES)
+        form = MediaForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('video_list')
+            return redirect('media_list')
     else:
-        form = VideoForm()
-    return render(request, 'video_app/upload_video.html', {'form': form})
+        form = MediaForm()
+    return render(request, 'video_app/upload_media.html', {'form': form})
