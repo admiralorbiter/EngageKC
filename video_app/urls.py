@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.video_list, name='video_list'),
-    path('upload/', views.upload_video, name='upload_video'),
+    path('', views.media_list, name='media_list'),
+    path('upload/', views.upload_media, name='upload_media'),
+    path('delete/<int:pk>/', views.delete_media, name='delete_media'),
 ]

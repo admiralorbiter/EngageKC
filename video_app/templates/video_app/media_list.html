@@ -26,6 +26,9 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ media.title }}</h5>
                             <p class="card-text">{{ media.description }}</p>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger">Delete</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

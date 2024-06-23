@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required, permission_required
 from .models import Media
 from .forms import MediaForm
 
@@ -15,3 +16,11 @@ def upload_media(request):
     else:
         form = MediaForm()
     return render(request, 'video_app/upload_media.html', {'form': form})
+
+@login_required
+def delete_media(request, pk):
+    media = get_object_or_404(Media, pk=pk)
+    if request.method == 'POST':
+        media.delete()
+        return redirect('media_list')
+    return render(request, 'video_app/delete_media.html', {'media': media})
