@@ -20,7 +20,8 @@ from video_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.media_list, name='media_list'),
+    path('', views.index, name='index'),
+    path('medialist/', views.media_list, name='media_list'),
     path('', include('video_app.urls')),
     path('upload/', views.upload_media, name='upload_media'),
 ]

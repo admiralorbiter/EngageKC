@@ -12,12 +12,15 @@ def signup(request):
             return redirect('login')
     else:
         form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form})
+
+def index(request):
+    return render(request, 'video_app/index.html')
 
 def media_list(request):
     medias = Media.objects.all()
     if not request.user.is_authenticated:
-        return render(request, 'video_app/index.html', {'medias': medias})
+        return render(request, 'video_app/media_list_loggedout.html', {'medias': medias})
     return render(request, 'video_app/media_list.html', {'medias': medias})
 
 def upload_media(request):
