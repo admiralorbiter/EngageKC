@@ -56,11 +56,12 @@ def class_detail(request, pk):
     return render(request, 'video_app/class_detail.html', {'class_instance': class_instance})
 
 def join_class(request):
+    classes = Class.objects.all()
     if request.method == 'POST':
         class_code = request.POST.get('class_code')
         try:
             class_instance = Class.objects.get(class_code=class_code)
             return redirect('class_detail', pk=class_instance.pk)
         except Class.DoesNotExist:
-            return render(request, 'video_app/join_class_form.html', {'error': 'Invalid class code'})
-    return render(request, 'video_app/join_class_form.html')
+            return render(request, 'video_app/join_class.html', {'error': 'Invalid class code', 'classes': classes})
+    return render(request, 'video_app/join_class.html', {'classes': classes})
