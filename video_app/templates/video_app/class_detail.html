@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class Detail</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Class: {{ class_instance.name }}</h1>
+        <p>Class Code: {{ class_instance.class_code }}</p>
+        <p>Created At: {{ class_instance.created_at }}</p>
+    </div>
+</body>
+</html>

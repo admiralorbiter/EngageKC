@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
-from .models import Media
-from .forms import MediaForm
+from .models import Media, Class
+from .forms import MediaForm, ClassForm
 from django.contrib.auth.forms import UserCreationForm
 
 def signup(request):
@@ -40,3 +40,27 @@ def delete_media(request, pk):
         media.delete()
         return redirect('media_list')
     return render(request, 'video_app/delete_media.html', {'media': media})
+
+def start_class(request):
+    if request.method == 'POST':
+        form = ClassForm(request.POST)
+        if form.is_valid():
+            new_class = form.save()
+            return redirect('class_detail', pk=new_class.pk)
+    else:
+        form = ClassForm()
+    return render(request, 'video_app/start_class.html', {'form': form})
+
+def class_detail(request, pk):
+    class_instance = get_object_or_404(Class, pk=pk)
+    return render(request, 'video_app/class_detail.html', {'class_instance': class_instance})
+
+def join_class(request):
+    if request.method == 'POST':
+        class_code = request.POST.get('class_code')
+        try:
+            class_instance = Class.objects.get(class_code=class_code)
+            return redirect('class_detail', pk=class_instance.pk)
+        except Class.DoesNotExist:
+            return render(request, 'video_app/join_class_form.html', {'error': 'Invalid class code'})
+    return render(request, 'video_app/join_class_form.html')

@@ -26,9 +26,9 @@
         {% include 'video_app/nav.html' %}
         <div class="container-center">
             <div class="text-center">
-                <button class="btn btn-primary btn-large">Join Class</button>
+                <a href="{% url 'join_class' %}" class="btn btn-primary btn-large">Join Class</a>
                 <br>
-                <button class="btn btn-success btn-large">Start Class</button>
+                <a href="{% url 'start_class' %}" class="btn btn-success btn-large">Start Class</a>
             </div>
         </div>
     </div>

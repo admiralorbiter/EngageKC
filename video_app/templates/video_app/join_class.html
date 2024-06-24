@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Join Class</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container-center {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-group {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="container-center">
+            <div class="text-center">
+                <h1>Join a Class</h1>
+                <form method="post" action="{% url 'join_class' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="class_code">Enter Class Code</label>
+                        <input type="text" id="class_code" name="class_code" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Join Class</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
