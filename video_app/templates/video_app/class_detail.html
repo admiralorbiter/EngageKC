@@ -11,30 +11,30 @@
         <h1>Class: {{ class_instance.name }}</h1>
         <p>Class Code: {{ class_instance.class_code }}</p>
         <p>Created At: {{ class_instance.created_at }}</p>
-    </div>
-    <h1>Media List</h1>
+        <h1>Media List</h1>
         <a href="{% url 'upload_media' %}" class="btn btn-primary mb-3">Upload Media</a>
-        <div class="row">
-            {% for media in medias %}
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        {% if media.media_type == 'video' %}
-                            <video class="card-img-top" controls>
-                                <source src="{{ media.video_file.url }}" type="video/mp4">
-                            </video>
-                        {% elif media.media_type == 'image' %}
-                            <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ media.title }}</h5>
-                            <p class="card-text">{{ media.description }}</p>
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger">Delete</a>
+        <div class="media-list mt-5">
+            <h2>Media for {{ class_instance.name }}</h2>
+            <div class="row">
+                {% for media in medias %}
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            {% if media.media_type == 'video' %}
+                                <video class="card-img-top" controls>
+                                    <source src="{{ media.video_file.url }}" type="video/mp4">
+                                </video>
+                            {% elif media.media_type == 'image' %}
+                                <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
                             {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ media.title }}</h5>
+                                <p class="card-text">{{ media.description }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
+    </div>
 </body>
 </html>

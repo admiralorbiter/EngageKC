@@ -53,7 +53,8 @@ def start_class(request):
 
 def class_detail(request, pk):
     class_instance = get_object_or_404(Class, pk=pk)
-    return render(request, 'video_app/class_detail.html', {'class_instance': class_instance})
+    medias = class_instance.media.all()
+    return render(request, 'video_app/class_detail.html', {'class_instance': class_instance, 'medias': medias})
 
 def join_class(request):
     classes = Class.objects.all()
