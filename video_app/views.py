@@ -14,6 +14,9 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
+def login(request):
+    return render(request, 'video_app/login.html')
+
 def index(request):
     return render(request, 'video_app/index.html')
 
