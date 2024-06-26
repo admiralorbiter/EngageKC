@@ -30,6 +30,10 @@ ALLOWED_HOSTS = [
     'da1e4a43-a582-482a-9f0b-0ff075e026ca-00-44w0qiqqdybg.worf.replit.dev',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://da1e4a43-a582-482a-9f0b-0ff075e026ca-00-44w0qiqqdybg.worf.replit.dev',  # Add your Replit URL here
+]
+
 # Application definition
 
 INSTALLED_APPS = [
