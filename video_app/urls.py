@@ -8,10 +8,9 @@ urlpatterns = [
     path('delete/<int:pk>/', views.delete_media, name='delete_media'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', views.signup, name='signup'),
-    path('start-class/', views.start_class, name='start_class'),
-    path('join-class/', views.join_class, name='join_class'),
-    path('class/<int:pk>/', views.class_detail, name='class_detail'),
-    path('join-class/<str:class_code>/', views.join_class, name='join_class'),  # Update to accept class code
+    path('start-session/', views.start_session, name='start_session'),
+    path('join-session/', views.join_session, name='join_session'),
+    path('session/<int:pk>/', views.session_detail, name='session_detail'),
+    path('join-session/<str:session_code>/', views.join_session, name='join_session'),  # Update to accept session code
     path('login/', views.login, name='login')
-
 ]

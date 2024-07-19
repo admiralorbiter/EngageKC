@@ -1,20 +1,21 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Class Detail</title>
+    <title>Session Detail</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Class: {{ class_instance.name }}</h1>
-        <p>Class Code: {{ class_instance.class_code }}</p>
-        <p>Created At: {{ class_instance.created_at }}</p>
+        <h1>Session: {{ session_instance.name }}</h1>
+        <p>Session Code: {{ session_instance.session_code }}</p>
+        <p>Created At: {{ session_instance.created_at }}</p>
         <h1>Media List</h1>
         <a href="{% url 'upload_media' %}" class="btn btn-primary mb-3">Upload Media</a>
         <div class="media-list mt-5">
-            <h2>Media for {{ class_instance.name }}</h2>
+            <h2>Media for {{ session_instance.name }}</h2>
             <div class="row">
                 {% for media in medias %}
                     <div class="col-md-4">

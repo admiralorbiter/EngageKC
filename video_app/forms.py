@@ -1,13 +1,13 @@
 from django import forms
-from .models import Media, Class
+from .models import Media, Session
 
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
-        fields = ['title', 'description', 'media_type', 'video_file', 'image_file', 'class_associated']
-    class_associated = forms.ModelChoiceField(queryset=Class.objects.all(), required=True)
+        fields = ['title', 'description', 'media_type', 'video_file', 'image_file', 'session_associated']
+    session_associated = forms.ModelChoiceField(queryset=Session.objects.all(), required=True)
 
-class ClassForm(forms.ModelForm):
+class SessionForm(forms.ModelForm):
     class Meta:
-        model = Class
-        fields = ['name']
+        model = Session
+        fields = ['name', 'description', 'files_links', 'notes']

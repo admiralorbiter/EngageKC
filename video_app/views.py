@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
-from .models import Media, Class
-from .forms import MediaForm, ClassForm
+from .models import Media, Session
+from .forms import MediaForm, SessionForm
 from django.contrib.auth.forms import UserCreationForm
 
 def signup(request):
@@ -30,9 +30,8 @@ def upload_media(request):
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
         if form.is_valid():
-            media=form.save()
-            return redirect('class_detail', pk=media.class_associated.pk)
-
+            media = form.save()
+            return redirect('session_detail', pk=media.session_associated.pk)
     else:
         form = MediaForm()
     return render(request, 'video_app/upload_media.html', {'form': form})
@@ -45,28 +44,28 @@ def delete_media(request, pk):
         return redirect('media_list')
     return render(request, 'video_app/delete_media.html', {'media': media})
 
-def start_class(request):
+def start_session(request):
     if request.method == 'POST':
-        form = ClassForm(request.POST)
+        form = SessionForm(request.POST)
         if form.is_valid():
-            new_class = form.save()
-            return redirect('class_detail', pk=new_class.pk)
+            new_session = form.save()
+            return redirect('session_detail', pk=new_session.pk)
     else:
-        form = ClassForm()
-    return render(request, 'video_app/start_class.html', {'form': form})
+        form = SessionForm()
+    return render(request, 'video_app/start_session.html', {'form': form})
 
-def class_detail(request, pk):
-    class_instance = get_object_or_404(Class, pk=pk)
-    medias = class_instance.media.all()
-    return render(request, 'video_app/class_detail.html', {'class_instance': class_instance, 'medias': medias})
+def session_detail(request, pk):
+    session_instance = get_object_or_404(Session, pk=pk)
+    medias = session_instance.media.all()
+    return render(request, 'video_app/session_detail.html', {'session_instance': session_instance, 'medias': medias})
 
-def join_class(request):
-    classes = Class.objects.all()
+def join_session(request):
+    sessions = Session.objects.all()
     if request.method == 'POST':
-        class_code = request.POST.get('class_code')
+        session_code = request.POST.get('session_code')
         try:
-            class_instance = Class.objects.get(class_code=class_code)
-            return redirect('class_detail', pk=class_instance.pk)
-        except Class.DoesNotExist:
-            return render(request, 'video_app/join_class.html', {'error': 'Invalid class code', 'classes': classes})
-    return render(request, 'video_app/join_class.html', {'classes': classes})
+            session_instance = Session.objects.get(session_code=session_code)
+            return redirect('session_detail', pk=session_instance.pk)
+        except Session.DoesNotExist:
+            return render(request, 'video_app/join_session.html', {'error': 'Invalid session code', 'sessions': sessions})
+    return render(request, 'video_app/join_session.html', {'sessions': sessions})

@@ -1,9 +1,10 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Join Class</title>
+    <title>Join Session</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container-center {
@@ -21,22 +22,22 @@
     <div class="container mt-5">
         <div class="container-center">
             <div class="text-center">
-                <h1>Join a Class</h1>
-                <form method="post" action="{% url 'join_class' %}">
+                <h1>Join a Session</h1>
+                <form method="post" action="{% url 'join_session' %}">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="class_code">Enter Class Code</label>
-                        <input type="text" id="class_code" name="class_code" class="form-control" required>
+                        <label for="session_code">Enter Session Code</label>
+                        <input type="text" id="session_code" name="session_code" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Join Class</button>
+                    <button type="submit" class="btn btn-primary mt-3">Join Session</button>
                 </form>
             </div>
-            <div class="class-list">
-                <h2>Available Classes</h2>
+            <div class="session-list">
+                <h2>Available Sessions</h2>
                 <ul class="list-group">
-                    {% for class in classes %}
+                    {% for session in sessions %}
                         <li class="list-group-item">
-                            <strong>{{ class.name }}</strong> - Code: {{ class.class_code }}
+                            <strong>{{ session.name }}</strong> - Code: {{ session.session_code }}
                         </li>
                     {% endfor %}
                 </ul>
