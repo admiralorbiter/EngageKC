@@ -5,32 +5,76 @@
     <meta charset="UTF-8">
     <title>Join Session</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .session-code {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .session-link {
+            text-decoration: none;
+        }
+        .session-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+    {% include 'video_app/nav.html' %}
     <div class="container mt-5">
-        <h1 class="mb-4">Join a Session</h1>
-        <form method="post" class="needs-validation" novalidate>
-            {% csrf_token %}
-            {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
-            <div class="mb-3">
-                <label for="session_code" class="form-label">Enter Session Code</label>
-                <input type="text" id="session_code" name="session_code" class="form-control" required>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="mb-4 text-center">Join a Session</h1>
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="session_code" class="form-label">Enter Session Code</label>
+                        <input type="text" id="session_code" name="session_code" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please enter a session code.
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-block">Join Session</button>
+                    </div>
+                </form>
+                <h2 class="mt-5 text-center">Available Sessions</h2>
+                <ul class="list-group">
+                    {% for session in sessions %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ session.name }}</strong> - 
+                                <span class="session-code">
+                                    <a href="{% url 'session_detail' session.pk %}" class="session-link">{{ session.session_code }}</a>
+                                </span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
-            <button type="submit" class="btn btn-primary">Join Session</button>
-        </form>
-        <h2 class="mt-5">Available Sessions</h2>
-        <ul class="list-group">
-            {% for session in sessions %}
-                <li class="list-group-item">
-                    <strong>{{ session.name }}</strong> - Code: {{ session.session_code }}
-                </li>
-            {% endfor %}
-        </ul>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap@5.1.3/js/bootstrap.min.js"></script>
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
 </body>
 </html>

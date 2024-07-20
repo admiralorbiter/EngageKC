@@ -9,4 +9,4 @@ class SessionForm(forms.ModelForm):
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
-        fields = ['title', 'description', 'media_type', 'video_file', 'image_file', 'session_associated']
+        fields = ['title', 'description', 'media_type', 'video_file', 'image_file']

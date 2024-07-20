@@ -26,15 +26,18 @@ def media_list(request):
         return render(request, 'video_app/media_list_loggedout.html', {'medias': medias})
     return render(request, 'video_app/media_list.html', {'medias': medias})
 
-def upload_media(request):
+def upload_media(request, session_id):
+    session = get_object_or_404(Session, id=session_id)
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
         if form.is_valid():
-            media = form.save()
-            return redirect('session_detail', pk=media.session_associated.pk)
+            media = form.save(commit=False)
+            media.session_associated = session
+            media.save()
+            return redirect('session_detail', pk=session.id)
     else:
         form = MediaForm()
-    return render(request, 'video_app/upload_media.html', {'form': form})
+    return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
 
 @login_required
 def delete_media(request, pk):
