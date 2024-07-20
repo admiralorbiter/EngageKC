@@ -20,13 +20,25 @@ class Session(models.Model):
     def __str__(self):
         return self.name
 
-class Post(models.Model):
+class Media(models.Model):
+    MEDIA_TYPE_CHOICES = (
+        ('video', 'Video'),
+        ('image', 'Image'),
+    )
+
     title = models.CharField(max_length=100)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    likes = models.PositiveIntegerField(default=0)
-    links = models.URLField(blank=True, null=True)
+    description = models.TextField()
+    media_type = models.CharField(max_length=5, choices=MEDIA_TYPE_CHOICES)
+    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
+    image_file = models.ImageField(upload_to='images/', blank=True, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    session_associated = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media')
+
+    def clean(self):
+        if self.media_type == 'video' and self.image_file:
+            raise ValidationError('Cannot upload an image file for a video media type')
+        if self.media_type == 'image' and self.video_file:
+            raise ValidationError('Cannot upload a video file for an image media type')
 
     def __str__(self):
         return self.title
@@ -43,13 +55,24 @@ class Media(models.Model):
     video_file = models.FileField(upload_to='videos/', blank=True, null=True)
     image_file = models.ImageField(upload_to='images/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    post_associated = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='media', blank=True, null=True)
+    session_associated = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media', null=True)
 
     def clean(self):
         if self.media_type == 'video' and self.image_file:
             raise ValidationError('Cannot upload an image file for a video media type')
         if self.media_type == 'image' and self.video_file:
             raise ValidationError('Cannot upload a video file for an image media type')
+
+    def __str__(self):
+        return self.title
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    likes = models.PositiveIntegerField(default=0)
+    links = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.title
