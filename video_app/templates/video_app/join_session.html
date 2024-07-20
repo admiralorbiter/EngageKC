@@ -24,22 +24,6 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h1 class="mb-4 text-center">Join a Session</h1>
-                <form method="post" class="needs-validation" novalidate>
-                    {% csrf_token %}
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error }}</div>
-                    {% endif %}
-                    <div class="mb-3">
-                        <label for="session_code" class="form-label">Enter Session Code</label>
-                        <input type="text" id="session_code" name="session_code" class="form-control" required>
-                        <div class="invalid-feedback">
-                            Please enter a session code.
-                        </div>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-block">Join Session</button>
-                    </div>
-                </form>
                 <h2 class="mt-5 text-center">Available Sessions</h2>
                 <ul class="list-group">
                     {% for session in sessions %}
@@ -53,6 +37,21 @@
                         </li>
                     {% endfor %}
                 </ul>
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}<div class="mb-3">
+                        <label for="session_code" class="form-label">Enter Session Code</label>
+                        <input type="text" id="session_code" name="session_code" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please enter a session code.
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-block">Join Session</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
