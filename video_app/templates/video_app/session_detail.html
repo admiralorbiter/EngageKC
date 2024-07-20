@@ -28,9 +28,8 @@
             <h1 class="mb-3">Session: {{ session_instance.name }}</h1>
             <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
             <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y, g:i a" }}</p>
+            <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
-        <h2 class="mb-4">Media List</h2>
-        <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         <div class="media-list">
             <h3>Media for {{ session_instance.name }}</h3>
             <div class="row">
