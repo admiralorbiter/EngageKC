@@ -50,27 +50,22 @@ def index(request):
     return render(request, 'video_app/index.html')
 
 def upload_media(request, session_pk):
-    logger.debug(f"Received session_pk: {session_pk}")
-    session_instance = get_object_or_404(Session, pk=session_pk)
-    logger.debug(f"Session instance: {session_instance}")
+    session = get_object_or_404(Session, pk=session_pk)
 
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
         if form.is_valid():
             media = form.save(commit=False)
-            media.session = session_instance  # Set the session field
+            media.session = session
             media.save()
-            logger.debug(f"Media saved with session: {media.session}")
-            return redirect('session_detail', pk=session_pk)
+            return redirect('session_detail', session_pk=session.pk)
         else:
-            logger.debug(f"Form errors: {form.errors}")
+            print(form.errors)
     else:
         form = MediaForm()
 
-    return render(request, 'video_app/upload_media.html', {
-        'form': form,
-        'session_instance': session_instance
-    })
+    return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
+   
 
 @user_passes_test(lambda u: u.is_superuser)
 def delete_media(request, pk):
