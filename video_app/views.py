@@ -20,12 +20,6 @@ def login(request):
 def index(request):
     return render(request, 'video_app/index.html')
 
-def media_list(request):
-    medias = Media.objects.all()
-    if not request.user.is_authenticated:
-        return render(request, 'video_app/media_list_loggedout.html', {'medias': medias})
-    return render(request, 'video_app/media_list.html', {'medias': medias})
-
 def upload_media(request, session_id):
     session = get_object_or_404(Session, id=session_id)
     if request.method == 'POST':
