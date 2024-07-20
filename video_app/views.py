@@ -8,6 +8,26 @@ from django.urls import reverse_lazy
 from django.contrib.auth import views
 from django.contrib.auth.decorators import user_passes_test
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Media
+
+def like_media(request, media_id):
+    media = get_object_or_404(Media, id=media_id)
+    liked_media = request.session.get('liked_media', [])
+    
+    if media_id not in liked_media:
+        media.likes += 1
+        media.save()
+        liked_media.append(media_id)
+        request.session['liked_media'] = liked_media
+        messages.success(request, 'You liked this media.')
+    else:
+        messages.info(request, 'You have already liked this media.')
+    
+    return redirect('session_detail', session_pk=media.session.pk)
+
+
 class AdminLoginView(views.LoginView):
     template_name = 'video_app/login.html'
     redirect_authenticated_user = True

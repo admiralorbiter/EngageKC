@@ -11,5 +11,7 @@ urlpatterns = [
     path('join-session/', views.join_session, name='join_session'),
     path('session/<int:session_pk>/', views.session_detail, name='session_detail'),
     path('join-session/<str:session_code>/', views.join_session, name='join_session'),  # Update to accept session code
-    path('login/', views.login, name='login')
+    path('login/', views.login, name='login'),
+    path('like/<int:media_id>/', views.like_media, name='like_media'),
+
 ]

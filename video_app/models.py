@@ -32,6 +32,8 @@ class Media(models.Model):
     video_file = models.FileField(upload_to='videos/', blank=True, null=True)
     image_file = models.ImageField(upload_to='images/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    likes = models.PositiveIntegerField(default=0)  # New field to track likes
+
 
     def clean(self):
         if self.media_type == 'video' and self.image_file:
