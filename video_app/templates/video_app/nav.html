@@ -6,8 +6,19 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'join_session' %}">Join Session</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
-        </li>
+        {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link" style="display:inline; padding: 0;">Logout</button>
+                    </form>
+                </li>
+            {% endif %}
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
+            </li>
+        {% endif %}
     </ul>
 </nav>
