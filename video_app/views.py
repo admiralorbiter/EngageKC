@@ -4,6 +4,15 @@ from .models import Media, Session
 from .forms import MediaForm, SessionForm, LoginForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
+from django.urls import reverse_lazy
+from django.contrib.auth import views
+
+class AdminLoginView(views.LoginView):
+    template_name = 'video_app/login.html'
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy('home')
 
 def signup(request):
     if request.method == 'POST':

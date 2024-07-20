@@ -26,6 +26,7 @@ DEBUG = True
 
 LOGIN_REDIRECT_URL = '/'
 
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]

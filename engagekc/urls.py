@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from video_app import views
+from video_app.views import AdminLoginView
 
 urlpatterns = [
-    path('admin/login/', views.login, name='login'),
+    path('admin/login/', AdminLoginView.as_view(), name='admin_login'),
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('', include('video_app.urls')),
