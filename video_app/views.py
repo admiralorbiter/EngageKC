@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Media, Session
-from .forms import MediaForm, SessionForm
+from .forms import MediaForm, SessionForm, LoginForm
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
 
 def signup(request):
     if request.method == 'POST':
@@ -15,7 +16,25 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def login(request):
-    return render(request, 'video_app/login.html')
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            print(f"Username: {username}, Password: {password}")  # Debugging output
+            user = authenticate(request, username=username, password=password)
+            print(user)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                print("Test 2")
+                return render(request, 'video_app/login.html', {'form': form, 'error': 'Invalid username or password'})
+        else:
+            return render(request, 'video_app/login.html', {'form': form, 'error': 'Invalid form submission'})
+    else:
+        form = LoginForm()
+    return render(request, 'video_app/login.html', {'form': form})
 
 def index(request):
     return render(request, 'video_app/index.html')

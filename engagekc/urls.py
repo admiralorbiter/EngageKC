@@ -19,6 +19,7 @@ from django.urls import path, include
 from video_app import views
 
 urlpatterns = [
+    path('admin/login/', views.login, name='login'),
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('', include('video_app.urls')),

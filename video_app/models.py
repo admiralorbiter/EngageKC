@@ -3,7 +3,6 @@ import uuid
 
 from jsonschema import ValidationError
 
-
 class Session(models.Model):
     name = models.CharField(max_length=100)
     session_code = models.CharField(max_length=8, unique=True, editable=False)
@@ -32,7 +31,7 @@ class Media(models.Model):
     video_file = models.FileField(upload_to='videos/', blank=True, null=True)
     image_file = models.ImageField(upload_to='images/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    session_associated = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media')
+    session_associated = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media', default=1)
 
     def clean(self):
         if self.media_type == 'video' and self.image_file:
