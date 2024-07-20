@@ -101,10 +101,11 @@ def start_session(request):
         form = SessionForm(request.POST)
         if form.is_valid():
             new_session = form.save()
-            return redirect('session_detail', pk=new_session.pk)
+            return redirect('session_detail', session_pk=new_session.pk)
     else:
         form = SessionForm()
     return render(request, 'video_app/start_session.html', {'form': form})
+
 
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
