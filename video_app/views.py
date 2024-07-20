@@ -68,12 +68,12 @@ def upload_media(request, session_pk):
    
 
 @user_passes_test(lambda u: u.is_superuser)
-def delete_media(request, pk):
-    media = get_object_or_404(Media, pk=pk)
+def delete_media(request, session_pk):
+    media = get_object_or_404(Media, pk=session_pk)
     if request.method == 'POST':
         session_pk = media.session.pk  # Save the session primary key before deleting the media
         media.delete()
-        return redirect('session_detail', pk=session_pk)
+        return redirect('session_detail', session_pk=session_pk)
     return render(request, 'video_app/delete_media.html', {'media': media})
 
 def start_session(request):
@@ -86,9 +86,9 @@ def start_session(request):
         form = SessionForm()
     return render(request, 'video_app/start_session.html', {'form': form})
 
-def session_detail(request, pk):
-    session_instance = get_object_or_404(Session, pk=pk)
-    medias = session_instance.media.all()  # Use the related_name 'media'
+def session_detail(request, session_pk):
+    session_instance = get_object_or_404(Session, pk=session_pk)
+    medias = session_instance.media.all()
     return render(request, 'video_app/session_detail.html', {
         'session_instance': session_instance,
         'medias': medias,
