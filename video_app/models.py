@@ -24,14 +24,13 @@ class Media(models.Model):
         ('video', 'Video'),
         ('image', 'Image'),
     )
-
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media')
     title = models.CharField(max_length=100)
     description = models.TextField()
     media_type = models.CharField(max_length=5, choices=MEDIA_TYPE_CHOICES)
     video_file = models.FileField(upload_to='videos/', blank=True, null=True)
     image_file = models.ImageField(upload_to='images/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    session_associated = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media', default=1)
 
     def clean(self):
         if self.media_type == 'video' and self.image_file:

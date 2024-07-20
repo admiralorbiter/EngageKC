@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.contrib.auth import views
+from django.contrib.auth.decorators import user_passes_test
 
 class AdminLoginView(views.LoginView):
     template_name = 'video_app/login.html'
@@ -48,25 +49,36 @@ def login(request):
 def index(request):
     return render(request, 'video_app/index.html')
 
-def upload_media(request, session_id):
-    session = get_object_or_404(Session, id=session_id)
+def upload_media(request, session_pk):
+    logger.debug(f"Received session_pk: {session_pk}")
+    session_instance = get_object_or_404(Session, pk=session_pk)
+    logger.debug(f"Session instance: {session_instance}")
+
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
         if form.is_valid():
             media = form.save(commit=False)
-            media.session_associated = session
+            media.session = session_instance  # Set the session field
             media.save()
-            return redirect('session_detail', pk=session.id)
+            logger.debug(f"Media saved with session: {media.session}")
+            return redirect('session_detail', pk=session_pk)
+        else:
+            logger.debug(f"Form errors: {form.errors}")
     else:
         form = MediaForm()
-    return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
 
-@login_required
+    return render(request, 'video_app/upload_media.html', {
+        'form': form,
+        'session_instance': session_instance
+    })
+
+@user_passes_test(lambda u: u.is_superuser)
 def delete_media(request, pk):
     media = get_object_or_404(Media, pk=pk)
     if request.method == 'POST':
+        session_pk = media.session.pk  # Save the session primary key before deleting the media
         media.delete()
-        return redirect('media_list')
+        return redirect('session_detail', pk=session_pk)
     return render(request, 'video_app/delete_media.html', {'media': media})
 
 def start_session(request):
@@ -81,8 +93,11 @@ def start_session(request):
 
 def session_detail(request, pk):
     session_instance = get_object_or_404(Session, pk=pk)
-    medias = session_instance.media.all()
-    return render(request, 'video_app/session_detail.html', {'session_instance': session_instance, 'medias': medias})
+    medias = session_instance.media.all()  # Use the related_name 'media'
+    return render(request, 'video_app/session_detail.html', {
+        'session_instance': session_instance,
+        'medias': medias,
+    })
 
 def join_session(request):
     sessions = Session.objects.all()
