@@ -52,16 +52,19 @@
                             <div class="card-body">
                                 <h5 class="card-title media-title">{{ media.title }}</h5>
                                 <p class="card-text">{{ media.description }}</p>
-                                <div class="like-section">
-                                    <form method="post" action="{% url 'like_media' media.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-primary like-button">+1</button>
-                                    </form>
-                                    <span id="like-count-{{ media.id }}">{{ media.likes }}</span>
+                                <div class="row">
+                                    <div class="like-section col">
+                                        <form method="post" action="{% url 'like_media' media.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary like-button">+{{ media.likes }}</button>
+                                        </form>
+                                    </div>
+                                    <div class="col text-end">
+                                        {% if user.is_superuser %}
+                                            <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger">Delete</a>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                                {% if user.is_superuser %}
-                                    <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger">Delete</a>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
