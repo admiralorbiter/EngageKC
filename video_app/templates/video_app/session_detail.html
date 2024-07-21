@@ -38,7 +38,6 @@
             <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
         <div class="media-list">
-            <h3>Media for {{ session_instance.name }}</h3>
             <div class="row">
                 {% for media in medias %}
                     <div class="col-md-4 media-item">

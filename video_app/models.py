@@ -26,8 +26,8 @@ class Media(models.Model):
         ('comment', 'Comment'),
     )
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media')
-    title = models.CharField(max_length=100)
-    description = models.TextField()
+    title = models.CharField(max_length=100, null=False, blank=False)
+    description = models.TextField(max_length=500, null=True, blank=True)
     media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES)
     video_file = models.FileField(upload_to='videos/', blank=True, null=True)
     image_file = models.ImageField(upload_to='images/', blank=True, null=True)

@@ -1,6 +1,7 @@
 from django import forms
 from .models import Session, Media
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.exceptions import ValidationError
 
 class SessionForm(forms.ModelForm):
     class Meta:
@@ -12,6 +13,21 @@ class SessionForm(forms.ModelForm):
             'files_links': forms.URLInput(attrs={'class': 'form-control'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 50}),
         }
+
+def validate_file_size(file):
+    max_size_mb = 10  # Define your size limit in MB
+    if file.size > max_size_mb * 1024 * 1024:
+        raise ValidationError(f"Max file size is {max_size_mb}MB")
+
+def validate_video_type(file):
+    valid_mime_types = ['video/mp4', 'video/avi', 'video/mov']
+    if file.content_type not in valid_mime_types:
+        raise ValidationError('Invalid video file type')
+
+def validate_image_type(file):
+    valid_mime_types = ['image/jpeg', 'image/png', 'image/gif']
+    if file.content_type not in valid_mime_types:
+        raise ValidationError('Invalid image file type')
 
 class MediaForm(forms.ModelForm):
     class Meta:
@@ -25,9 +41,16 @@ class MediaForm(forms.ModelForm):
         image_file = cleaned_data.get('image_file')
 
         if media_type == 'video' and not video_file:
-            raise forms.ValidationError('A video file is required for the selected media type.')
+            self.add_error('video_file', 'Please upload a video file.')
+        elif media_type == 'video' and video_file:
+            validate_file_size(video_file)
+            validate_video_type(video_file)
+
         if media_type == 'image' and not image_file:
-            raise forms.ValidationError('An image file is required for the selected media type.')
+            self.add_error('image_file', 'Please upload an image file.')
+        elif media_type == 'image' and image_file:
+            validate_file_size(image_file)
+            validate_image_type(image_file)
 
         return cleaned_data
 
