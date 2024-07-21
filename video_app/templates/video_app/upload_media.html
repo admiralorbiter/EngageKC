@@ -46,15 +46,31 @@
                     Please select a media type.
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="media_source" class="form-label">Media Source</label>
+                <div>
+                    <input type="radio" id="upload" name="media_source" value="upload" checked>
+                    <label for="upload">Upload a file</label>
+                </div>
+                <div>
+                    <input type="radio" id="capture" name="media_source" value="capture">
+                    <label for="capture">Capture from device</label>
+                </div>
+            </div>
             <div class="mb-3 video-upload hidden">
                 <label for="id_video_file" class="form-label">Video File</label>
-                {{ form.video_file|add_class:"form-control" }}
+                <input type="file" accept="video/*" class="form-control upload-input" id="id_video_file" name="video_file">
+                <input type="file" accept="video/*" capture="camcorder" class="form-control capture-input mt-2 hidden" id="id_video_capture" name="video_capture">
             </div>
             <div class="mb-3 image-upload hidden">
                 <label for="id_image_file" class="form-label">Image File</label>
-                {{ form.image_file|add_class:"form-control" }}
+                <input type="file" accept="image/*" class="form-control upload-input" id="id_image_file" name="image_file">
+                <input type="file" accept="image/*" capture="camera" class="form-control capture-input mt-2 hidden" id="id_image_capture" name="image_capture">
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Upload</button>
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'session_detail' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
         </form>
     </div>
 
@@ -63,8 +79,22 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mediaTypeSelect = document.getElementById('id_media_type');
+            const uploadRadio = document.getElementById('upload');
+            const captureRadio = document.getElementById('capture');
             const videoUploadDiv = document.querySelector('.video-upload');
             const imageUploadDiv = document.querySelector('.image-upload');
+            const uploadInputs = document.querySelectorAll('.upload-input');
+            const captureInputs = document.querySelectorAll('.capture-input');
+
+            function toggleMediaSource() {
+                if (uploadRadio.checked) {
+                    uploadInputs.forEach(input => input.classList.remove('hidden'));
+                    captureInputs.forEach(input => input.classList.add('hidden'));
+                } else if (captureRadio.checked) {
+                    uploadInputs.forEach(input => input.classList.add('hidden'));
+                    captureInputs.forEach(input => input.classList.remove('hidden'));
+                }
+            }
 
             mediaTypeSelect.addEventListener('change', function() {
                 if (this.value === 'video') {
@@ -77,7 +107,14 @@
                     videoUploadDiv.classList.add('hidden');
                     imageUploadDiv.classList.add('hidden');
                 }
+                toggleMediaSource();
             });
+
+            uploadRadio.addEventListener('change', toggleMediaSource);
+            captureRadio.addEventListener('change', toggleMediaSource);
+
+            // Initial setup
+            toggleMediaSource();
         });
     </script>
 </body>

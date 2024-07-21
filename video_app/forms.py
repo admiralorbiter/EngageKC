@@ -39,18 +39,22 @@ class MediaForm(forms.ModelForm):
         media_type = cleaned_data.get('media_type')
         video_file = cleaned_data.get('video_file')
         image_file = cleaned_data.get('image_file')
+        video_capture = cleaned_data.get('video_capture')
+        image_capture = cleaned_data.get('image_capture')
 
-        if media_type == 'video' and not video_file:
-            self.add_error('video_file', 'Please upload a video file.')
-        elif media_type == 'video' and video_file:
-            validate_file_size(video_file)
-            validate_video_type(video_file)
+        if media_type == 'video' and not (video_file or video_capture):
+            self.add_error('video_file', 'Please upload or capture a video file.')
+        elif media_type == 'video':
+            file = video_file or video_capture
+            validate_file_size(file)
+            validate_video_type(file)
 
-        if media_type == 'image' and not image_file:
-            self.add_error('image_file', 'Please upload an image file.')
-        elif media_type == 'image' and image_file:
-            validate_file_size(image_file)
-            validate_image_type(image_file)
+        if media_type == 'image' and not (image_file or image_capture):
+            self.add_error('image_file', 'Please upload or capture an image file.')
+        elif media_type == 'image':
+            file = image_file or image_capture
+            validate_file_size(file)
+            validate_image_type(file)
 
         return cleaned_data
 
