@@ -12,6 +12,12 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import Media
 
+@user_passes_test(lambda u: u.is_superuser)
+def delete_session(request, session_pk):
+    session = get_object_or_404(Session, pk=session_pk)
+    session.delete()
+    return redirect('join_session')
+
 def like_media(request, media_id):
     media = get_object_or_404(Media, id=media_id)
     liked_media = request.session.get('liked_media', [])
