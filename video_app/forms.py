@@ -6,6 +6,12 @@ class SessionForm(forms.ModelForm):
     class Meta:
         model = Session
         fields = ['name', 'description', 'files_links', 'notes']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 50}),
+            'files_links': forms.URLInput(attrs={'class': 'form-control'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 50}),
+        }
 
 class MediaForm(forms.ModelForm):
     class Meta:
