@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.contrib.auth import views
 from django.contrib.auth.decorators import user_passes_test
+import base64
+from django.core.files.base import ContentFile
 
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -86,6 +88,17 @@ def upload_media(request, session_pk):
 
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
+        captured_image_data = request.POST.get('captured_image_data')
+        
+        if captured_image_data:
+            # Process the base64 image data
+            format, imgstr = captured_image_data.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(imgstr), name=f'captured.{ext}')
+            
+            # Update the request.FILES to include the decoded image file
+            request.FILES['image_file'] = data
+        
         if form.is_valid():
             media = form.save(commit=False)
             media.session = session

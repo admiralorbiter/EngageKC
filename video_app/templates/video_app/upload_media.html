@@ -23,7 +23,7 @@
     {% include 'video_app/nav.html' %}
     <div class="container mt-5">
         <h1 class="mb-4">Upload Media</h1>
-        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <form id="media-form" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="mb-3">
                 <label for="id_title" class="form-label">Title</label>
@@ -68,6 +68,7 @@
                 <input type="file" accept="image/*" class="form-control upload-input" id="id_image_file" name="image_file">
                 <input type="button" value="Capture Image" class="btn btn-secondary capture-input mt-2 hidden" id="capture_image_button">
                 <img id="image_preview" class="mt-2 hidden" src="" alt="Captured Image">
+                <input type="hidden" id="captured_image_data" name="captured_image_data">
             </div>
             <div class="d-flex justify-content-between">
                 <a href="{% url 'session_detail' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
@@ -91,6 +92,8 @@
             const videoPreview = document.getElementById('video_preview');
             const captureImageButton = document.getElementById('capture_image_button');
             const imagePreview = document.getElementById('image_preview');
+            const capturedImageData = document.getElementById('captured_image_data');
+            const mediaForm = document.getElementById('media-form');
 
             let mediaRecorder;
             let recordedChunks = [];
@@ -122,39 +125,6 @@
             uploadRadio.addEventListener('change', toggleMediaSource);
             captureRadio.addEventListener('change', toggleMediaSource);
 
-            recordVideoButton.addEventListener('click', async () => {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                videoPreview.classList.remove('hidden');
-                videoPreview.srcObject = stream;
-                mediaRecorder = new MediaRecorder(stream);
-
-                mediaRecorder.ondataavailable = event => {
-                    if (event.data.size > 0) {
-                        recordedChunks.push(event.data);
-                    }
-                };
-
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(blob);
-                    videoPreview.srcObject = null;
-                    videoPreview.src = url;
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'recorded_video.webm';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                };
-
-                mediaRecorder.start();
-
-                setTimeout(() => {
-                    mediaRecorder.stop();
-                    stream.getTracks().forEach(track => track.stop());
-                }, 5000); // Recording duration: 5 seconds
-            });
-
             captureImageButton.addEventListener('click', async () => {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 const track = stream.getVideoTracks()[0];
@@ -165,6 +135,21 @@
                 imagePreview.src = url;
                 imagePreview.classList.remove('hidden');
                 track.stop();
+
+                // Convert Blob to Base64
+                const reader = new FileReader();
+                reader.readAsDataURL(photo);
+                reader.onloadend = function() {
+                    capturedImageData.value = reader.result;
+                };
+            });
+
+            mediaForm.addEventListener('submit', function(event) {
+                // Ensure that base64 image data is included in the form submission
+                if (captureRadio.checked && capturedImageData.value === '') {
+                    event.preventDefault();
+                    alert('Please capture an image before submitting.');
+                }
             });
 
             // Initial setup
