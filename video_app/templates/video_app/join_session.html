@@ -33,13 +33,23 @@
                                     <h5 class="mb-1">{{ session.name }}</h5>
                                     <p class="mb-1">{{ session.description }}</p>
                                     <small class="text-muted">Session Code: <a href="{% url 'session_detail' session.pk %}" class="session-link">{{ session.session_code }}</a></small>
+                                    <br>
+                                    <small class="text-muted">Days until deletion: {{ session.days_until_deletion }}</small>
                                 </div>
-                                {% if user.is_superuser %}
-                                <form method="post" action="{% url 'delete_session' session.pk %}" onsubmit="return confirmDelete()">
-                                    {% csrf_token %}
+                                <div class="btn-group">
+                                    {% if user.is_superuser %}
+                                    <form method="post" action="{% url 'pause_session' session.pk %}" class="m-1">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-warning btn-sm">
+                                            {% if session.is_paused %}Resume{% else %}Pause{% endif %}
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'delete_session' session.pk %}" onsubmit="return confirmDelete()" class="m-1">
+                                        {% csrf_token %}
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>
-                                {% endif %}
+                                    {% endif %}
+                                </div>
                             </div>
                         </li>
                     {% endfor %}

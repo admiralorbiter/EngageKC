@@ -12,17 +12,11 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import Media
 
-def pause_session(request, session_id):
-    session = get_object_or_404(Session, id=session_id)
-    session.is_paused = True
+def pause_session(request, session_pk):
+    session = get_object_or_404(Session, id=session_pk)
+    session.is_paused = not(session.is_paused)
     session.save()
-    return redirect('session_detail', session_id=session.id)
-
-def resume_session(request, session_id):
-    session = get_object_or_404(Session, id=session_id)
-    session.is_paused = False
-    session.save()
-    return redirect('session_detail', session_id=session.id)
+    return redirect('join_session')
 
 @user_passes_test(lambda u: u.is_superuser)
 def delete_session(request, session_pk):

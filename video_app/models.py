@@ -18,13 +18,18 @@ class Session(models.Model):
     is_paused = models.BooleanField(default=False)
 
     def is_expired(self):
-        return not self.is_paused and (timezone.now() > self.created_at + timedelta(minutes=1))
-        # return not self.is_paused and (timezone.now() > self.created_at + timedelta(days=7))
+        return not self.is_paused and (timezone.now() > self.created_at + timedelta(days=7))
     
     def save(self, *args, **kwargs):
         if not self.session_code:
             self.session_code = str(uuid.uuid4())[:8]  # Generate an 8-character unique code
         super().save(*args, **kwargs)
+
+    def days_until_deletion(self):
+        if self.is_paused:
+            return 'Paused'
+        days_left = 7 - (timezone.now() - self.created_at).days
+        return max(0, days_left)
 
     def __str__(self):
         return self.name
