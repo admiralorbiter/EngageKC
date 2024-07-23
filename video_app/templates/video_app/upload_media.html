@@ -17,11 +17,19 @@
         .hidden {
             display: none;
         }
+        .image-preview-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .image-preview {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
     {% include 'video_app/nav.html' %}
-    <div class="container mt-5">
+    <div class="container my-5">
         <h1 class="mb-4">Upload Media</h1>
         <form id="media-form" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             {% csrf_token %}
@@ -67,7 +75,9 @@
                 <label for="id_image_file" class="form-label">Image File</label>
                 <input type="file" accept="image/*" class="form-control upload-input" id="id_image_file" name="image_file">
                 <input type="button" value="Capture Image" class="btn btn-secondary capture-input mt-2 hidden" id="capture_image_button">
-                <img id="image_preview" class="mt-2 hidden" src="" alt="Captured Image">
+                <div class="image-preview-container hidden" id="image_preview_container">
+                    <img id="image_preview" class="image-preview" src="" alt="Captured Image">
+                </div>
                 <input type="hidden" id="captured_image_data" name="captured_image_data">
             </div>
             <div class="d-flex justify-content-between">
@@ -91,12 +101,10 @@
             const recordVideoButton = document.getElementById('record_video_button');
             const videoPreview = document.getElementById('video_preview');
             const captureImageButton = document.getElementById('capture_image_button');
+            const imagePreviewContainer = document.getElementById('image_preview_container');
             const imagePreview = document.getElementById('image_preview');
             const capturedImageData = document.getElementById('captured_image_data');
             const mediaForm = document.getElementById('media-form');
-
-            let mediaRecorder;
-            let recordedChunks = [];
 
             function toggleMediaSource() {
                 if (uploadRadio.checked) {
@@ -133,7 +141,7 @@
                 const photo = await imageCapture.takePhoto();
                 const url = URL.createObjectURL(photo);
                 imagePreview.src = url;
-                imagePreview.classList.remove('hidden');
+                imagePreviewContainer.classList.remove('hidden');
                 track.stop();
 
                 // Convert Blob to Base64
