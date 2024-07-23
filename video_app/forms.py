@@ -20,7 +20,7 @@ def validate_file_size(file):
         raise ValidationError(f"Max file size is {max_size_mb}MB")
 
 def validate_video_type(file):
-    valid_mime_types = ['video/mp4', 'video/avi', 'video/mov']
+    valid_mime_types = ['video/mp4', 'video/avi', 'video/mov', 'video/webm', 'video/ogg']
     if file.content_type not in valid_mime_types:
         raise ValidationError('Invalid video file type')
 

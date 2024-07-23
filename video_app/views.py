@@ -9,7 +9,7 @@ from django.contrib.auth import views
 from django.contrib.auth.decorators import user_passes_test
 import base64
 from django.core.files.base import ContentFile
-
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import Media
@@ -87,17 +87,25 @@ def upload_media(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
 
     if request.method == 'POST':
-        form = MediaForm(request.POST, request.FILES)
         captured_image_data = request.POST.get('captured_image_data')
-        
+        captured_video_data = request.POST.get('captured_video_data')
+
+        # Check if there's any captured image or video data
         if captured_image_data:
-            # Process the base64 image data
             format, imgstr = captured_image_data.split(';base64,')
             ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name=f'captured.{ext}')
-            
-            # Update the request.FILES to include the decoded image file
+            data = ContentFile(base64.b64decode(imgstr), name=f'captured_image.{ext}')
             request.FILES['image_file'] = data
+
+        if captured_video_data:
+            format, vidstr = captured_video_data.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(vidstr), name=f'captured_video.{ext}')
+            content_type = 'video/webm'  # Adjust this according to the actual video format you are using
+            video_file = SimpleUploadedFile(f'captured_video.{ext}', base64.b64decode(vidstr), content_type=content_type)
+            request.FILES['video_file'] = video_file
+
+        form = MediaForm(request.POST, request.FILES)
         
         if form.is_valid():
             media = form.save(commit=False)
@@ -105,7 +113,7 @@ def upload_media(request, session_pk):
             media.save()
             return redirect('session_detail', session_pk=session.pk)
         else:
-            print(form.errors)
+            print("Form errors:", form.errors)
     else:
         form = MediaForm()
 
