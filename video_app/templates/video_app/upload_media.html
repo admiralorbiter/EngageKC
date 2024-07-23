@@ -25,11 +25,17 @@
             max-width: 100%;
             height: auto;
         }
+        .countdown {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     {% include 'video_app/nav.html' %}
-    <div class="container my-5">
+    <div class="container mt-5">
         <h1 class="mb-4">Upload Media</h1>
         <form id="media-form" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             {% csrf_token %}
@@ -75,6 +81,7 @@
                 <label for="id_image_file" class="form-label">Image File</label>
                 <input type="file" accept="image/*" class="form-control upload-input" id="id_image_file" name="image_file">
                 <input type="button" value="Capture Image" class="btn btn-secondary capture-input mt-2 hidden" id="capture_image_button">
+                <div class="countdown hidden" id="countdown">3</div>
                 <div class="image-preview-container hidden" id="image_preview_container">
                     <img id="image_preview" class="image-preview" src="" alt="Captured Image">
                 </div>
@@ -101,6 +108,7 @@
             const recordVideoButton = document.getElementById('record_video_button');
             const videoPreview = document.getElementById('video_preview');
             const captureImageButton = document.getElementById('capture_image_button');
+            const countdownElement = document.getElementById('countdown');
             const imagePreviewContainer = document.getElementById('image_preview_container');
             const imagePreview = document.getElementById('image_preview');
             const capturedImageData = document.getElementById('captured_image_data');
@@ -138,18 +146,31 @@
                 const track = stream.getVideoTracks()[0];
                 const imageCapture = new ImageCapture(track);
 
-                const photo = await imageCapture.takePhoto();
-                const url = URL.createObjectURL(photo);
-                imagePreview.src = url;
-                imagePreviewContainer.classList.remove('hidden');
-                track.stop();
+                countdownElement.classList.remove('hidden');
+                let countdown = 3;
+                countdownElement.textContent = countdown;
 
-                // Convert Blob to Base64
-                const reader = new FileReader();
-                reader.readAsDataURL(photo);
-                reader.onloadend = function() {
-                    capturedImageData.value = reader.result;
-                };
+                const countdownInterval = setInterval(() => {
+                    countdown -= 1;
+                    countdownElement.textContent = countdown;
+                    if (countdown === 0) {
+                        clearInterval(countdownInterval);
+                        countdownElement.classList.add('hidden');
+                        imageCapture.takePhoto().then(photo => {
+                            const url = URL.createObjectURL(photo);
+                            imagePreview.src = url;
+                            imagePreviewContainer.classList.remove('hidden');
+                            track.stop();
+
+                            // Convert Blob to Base64
+                            const reader = new FileReader();
+                            reader.readAsDataURL(photo);
+                            reader.onloadend = function() {
+                                capturedImageData.value = reader.result;
+                            };
+                        });
+                    }
+                }, 1000);
             });
 
             mediaForm.addEventListener('submit', function(event) {
