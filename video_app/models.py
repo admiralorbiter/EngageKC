@@ -1,5 +1,8 @@
 from django.db import models
 import uuid
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+import os
 
 from jsonschema import ValidationError
 
@@ -25,12 +28,12 @@ class Media(models.Model):
         ('image', 'Image'),
         ('comment', 'Comment'),
     )
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='media')
+    session = models.ForeignKey(Session, related_name='media', on_delete=models.CASCADE)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(max_length=500, null=True, blank=True)
     media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES)
-    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
-    image_file = models.ImageField(upload_to='images/', blank=True, null=True)
+    video_file = models.FileField(upload_to='videos', blank=True, null=True)
+    image_file = models.ImageField(upload_to='images', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     likes = models.PositiveIntegerField(default=0)  # New field to track likes
 
@@ -43,6 +46,33 @@ class Media(models.Model):
 
     def __str__(self):
         return self.title
+
+@receiver(pre_delete, sender=Session)
+def delete_associated_media(sender, instance, **kwargs):
+    media_files = instance.media.all()
+    print(f"Found {media_files.count()} media files associated with the session")
+    for media in media_files:
+        if media.media_type == 'video' and media.video_file:
+            print(f"Deleting video file: {media.video_file.path}")
+            if os.path.isfile(media.video_file.path):
+                try:
+                    os.remove(media.video_file.path)
+                    print(f"Successfully deleted video file: {media.video_file.path}")
+                except Exception as e:
+                    print(f"Error deleting video file {media.video_file.path}: {e}")
+            else:
+                print(f"Video file does not exist: {media.video_file.path}")
+        elif media.media_type == 'image' and media.image_file:
+            print(f"Deleting image file: {media.image_file.path}")
+            if os.path.isfile(media.image_file.path):
+                try:
+                    os.remove(media.image_file.path)
+                    print(f"Successfully deleted image file: {media.image_file.path}")
+                except Exception as e:
+                    print(f"Error deleting image file {media.image_file.path}: {e}")
+            else:
+                print(f"Image file does not exist: {media.image_file.path}")
+        media.delete()
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
