@@ -14,4 +14,6 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('like/<int:media_id>/', views.like_media, name='like_media'),
     path('session/<int:session_pk>/delete/', views.delete_session, name='delete_session'),  # Add this line
+    path('session/<int:session_id>/pause/', views.pause_session, name='pause_session'),
+    path('session/<int:session_id>/resume/', views.resume_session, name='resume_session'),
 ]

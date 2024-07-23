@@ -3,6 +3,8 @@ import uuid
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 import os
+from django.utils import timezone
+from datetime import timedelta
 
 from jsonschema import ValidationError
 
@@ -13,7 +15,12 @@ class Session(models.Model):
     files_links = models.URLField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_paused = models.BooleanField(default=False)
 
+    def is_expired(self):
+        return not self.is_paused and (timezone.now() > self.created_at + timedelta(minutes=1))
+        # return not self.is_paused and (timezone.now() > self.created_at + timedelta(days=7))
+    
     def save(self, *args, **kwargs):
         if not self.session_code:
             self.session_code = str(uuid.uuid4())[:8]  # Generate an 8-character unique code

@@ -15,3 +15,8 @@ pip install django
 ```bash
 python manage.py runserver
 ```
+
+Celery Worker
+
+celery -A engagekc worker --loglevel=info
+celery -A engagekc beat --loglevel=info
