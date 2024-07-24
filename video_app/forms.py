@@ -7,6 +7,13 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'style': 'border-radius: 10px; border: 1px solid #ccc; padding: 10px;',
+            }),
+        }
 
 class SessionForm(forms.ModelForm):
     class Meta:

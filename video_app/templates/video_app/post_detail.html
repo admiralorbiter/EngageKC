@@ -9,6 +9,24 @@
             max-width: 100%;
             height: auto;
         }
+        .comment-form textarea {
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 100%;
+            resize: vertical;
+        }
+        .comment-form button {
+            border-radius: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .comment-form button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -39,7 +57,7 @@
                 </div>
 
                 <h3>Add a comment</h3>
-                <form method="post">
+                <form method="post" class="comment-form">
                     {% csrf_token %}
                     {{ comment_form.as_p }}
                     <button type="submit" class="btn btn-primary">Add Comment</button>
