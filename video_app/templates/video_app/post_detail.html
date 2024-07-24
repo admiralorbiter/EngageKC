@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ media.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    {% include 'video_app/nav.html' %}
+    <div class="container mt-5">
+        <a href="{% url 'session_detail' media.session.id %}" class="btn btn-secondary mb-3">Back to Session</a>
+        <h1>{{ media.title }}</h1>
+        {% if media.media_type == 'image' %}
+            <img src="{{ media.image_file.url }}" alt="{{ media.title }}">
+        {% elif media.media_type == 'video' %}
+            <video controls>
+                <source src="{{ media.video_file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% endif %}
+        <p>{{ media.description }}</p>
+        <p>Uploaded at: {{ media.uploaded_at }}</p>
+        <p>Likes: {{ media.likes }}</p>
+    </div>
+</body>
+</html>

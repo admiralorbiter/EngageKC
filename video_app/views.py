@@ -12,7 +12,11 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
-from .models import Media
+from .models import Media, Post
+
+def post_detail(request, id):
+    media = get_object_or_404(Media, id=id)
+    return render(request, 'video_app/post_detail.html', {'media': media})
 
 def pause_session(request, session_pk):
     session = get_object_or_404(Session, id=session_pk)
