@@ -1,7 +1,12 @@
 from django import forms
-from .models import Session, Media
+from .models import Session, Media, Comment
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
 
 class SessionForm(forms.ModelForm):
     class Meta:

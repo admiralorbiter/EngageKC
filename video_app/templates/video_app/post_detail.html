@@ -26,6 +26,18 @@
             </div>
             <div class="col">
                 <h1>Comments</h1>
+                <div class="comments">
+                    {% for comment in comments %}
+                        {% include 'video_app/comment.html' with comment=comment %}
+                    {% endfor %}
+                </div>
+
+                <h3>Add a comment</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Add Comment</button>
+                </form>
             </div>
         </div>
     </div>

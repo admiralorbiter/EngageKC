@@ -1,0 +1,28 @@
+<div class="comment">
+    <p>{{ comment.text }}</p>
+    <p><small>{{ comment.created_at }}</small></p>
+    <a href="#" class="reply" data-id="{{ comment.id }}">Reply</a>
+
+    <div class="replies">
+        {% for reply in comment.replies.all %}
+            {% include 'video_app/comment.html' with comment=reply %}
+        {% endfor %}
+    </div>
+
+    <form method="post" class="reply-form" style="display: none;">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+        <button type="submit" class="btn btn-primary">Reply</button>
+    </form>
+</div>
+<script>
+    document.querySelectorAll('.reply').forEach(function(replyLink) {
+        replyLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            var commentId = this.dataset.id;
+            var replyForm = this.nextElementSibling.nextElementSibling;
+            replyForm.style.display = 'block';
+        });
+    });
+</script>

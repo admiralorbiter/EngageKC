@@ -12,11 +12,28 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
-from .models import Media, Post
+from .models import Media, Post, Comment
+from .forms import CommentForm
 
 def post_detail(request, id):
     media = get_object_or_404(Media, id=id)
-    return render(request, 'video_app/post_detail.html', {'media': media})
+    comments = media.comments.filter(parent__isnull=True)
+    new_comment = None
+
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.media = media
+            if request.POST.get('parent_id'):
+                parent_id = int(request.POST.get('parent_id'))
+                new_comment.parent = Comment.objects.get(id=parent_id)
+            new_comment.save()
+            return redirect('post_detail', id=media.id)
+    else:
+        comment_form = CommentForm()
+
+    return render(request, 'video_app/post_detail.html', {'media': media, 'comments': comments, 'new_comment': new_comment, 'comment_form': comment_form})
 
 def pause_session(request, session_pk):
     session = get_object_or_404(Session, id=session_pk)
