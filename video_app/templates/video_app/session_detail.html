@@ -64,6 +64,7 @@
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-primary like-button">+{{ media.likes }}</button>
                                         </form>
+                                        @{{media.tag}}
                                     </div>
                                     <div class="col text-end">
                                         {% if user.is_superuser %}
