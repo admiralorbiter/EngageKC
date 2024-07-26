@@ -1,3 +1,5 @@
+<!-- post_detail.html -->
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,10 +62,14 @@
                 <form method="post" class="comment-form">
                     {% csrf_token %}
                     {{ comment_form.as_p }}
+                    <input type="hidden" name="device_id" id="device_id"> <!-- Hidden field for device ID -->
                     <button type="submit" class="btn btn-primary">Add Comment</button>
                 </form>
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('device_id').value = localStorage.getItem('deviceID'); // Set the device ID in the hidden field
+    </script>
 </body>
 </html>

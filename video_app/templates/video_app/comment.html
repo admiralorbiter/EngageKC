@@ -1,6 +1,7 @@
 <!-- comment.html -->
 <div class="comment border m-1 p-1 bg-info bg-opacity-10 border-info rounded-end">
-    <p>{{ comment.text }}</p>
+    <p><strong>{{comment.device_id}}</strong></p>
+    <p class="mx-3">{{ comment.text }}</p>
     <div class="row">
         <div class="col">
             <a href="#" class="reply" data-id="{{ comment.id }}">Reply</a>
@@ -19,6 +20,7 @@
         {% csrf_token %}
         {{ comment_form.as_p }}
         <input type="hidden" name="parent_id" value="{{ comment.id }}">
+        <input type="hidden" name="device_id" id="device_id_{{ comment.id }}"> <!-- Hidden field for device ID -->
         <button type="submit" class="btn btn-primary">Reply</button>
     </form>
 </div>
@@ -29,6 +31,7 @@
             var commentId = this.dataset.id;
             var replyForm = this.closest('.comment').querySelector('.reply-form');
             replyForm.style.display = 'block';
+            document.getElementById('device_id_' + commentId).value = localStorage.getItem('deviceID'); // Set the device ID in the hidden field
         });
     });
-</script>
+</script>   

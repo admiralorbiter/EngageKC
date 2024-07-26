@@ -99,6 +99,7 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    device_id = models.CharField(max_length=255, blank=True, null=True)
+    
     def __str__(self):
         return f'Comment by {self.id} on {self.post.title}'
