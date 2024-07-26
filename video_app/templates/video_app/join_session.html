@@ -34,14 +34,14 @@
                                     <h3 class="mb-1">{{ session.name }}</h3>
                                     <p class="mb-1">{{ session.description }}</p>
                                     <small class="text-muted">Created by: {{ session.created_by }}</small>
-                                    <p class="text-muted">Session Code: 
-                                        <form method="post" action="{% url 'join_session' %}" style="display:inline;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="session_code" value="{{ session.session_code }}">
-                                            <button type="submit" class="btn btn-link session-link" style="padding: 0; border: none; background: none; text-decoration: none;">
-                                                <i class="fa-solid fa-link"></i> Join
-                                            </button>
-                                        </form>
+                                    <br/>
+                                    <form method="post" action="{% url 'join_session' %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="session_code" value="{{ session.session_code }}">
+                                        <button type="submit" class="btn btn-link session-link" style="padding: 0; border: none; background: none; text-decoration: none;">
+                                            <i class="fa-solid fa-link"></i>Join - {{ session.session_code }}
+                                        </button>
+                                    </form>
                                     </small>
                                     <br>
                                     <small class="text-muted">Days until deletion: {{ session.days_until_deletion }}</small>
