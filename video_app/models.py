@@ -40,6 +40,12 @@ class Media(models.Model):
         ('image', 'Image'),
         ('comment', 'Comment'),
     )
+    TAG_CHOICES = [
+        ('education', 'Education'),
+        ('announcement', 'Announcement'),
+        ('discussion', 'Discussion'),
+        ('other', 'Other'),
+    ]
     session = models.ForeignKey(Session, related_name='media', on_delete=models.CASCADE)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(max_length=500, null=True, blank=True)
@@ -48,6 +54,8 @@ class Media(models.Model):
     image_file = models.ImageField(upload_to='images', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     likes = models.PositiveIntegerField(default=0)  # New field to track likes
+    tag = models.CharField(max_length=50, choices=TAG_CHOICES, default='education')
+
 
 
     def clean(self):
@@ -85,17 +93,6 @@ def delete_associated_media(sender, instance, **kwargs):
             else:
                 print(f"Image file does not exist: {media.image_file.path}")
         media.delete()
-
-class Post(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    likes = models.PositiveIntegerField(default=0)
-    links = models.URLField(blank=True, null=True)
-
-    def __str__(self):
-        return self.title
 
 class Comment(models.Model):
     media = models.ForeignKey(Media, related_name='comments', on_delete=models.CASCADE)

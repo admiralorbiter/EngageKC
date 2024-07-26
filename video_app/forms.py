@@ -44,7 +44,7 @@ def validate_image_type(file):
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
-        fields = ['title', 'description', 'media_type', 'video_file', 'image_file']
+        fields = ['title', 'description', 'media_type', 'video_file', 'image_file', 'tag']
 
     def clean(self):
         cleaned_data = super().clean()

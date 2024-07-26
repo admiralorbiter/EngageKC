@@ -8,31 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@1.5.0/dist/htmx.min.js"></script>
     <style>
-        .form-section {
-            margin-top: 2rem;
-        }
-        .form-label {
-            font-weight: bold;
-        }
-        .hidden {
-            display: none;
-        }
-        .image-preview-container,
-        .video-preview-container {
-            margin-top: 1rem;
-            text-align: center;
-        }
-        .image-preview,
-        .video-preview {
-            max-width: 100%;
-            height: auto;
-        }
-        .countdown {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
+        .form-section { margin-top: 2rem; }
+        .form-label { font-weight: bold; }
+        .hidden { display: none; }
+        .image-preview-container, .video-preview-container { margin-top: 1rem; text-align: center; }
+        .image-preview, .video-preview { max-width: 100%; height: auto; }
+        .countdown { font-size: 2rem; font-weight: bold; margin-bottom: 1rem; text-align: center; }
     </style>
 </head>
 <body>
@@ -44,23 +25,22 @@
             <div class="mb-3">
                 <label for="id_title" class="form-label">Title</label>
                 {{ form.title|add_class:"form-control" }}
-                <div class="invalid-feedback">
-                    Please provide a title.
-                </div>
+                <div class="invalid-feedback">Please provide a title.</div>
             </div>
             <div class="mb-3">
                 <label for="id_description" class="form-label">Description</label>
                 {{ form.description|add_class:"form-control" }}
-                <div class="invalid-feedback">
-                    Please provide a description.
-                </div>
+                <div class="invalid-feedback">Please provide a description.</div>
             </div>
             <div class="mb-3">
                 <label for="id_media_type" class="form-label">Media Type</label>
                 {{ form.media_type|add_class:"form-select" }}
-                <div class="invalid-feedback">
-                    Please select a media type.
-                </div>
+                <div class="invalid-feedback">Please select a media type.</div>
+            </div>
+            <div class="mb-3">
+                <label for="id_tag" class="form-label">Tag</label>
+                {{ form.tag|add_class:"form-select" }}
+                <div class="invalid-feedback">Please select a tag.</div>
             </div>
             <div class="mb-3">
                 <label for="media_source" class="form-label">Media Source</label>

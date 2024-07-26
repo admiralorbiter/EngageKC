@@ -12,7 +12,7 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
-from .models import Media, Post, Comment
+from .models import Media, Comment
 from .forms import CommentForm
 
 def post_detail(request, id):
