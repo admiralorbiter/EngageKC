@@ -16,6 +16,7 @@ class Session(models.Model):
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_paused = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=255, blank=True, null=True)
 
     def is_expired(self):
         return not self.is_paused and (timezone.now() > self.created_at + timedelta(days=7))

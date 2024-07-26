@@ -161,7 +161,9 @@ def start_session(request):
     if request.method == 'POST':
         form = SessionForm(request.POST)
         if form.is_valid():
-            new_session = form.save()
+            new_session = form.save(commit=False)  # Use commit=False to get the object but not save it to the database yet
+            new_session.created_by = str(request.user)
+            new_session.save()  # Now save the session with the updated created_by field
             return redirect('session_detail', session_pk=new_session.pk)
     else:
         form = SessionForm()
