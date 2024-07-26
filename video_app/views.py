@@ -180,11 +180,17 @@ def session_detail(request, session_pk):
 
 def join_session(request):
     sessions = Session.objects.all()
+    print(request.method)
     if request.method == 'POST':
         session_code = request.POST.get('session_code')
         try:
+            print("test")
             session_instance = Session.objects.get(session_code=session_code)
-            return redirect('session_detail', pk=session_instance.pk)
+            # Store session information in user's session
+            request.session['current_session_id'] = session_instance.id
+            request.session['current_session_name'] = session_instance.name
+            print(f"Session code: {session_code}, Session name: {session_instance.name}")
+            return redirect('session_detail', session_pk=session_instance.pk)
         except Session.DoesNotExist:
             return render(request, 'video_app/join_session.html', {'error': 'Invalid session code', 'sessions': sessions})
     return render(request, 'video_app/join_session.html', {'sessions': sessions})

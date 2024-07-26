@@ -13,7 +13,6 @@
         margin: 0;
         padding: 0;
     }
-    
 </style>
 <nav>
     <ul class="nav nav-tabs">
@@ -37,7 +36,13 @@
                 <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
             </li>
         {% endif %}
-        <!-- Other navbar items -->
+        {% if request.session.current_session_id %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'session_detail' session_pk=request.session.current_session_id %}">
+                    Current Session: {{ request.session.current_session_name }}
+                </a>
+            </li>
+        {% endif %}
         <li class="nav-item">
             <span class="nav-link">Device ID: <span id="deviceIDDisplay"></span></span>
         </li>
