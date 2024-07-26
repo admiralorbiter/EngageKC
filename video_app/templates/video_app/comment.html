@@ -1,12 +1,17 @@
-<div class="comment">
+<div class="comment border m-1 p-1 bg-info bg-opacity-10 border-info rounded-end">
     <p>{{ comment.text }}</p>
-    <p><small>{{ comment.created_at }}</small></p>
-    <a href="#" class="reply" data-id="{{ comment.id }}">Reply</a>
-
-    <div class="replies">
-        {% for reply in comment.replies.all %}
-            {% include 'video_app/comment.html' with comment=reply %}
-        {% endfor %}
+    <div class="row">
+        <div class="col">
+            <a href="#" class="reply" data-id="{{ comment.id }}">Reply</a>
+        </div>
+        <div class="col text-end">
+            <p><small>{{ comment.created_at }}</small></p>
+        </div>
+        <div class="replies">
+            {% for reply in comment.replies.all %}
+                {% include 'video_app/comment.html' with comment=reply %}
+            {% endfor %}
+        </div>
     </div>
 
     <form method="post" class="reply-form" style="display: none;">
