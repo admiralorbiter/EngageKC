@@ -25,6 +25,8 @@ def post_detail(request, id):
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
             new_comment.media = media
+            new_comment.device_id = request.POST.get('device_id')  # Save the device ID with the comment
+            print(new_comment.device_id)
             if request.POST.get('parent_id'):
                 parent_id = int(request.POST.get('parent_id'))
                 new_comment.parent = Comment.objects.get(id=parent_id)
@@ -33,7 +35,12 @@ def post_detail(request, id):
     else:
         comment_form = CommentForm()
 
-    return render(request, 'video_app/post_detail.html', {'media': media, 'comments': comments, 'new_comment': new_comment, 'comment_form': comment_form})
+    return render(request, 'video_app/post_detail.html', {
+        'media': media,
+        'comments': comments,
+        'new_comment': new_comment,
+        'comment_form': comment_form
+    })
 
 def pause_session(request, session_pk):
     session = get_object_or_404(Session, id=session_pk)

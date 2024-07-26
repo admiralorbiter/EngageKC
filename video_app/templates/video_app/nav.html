@@ -37,5 +37,12 @@
                 <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
             </li>
         {% endif %}
+        <!-- Other navbar items -->
+        <li class="nav-item">
+            <span class="nav-link">Device ID: <span id="deviceIDDisplay"></span></span>
+        </li>
     </ul>
 </nav>
+<script>
+    document.getElementById('deviceIDDisplay').innerText = localStorage.getItem('deviceID');
+</script>
