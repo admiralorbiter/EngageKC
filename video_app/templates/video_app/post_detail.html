@@ -60,13 +60,10 @@
                 <form method="post" class="comment-form">
                     {% csrf_token %}
                     {{ comment_form.as_p }}
-                    <button type="submit" class="btn btn-primary">Add Comment as <span id="deviceIDDisplay"></span></button>
+                    <button type="submit" class="btn btn-primary">Add Comment</button>
                 </form>
             </div>
         </div>
     </div>
-    <script>
-       document.getElementById('deviceIDDisplay').innerText = localStorage.getItem('deviceID');
-    </script>
 </body>
 </html>

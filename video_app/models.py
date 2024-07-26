@@ -57,8 +57,6 @@ class Media(models.Model):
     likes = models.PositiveIntegerField(default=0)  # New field to track likes
     tag = models.CharField(max_length=50, choices=TAG_CHOICES, default='education')
 
-
-
     def clean(self):
         if self.media_type == 'video' and self.image_file:
             raise ValidationError('Cannot upload an image file for a video media type')

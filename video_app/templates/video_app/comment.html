@@ -7,7 +7,6 @@
         </div>
         <div class="col text-end">
             <p><small>{{ comment.created_at }}</small></p>
-            <p><small>Device ID: {{ comment.device_id }}</small></p> <!-- Display the device ID -->
         </div>
         <div class="replies">
             {% for reply in comment.replies.all %}
@@ -20,7 +19,6 @@
         {% csrf_token %}
         {{ comment_form.as_p }}
         <input type="hidden" name="parent_id" value="{{ comment.id }}">
-        <input type="hidden" name="device_id" id="device_id_{{ comment.id }}"> <!-- Hidden field for device ID -->
         <button type="submit" class="btn btn-primary">Reply</button>
     </form>
 </div>
@@ -29,9 +27,8 @@
         replyLink.addEventListener('click', function(event) {
             event.preventDefault();
             var commentId = this.dataset.id;
-            var replyForm = this.nextElementSibling.nextElementSibling;
+            var replyForm = this.closest('.comment').querySelector('.reply-form');
             replyForm.style.display = 'block';
-            document.getElementById('device_id_' + commentId).value = localStorage.getItem('deviceID'); // Set the device ID in the hidden field
         });
     });
 </script>
