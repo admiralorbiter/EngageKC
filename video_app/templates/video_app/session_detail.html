@@ -51,9 +51,13 @@
             <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
         <div class="tag-buttons">
-            {% for tag_value, tag_name in tags %}
-                <a href="?tag={{ tag_value }}" class="btn btn-outline-primary tag-button {% if tag_value == selected_tag %}active{% endif %}">{{ tag_name }}</a>
-            {% endfor %}
+            <form method="get" action="">
+                {% for tag_value, tag_name in tags %}
+                    <input type="checkbox" name="tags" value="{{ tag_value }}" id="tag_{{ tag_value }}" {% if tag_value in selected_tags %}checked{% endif %}>
+                    <label for="tag_{{ tag_value }}" class="btn btn-outline-primary tag-button {% if tag_value in selected_tags %}active{% endif %}">{{ tag_name }}</label>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
         </div>
         <div class="media-list">
             <div class="row">
@@ -81,7 +85,7 @@
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-primary like-button">+{{ media.likes }}</button>
                                         </form>
-                                        <a href="?tag={{ media.tag }}" class="btn btn-outline-secondary">@{{ media.get_tag_display }}</a>
+                                        <a href="?tag={{ media.tag }}" class="btn btn-outline-secondary">{{ media.get_tag_display }}</a>
                                     </div>
                                     <div class="col text-end">
                                         {% if user.is_superuser %}
@@ -100,4 +104,3 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
 </body>
 </html>
-
