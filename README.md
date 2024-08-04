@@ -7,7 +7,7 @@ Make sure python 3 is installed and run the following command to install django
 ```bash
 
 pip install django
-
+pip install celery
 ```
 
 ## Running the server

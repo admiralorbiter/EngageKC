@@ -18,7 +18,7 @@
 </head>
 <body>
     {% include 'video_app/nav.html' %}
-    <div class="container mt-5">
+    <div class="container mt-5 col-md-6">
         <h1 class="mb-4">Upload Media</h1>
         <form id="media-form" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             {% csrf_token %}

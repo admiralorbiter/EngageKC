@@ -172,11 +172,20 @@ def start_session(request):
 
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
-    medias = session_instance.media.all()
-    return render(request, 'video_app/session_detail.html', {
+    tags = Media.TAG_CHOICES
+    selected_tag = request.GET.get('tag')
+    if selected_tag:
+        medias = Media.objects.filter(session=session_instance, tag=selected_tag)
+    else:
+        medias = Media.objects.filter(session=session_instance)
+
+    context = {
         'session_instance': session_instance,
         'medias': medias,
-    })
+        'tags': tags,
+        'selected_tag': selected_tag,
+    }
+    return render(request, 'video_app/session_detail.html', context)
 
 def join_session(request):
     sessions = Session.objects.all()
