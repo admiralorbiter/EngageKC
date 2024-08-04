@@ -81,7 +81,7 @@
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-primary like-button">+{{ media.likes }}</button>
                                         </form>
-                                        @{{ media.tag }}
+                                        <a href="?tag={{ media.tag }}" class="btn btn-outline-secondary">@{{ media.get_tag_display }}</a>
                                     </div>
                                     <div class="col text-end">
                                         {% if user.is_superuser %}
@@ -100,3 +100,4 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
 </body>
 </html>
+
