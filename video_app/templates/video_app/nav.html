@@ -75,7 +75,7 @@
                     <li class="nav-item">
                         <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none; background: none; text-decoration: none;">Logout</button>
+                            <button type="submit" class="nav-link btn btn-link">Logout</button>
                         </form>
                     </li>
                 {% endif %}

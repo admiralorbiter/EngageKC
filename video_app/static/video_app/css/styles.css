@@ -1,0 +1,15 @@
+body{
+    background-color: #B5A886;
+}
+
+.btn-large {
+    font-size: 2em;
+    padding: 10% 20%;
+    margin: 10% 0;
+    background-color: #00334C;
+    border: none;
+}
+.btn-large:hover {
+    background-color: #FEE1C7;
+    color: #00334C;
+}
