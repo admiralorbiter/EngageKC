@@ -1,53 +1,102 @@
-<style>
-    .nav-tabs .nav-item {
-        display: flex;
-        align-items: center;
-    }
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Django App</title>
+    <link rel="stylesheet" href="{% static 'video_app/css/styles.css' %}">
+    <style>
+        /* Flexbox container for the nav items and logo */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: transparent; /* No background color */
+        }
+        
+        /* Flexbox for the nav items */
+        .nav-items {
+            display: flex;
+            align-items: center;
+        }
 
-    .nav-tabs .nav-link {
-        display: flex;
-        align-items: center;
-    }
+        /* Logo adjustments */
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
 
-    .nav-tabs form {
-        margin: 0;
-        padding: 0;
-    }
-</style>
-<nav>
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'join_session' %}">Join Session</a>
-        </li>
-        {% if user.is_authenticated %}
-            {% if user.is_superuser %}
+        .navbar-brand img {
+            width: 160px;
+            height: auto;
+        }
+
+        /* Nav link styles */
+        .nav-link {
+            font-size: 1.5em;
+            color: #00334C; /* Default text color */
+            margin-right: 20px;
+            text-decoration: none;
+        }
+
+        /* Nav link hover and active styles */
+        .nav-tabs .nav-link:hover,
+        .nav-tabs .nav-link:focus,
+        .nav-tabs .nav-link.active {
+            color: #FEE1C7;
+            border-bottom: 2px solid #FEE1C7;
+        }
+
+        /* Device ID style */
+        #deviceIDDisplay {
+            font-size: 3em;
+            color: #00334C;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-items">
+        <a class="navbar-brand" href="{% url 'home' %}" id="logo">
+            <img src="{% static 'video_app/images/logo.png' %}" alt="Logo">
+        </a>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'join_session' %}">Join Session</a>
+            </li>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none; background: none; text-decoration: none;">Logout</button>
+                        </form>
+                    </li>
+                {% endif %}
+            {% else %}
                 <li class="nav-item">
-                    <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none; background: none; text-decoration: none;">Logout</button>
-                    </form>
+                    <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
                 </li>
             {% endif %}
-        {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
-            </li>
-        {% endif %}
-        {% if request.session.current_session_id %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'session_detail' session_pk=request.session.current_session_id %}">
-                    {{ request.session.current_session_name }}
-                </a>
-            </li>
-        {% endif %}
-        <li class="nav-item">
-            <span id="deviceIDDisplay"></span>
-        </li>
-    </ul>
+            {% if request.session.current_session_id %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'session_detail' session_pk=request.session.current_session_id %}">
+                        {{ request.session.current_session_name }}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="deviceIDDisplay"></div>
 </nav>
 <script>
     document.getElementById('deviceIDDisplay').innerText = localStorage.getItem('deviceID');
 </script>
+</body>
+</html>
