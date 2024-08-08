@@ -1,15 +1,70 @@
 body{
     background-color: #B5A886;
+    color:#00334C;
+}
+
+.btn{
+    background-color: #00334C;
+    border: none;
 }
 
 .btn-large {
     font-size: 2em;
-    padding: 10% 20%;
+    padding: 10% 50%;
     margin: 10% 0;
-    background-color: #00334C;
-    border: none;
 }
-.btn-large:hover {
+.btn:hover {
     background-color: #FEE1C7;
     color: #00334C;
+}
+
+/* Flexbox container for the nav items and logo */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: transparent; /* No background color */
+    margin-inline: 10%;
+}
+
+/* Flexbox for the nav items */
+.nav-items {
+    display: flex;
+    align-items: center;
+}
+
+/* Logo adjustments */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+
+.navbar-brand img {
+    width: 160px;
+    height: auto;
+}
+
+/* Nav link styles */
+.nav-link {
+    font-size: 1.5em;
+    color: #00334C; /* Default text color */
+    margin-right: 20px;
+    text-decoration: none;
+}
+
+/* Nav link hover and active styles */
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link.active {
+    color: #FEE1C7;
+    border-bottom: 2px solid #FEE1C7;
+}
+
+/* Device ID style */
+#deviceIDDisplay {
+    font-size: 3em;
+    color: #00334C;
+    margin-left: auto;
 }

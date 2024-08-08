@@ -1,63 +1,4 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My Django App</title>
-    <link rel="stylesheet" href="{% static 'video_app/css/styles.css' %}">
-    <style>
-        /* Flexbox container for the nav items and logo */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: transparent; /* No background color */
-        }
-        
-        /* Flexbox for the nav items */
-        .nav-items {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Logo adjustments */
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            padding: 0;
-        }
-
-        .navbar-brand img {
-            width: 160px;
-            height: auto;
-        }
-
-        /* Nav link styles */
-        .nav-link {
-            font-size: 1.5em;
-            color: #00334C; /* Default text color */
-            margin-right: 20px;
-            text-decoration: none;
-        }
-
-        /* Nav link hover and active styles */
-        .nav-tabs .nav-link:hover,
-        .nav-tabs .nav-link:focus,
-        .nav-tabs .nav-link.active {
-            color: #FEE1C7;
-            border-bottom: 2px solid #FEE1C7;
-        }
-
-        /* Device ID style */
-        #deviceIDDisplay {
-            font-size: 3em;
-            color: #00334C;
-            margin-left: auto;
-        }
-    </style>
-</head>
-<body>
 <nav class="navbar">
     <div class="nav-items">
         <a class="navbar-brand" href="{% url 'home' %}" id="logo">
@@ -75,7 +16,7 @@
                     <li class="nav-item">
                         <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="nav-link btn btn-link">Logout</button>
+                            <button type="submit" class="nav-link">Logout</button>
                         </form>
                     </li>
                 {% endif %}
@@ -98,5 +39,3 @@
 <script>
     document.getElementById('deviceIDDisplay').innerText = localStorage.getItem('deviceID');
 </script>
-</body>
-</html>

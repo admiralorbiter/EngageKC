@@ -1,34 +1,22 @@
-
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>EngageKC</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/htmx.org@1.5.0/dist/htmx.min.js"></script>
-    <link rel="stylesheet" href="{% static 'video_app/css/styles.css' %}">
-    <style>
-        .container-center {
-            height: 40vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="container mt-5">
-        {% include 'video_app/nav.html' %}
-        <div class="container-center">
-            <div class="text-center">
-                <a href="{% url 'join_session' %}" class="btn btn-primary btn-large">Join Session</a>
-                <br>
-                {% if user.is_superuser %}
-                    <a href="{% url 'start_session' %}" class="btn btn-success btn-large">Start Session</a>
-                {% endif %}
-            </div>
+{% extends "video_app/base.html" %}
+{% block content %}
+<style>
+    .container-center {
+        height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<div class="container mt-5">
+    <div class="container-center">
+        <div class="text-center">
+            <a href="{% url 'join_session' %}" class="btn btn-primary btn-large">Join Session</a>
+            <br>
+            {% if user.is_superuser %}
+                <a href="{% url 'start_session' %}" class="btn btn-success btn-large">Start Session</a>
+            {% endif %}
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
