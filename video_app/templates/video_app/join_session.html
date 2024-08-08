@@ -39,13 +39,13 @@
                                     {% if user.is_superuser %}
                                     <form method="post" action="{% url 'pause_session' session.pk %}" class="m-1">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-warning btn-sm">
+                                        <button type="submit" class="btn btn-warning btn-sm custom-button">
                                             {% if session.is_paused %}Resume{% else %}Pause{% endif %}
                                         </button>
                                     </form>
                                     <form method="post" action="{% url 'delete_session' session.pk %}" onsubmit="return confirmDelete()" class="m-1">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="submit" class="btn btn-danger btn-sm custom-button">Delete</button>
                                     </form>
                                     {% endif %}
                                 </div>
