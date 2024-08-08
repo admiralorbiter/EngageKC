@@ -1,11 +1,12 @@
 {% extends "video_app/base.html" %}
+{% load widget_tweaks %}
 {% block content %}
-    <div class="container my-5 col-md-6">
+    <div class="container my-5 col-sm-4">
         <h1 class="mb-4">Start a New Session</h1>
         <form method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="mb-3">
-                <label for="id_name" class="form-label">Name</label>
+                <label for="id_name" class="form-label">Session Name</label>
                 {{ form.name|add_class:"form-control" }}
                 <div class="invalid-feedback">
                     Please provide a name.

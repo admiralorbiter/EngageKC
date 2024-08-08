@@ -8,6 +8,7 @@ Make sure python 3 is installed and run the following command to install django
 
 pip install django
 pip install celery
+pip install django-widget-tweaks
 ```
 
 ## Running the server
