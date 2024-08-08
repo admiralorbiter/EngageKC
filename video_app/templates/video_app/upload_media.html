@@ -1,16 +1,9 @@
 {% extends "video_app/base.html" %}
 {% load widget_tweaks %}
 {% block content %}
-    <script src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
     <style>
         .form-section { margin-top: 2rem; }
         .form-label { font-weight: bold; }
-        .hidden { display: none; }
-        .image-preview-container, .video-preview-container { margin-top: 1rem; text-align: center; }
-        .image-preview, .video-preview { max-width: 100%; height: auto; }
-        .countdown { font-size: 2rem; font-weight: bold; margin-bottom: 1rem; text-align: center; }
-        .recording-indicator { font-size: 2rem; font-weight: bold; color: red; text-align: center; }
-        .video-preview { width: 100%; max-height: 500px; }
     </style>
     <div class="container mt-5 col-md-6">
         <h1 class="mb-4">Upload Media</h1>
@@ -22,45 +15,14 @@
                 <div class="invalid-feedback">Please provide a title.</div>
             </div>
             <div class="mb-3">
-                <label for="id_description" class="form-label">Description</label>
-                {{ form.description|add_class:"form-control" }}
-                <div class="invalid-feedback">Please provide a description.</div>
-            </div>
-            <div class="mb-3">
-                <label for="id_media_type" class="form-label">Media Type</label>
-                {{ form.media_type|add_class:"form-select" }}
-                <div class="invalid-feedback">Please select a media type.</div>
-            </div>
-            <div class="mb-3">
                 <label for="id_tag" class="form-label">Tag</label>
                 {{ form.tag|add_class:"form-select" }}
                 <div class="invalid-feedback">Please select a tag.</div>
             </div>
             <div class="mb-3">
-                <label for="media_source" class="form-label">Media Source</label>
-                <div>
-                    <input type="radio" id="upload" name="media_source" value="upload" checked>
-                    <label for="upload">Upload a file</label>
-                </div>
-                <div>
-                    <input type="radio" id="capture" name="media_source" value="capture">
-                    <label for="capture">Capture from device</label>
-                </div>
-            </div>
-            <div class="mb-3 video-upload hidden">
-                <label for="id_video_file" class="form-label">Video File</label>
-                <input type="file" accept="video/*" class="form-control upload-input" id="id_video_file" name="video_file">
-                <input type="button" value="Record Video" class="btn btn-secondary capture-input mt-2 hidden" id="record_video_button">
-                <div class="countdown hidden" id="countdown">3</div>
-                <div class="recording-indicator hidden" id="recording_indicator">Recording...</div>
-                <div class="video-preview-container hidden" id="video_preview_container">
-                    <video id="video_preview" class="video-preview" controls autoplay playsinline muted></video>
-                </div>
-                <input type="hidden" id="captured_video_data" name="captured_video_data">
-            </div>
-            <div class="mb-3">
-                <label for="video_duration" class="form-label">Video Duration (seconds)</label>
-                <input type="number" class="form-control" id="video_duration" value="5">
+                <label for="id_image_file" class="form-label">Image File</label>
+                {{ form.image_file|add_class:"form-control" }}
+                <div class="invalid-feedback">Please upload an image file.</div>
             </div>
             <div class="d-flex justify-content-between">
                 <a href="{% url 'session_detail' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
@@ -71,105 +33,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mediaTypeSelect = document.getElementById('id_media_type');
-            const uploadRadio = document.getElementById('upload');
-            const captureRadio = document.getElementById('capture');
-            const videoUploadDiv = document.querySelector('.video-upload');
-            const uploadInputs = document.querySelectorAll('.upload-input');
-            const captureInputs = document.querySelectorAll('.capture-input');
-            const recordVideoButton = document.getElementById('record_video_button');
-            const countdownElement = document.getElementById('countdown');
-            const recordingIndicator = document.getElementById('recording_indicator');
-            const videoPreviewContainer = document.getElementById('video_preview_container');
-            const videoPreview = document.getElementById('video_preview');
-            const capturedVideoData = document.getElementById('captured_video_data');
-            const videoDurationInput = document.getElementById('video_duration');
-            const mediaForm = document.getElementById('media-form');
-
-            let recorder;
-            let stream;
-
-            function toggleMediaSource() {
-                if (uploadRadio.checked) {
-                    uploadInputs.forEach(input => input.classList.remove('hidden'));
-                    captureInputs.forEach(input => input.classList.add('hidden'));
-                } else if (captureRadio.checked) {
-                    uploadInputs.forEach(input => input.classList.add('hidden'));
-                    captureInputs.forEach(input => input.classList.remove('hidden'));
-                }
-            }
-
-            mediaTypeSelect.addEventListener('change', function() {
-                if (this.value === 'video') {
-                    videoUploadDiv.classList.remove('hidden');
-                } else {
-                    videoUploadDiv.classList.add('hidden');
-                }
-                toggleMediaSource();
-            });
-
-            uploadRadio.addEventListener('change', toggleMediaSource);
-            captureRadio.addEventListener('change', toggleMediaSource);
-
-            recordVideoButton.addEventListener('click', async () => {
-                const duration = parseInt(videoDurationInput.value, 10) || 5;
-                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                videoPreview.srcObject = stream;  // Set the video source to the stream
-                videoPreview.muted = true; // Mute the video preview during recording
-                videoPreviewContainer.classList.remove('hidden');
-
-                countdownElement.classList.remove('hidden');
-                let countdown = 3;
-                countdownElement.textContent = countdown;
-
-                const countdownInterval = setInterval(() => {
-                    countdown -= 1;
-                    countdownElement.textContent = countdown;
-                    if (countdown === 0) {
-                        clearInterval(countdownInterval);
-                        countdownElement.classList.add('hidden');
-                        recordingIndicator.classList.remove('hidden');
-                        recorder = RecordRTC(stream, {
-                            type: 'video',
-                            mimeType: 'video/webm'
-                        });
-                        recorder.startRecording();
-                        setTimeout(() => {
-                            recorder.stopRecording(() => {
-                                const blob = recorder.getBlob();
-                                const url = URL.createObjectURL(blob);
-                                videoPreview.srcObject = null; // Remove the stream source
-                                videoPreview.src = url;
-                                videoPreview.muted = false; // Unmute the video after recording
-                                videoPreviewContainer.classList.remove('hidden');
-                                recordingIndicator.classList.add('hidden');
-
-                                // Convert Blob to Base64
-                                const reader = new FileReader();
-                                reader.readAsDataURL(blob);
-                                reader.onloadend = function() {
-                                    capturedVideoData.value = reader.result;
-                                };
-
-                                stream.getTracks().forEach(track => track.stop());
-                            });
-                        }, duration * 1000); // Recording duration based on input value
-                    }
-                }, 1000);
-            });
-
-            mediaForm.addEventListener('submit', function(event) {
-                if (captureRadio.checked) {
-                    if (capturedVideoData.value === '') {
-                        event.preventDefault();
-                        alert('Please capture a video before submitting.');
-                    }
-                }
-            });
-
-            toggleMediaSource();
-        });
-    </script>
 {% endblock %}

@@ -1,52 +1,12 @@
-<!-- post_detail.html -->
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "video_app/base.html" %}
+{% block content %}
     <title>{{ media.title }}</title>
-    <script src="https://kit.fontawesome.com/e0a2833fbd.js" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .media-content img, .media-content video {
-            max-width: 100%;
-            height: auto;
-        }
-        .comment-form textarea {
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 100%;
-            resize: vertical;
-        }
-        .comment-form button {
-            border-radius: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        .comment-form button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    {% include 'video_app/nav.html' %}
     <div class="container mt-5">
         <a href="{% url 'session_detail' media.session.id %}" class="btn btn-secondary mb-3">Back to Session</a>
         <h1>{{ media.title }}</h1>
         <div class="row">
             <div class="col-8 media-content">
-                {% if media.media_type == 'image' %}
-                    <img src="{{ media.image_file.url }}" alt="{{ media.title }}">
-                {% elif media.media_type == 'video' %}
-                    <video controls>
-                        <source src="{{ media.video_file.url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                {% endif %}
-                <p>{{ media.description }}</p>
+                <img src="{{ media.image_file.url }}" alt="{{ media.title }}">
                 <p>Uploaded at: {{ media.uploaded_at }}</p>
                 <p>Likes: {{ media.likes }}</p>
             </div>
@@ -71,5 +31,4 @@
     <script>
         document.getElementById('device_id').value = localStorage.getItem('deviceID'); // Set the device ID in the hidden field
     </script>
-</body>
-</html>
+{% endblock %}

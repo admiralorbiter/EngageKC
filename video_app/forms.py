@@ -44,32 +44,20 @@ def validate_image_type(file):
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
-        fields = ['title', 'description', 'media_type', 'video_file', 'image_file', 'tag']
+        fields = ['title', 'tag', 'image_file']
 
     def clean(self):
         cleaned_data = super().clean()
-        media_type = cleaned_data.get('media_type')
-        video_file = cleaned_data.get('video_file')
         image_file = cleaned_data.get('image_file')
-        video_capture = cleaned_data.get('video_capture')
-        image_capture = cleaned_data.get('image_capture')
 
-        if media_type == 'video' and not (video_file or video_capture):
-            self.add_error('video_file', 'Please upload or capture a video file.')
-        elif media_type == 'video':
-            file = video_file or video_capture
-            validate_file_size(file)
-            validate_video_type(file)
-
-        if media_type == 'image' and not (image_file or image_capture):
-            self.add_error('image_file', 'Please upload or capture an image file.')
-        elif media_type == 'image':
-            file = image_file or image_capture
-            validate_file_size(file)
-            validate_image_type(file)
+        if not image_file:
+            self.add_error('image_file', 'Please upload an image file.')
+        else:
+            validate_file_size(image_file)
+            validate_image_type(image_file)
 
         return cleaned_data
-
+    
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))

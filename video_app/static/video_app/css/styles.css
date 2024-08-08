@@ -74,3 +74,31 @@ body{
     border: none;
     color: #FEE1C7;
 }
+
+.media-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.comment{
+    background-color: #FA7E61;
+}
+
+.comment-form textarea {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    resize: vertical;
+}
+.comment-form button {
+    border-radius: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.comment-form button:hover {
+    background-color: #0056b3;
+}

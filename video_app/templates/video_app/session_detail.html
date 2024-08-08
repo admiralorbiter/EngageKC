@@ -56,20 +56,12 @@
                     <div class="col-md-4 media-item">
                         <div class="card">
                             <a href="{% url 'post_detail' media.id %}">
-                                {% if media.media_type == 'video' %}
-                                    <video class="card-img-top" controls>
-                                        <source src="{{ media.video_file.url }}" type="video/mp4">
-                                    </video>
-                                {% elif media.media_type == 'image' %}
-                                    <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
-                                {% endif %}
+                                <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
                             </a>
                             <div class="card-body">
                                 <h5 class="card-title media-title">
-                                    {{ media.title }}
-                                    <a href="{% url 'post_detail' media.id %}"><i class="fa-solid fa-link"></i></a>
+                                    <a href="{% url 'post_detail' media.id %}">Leave Feedback <i class="fa-solid fa-link"></i></a>
                                 </h5>
-                                <p class="card-text">{{ media.description }}</p>
                                 <div class="row">
                                     <div class="like-section col">
                                         <form method="post" action="{% url 'like_media' media.id %}">
