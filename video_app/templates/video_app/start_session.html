@@ -6,26 +6,25 @@
         <form method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="mb-3">
-                <label for="id_name" class="form-label">Session Name</label>
-                {{ form.name|add_class:"form-control" }}
+                <label for="id_title" class="form-label">Session Title</label>
+                {{ form.title|add_class:"form-control" }}
                 <div class="invalid-feedback">
-                    Please provide a name.
+                    Please provide a session title.
                 </div>
             </div>
             <div class="mb-3">
-                <label for="id_description" class="form-label">Description</label>
-                {{ form.description|add_class:"form-control" }}
+                <label for="id_section" class="form-label">Section Number</label>
+                {{ form.section|add_class:"form-control" }}
                 <div class="invalid-feedback">
-                    Please provide a description.
+                    Please provide a section number.
                 </div>
             </div>
             <div class="mb-3">
-                <label for="id_files_links" class="form-label">Files links</label>
-                {{ form.files_links|add_class:"form-control" }}
-            </div>
-            <div class="mb-3">
-                <label for="id_notes" class="form-label">Notes</label>
-                {{ form.notes|add_class:"form-control" }}
+                <label for="id_num_students" class="form-label">Number of Students</label>
+                {{ form.num_students|add_class:"form-control" }}
+                <div class="invalid-feedback">
+                    Please provide the number of students.
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Create Session</button>
         </form>

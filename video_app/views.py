@@ -1,7 +1,11 @@
+import os
+import random
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
+
+from engagekc import settings
 from .models import Media, Session
-from .forms import MediaForm, SessionForm, LoginForm
+from .forms import MediaForm, LoginForm, StartSessionForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
@@ -157,16 +161,77 @@ def delete_media(request, session_pk):
         return redirect('session_detail', session_pk=session_pk)
     return render(request, 'video_app/delete_media.html', {'media': media})
 
+# Paths to your files
+NAMES_FILE_PATH = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'names.txt')
+WORDS_FILE_PATH = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'words.txt')
+
+def load_names():
+    """Load names from the names.txt file."""
+    with open(NAMES_FILE_PATH, 'r', encoding='utf-8') as f:
+        return [line.strip() for line in f]
+
+def load_words():
+    """Load words from the words.txt file."""
+    with open(WORDS_FILE_PATH, 'r', encoding='utf-8') as f:
+        return [line.strip() for line in f]
+
+def generate_passcode(words):
+    """Generates a 4-word passcode from the loaded word list."""
+    return '-'.join(random.sample(words, 4))
+
+def generate_users_for_section(section, num_students):
+    """Generates users with random names and passcodes for a given section."""
+    names_list = load_names()
+    words_list = load_words()
+    
+    used_names = set()  # This could be a database query to check already used names
+    generated_users = []
+    
+    for _ in range(num_students):
+        # Pick a unique name
+        while True:
+            name = random.choice(names_list)
+            if name not in used_names:
+                used_names.add(name)
+                break
+        
+        # Generate the 4-word passcode
+        passcode = generate_passcode(words_list)
+        
+        # Save the user (in reality, you would save to a database)
+        # For example, assuming you have a User model
+        # User.objects.create(name=name, passcode=passcode, section=section)
+        
+        # For now, we just store in a list
+        generated_users.append({'name': name, 'passcode': passcode, 'section': section})
+    
+    return generated_users  # This could return saved users from the database
+
+
 def start_session(request):
     if request.method == 'POST':
-        form = SessionForm(request.POST)
+        form = StartSessionForm(request.POST)
         if form.is_valid():
-            new_session = form.save(commit=False)  # Use commit=False to get the object but not save it to the database yet
-            new_session.created_by = str(request.user)
-            new_session.save()  # Now save the session with the updated created_by field
+            # Extract form data
+            title = form.cleaned_data['title']
+            section = form.cleaned_data['section']
+            num_students = form.cleaned_data['num_students']
+            
+            # Create the session object (you'll need to adjust this according to your actual model)
+            new_session = Session.objects.create(
+                name=title,  # Assuming 'name' field in your Session model corresponds to 'title'
+                section=section,  # Assuming there's a section field in your Session model
+                created_by=str(request.user)
+            )
+            
+            # Generate users for this section (you need to define this function)
+            print(generate_users_for_section(section, num_students))
+            
+            # Redirect to the session detail page or any other page
             return redirect('session_detail', session_pk=new_session.pk)
     else:
-        form = SessionForm()
+        form = StartSessionForm()
+    
     return render(request, 'video_app/start_session.html', {'form': form})
 
 
@@ -203,3 +268,7 @@ def join_session(request):
         except Session.DoesNotExist:
             return render(request, 'video_app/join_session.html', {'error': 'Invalid session code', 'sessions': sessions})
     return render(request, 'video_app/join_session.html', {'sessions': sessions})
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_view(request):
+    return render(request, 'video_app/admin_view.html')

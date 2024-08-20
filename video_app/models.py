@@ -11,9 +11,7 @@ from jsonschema import ValidationError
 class Session(models.Model):
     name = models.CharField(max_length=100)
     session_code = models.CharField(max_length=8, unique=True, editable=False)
-    description = models.TextField(blank=True, null=True)
-    files_links = models.URLField(blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
+    section = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_paused = models.BooleanField(default=False)
     created_by = models.CharField(max_length=255, blank=True, null=True)

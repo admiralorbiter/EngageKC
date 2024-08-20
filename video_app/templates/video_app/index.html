@@ -11,10 +11,10 @@
 <div class="container mt-5">
     <div class="container-center">
         <div class="text-center">
-            <a href="{% url 'join_session' %}" class="btn btn-primary btn-large">Join Session</a>
+            <a href="{% url 'join_session' %}" class="btn btn-primary btn-large">Join</a>
             <br>
             {% if user.is_superuser %}
-                <a href="{% url 'start_session' %}" class="btn btn-success btn-large">Start Session</a>
+                <a href="{% url 'start_session' %}" class="btn btn-success btn-large">Start Class</a>
             {% endif %}
         </div>
     </div>

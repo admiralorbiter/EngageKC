@@ -16,4 +16,5 @@ urlpatterns = [
     path('session/<int:session_pk>/delete/', views.delete_session, name='delete_session'),  # Add this line
     path('session/<int:session_pk>/pause/', views.pause_session, name='pause_session'),   
     path('post/<int:id>/', views.post_detail, name='post_detail'),
+    path('admin_view/', views.admin_view, name='admin_view'),
 ]

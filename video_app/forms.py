@@ -15,17 +15,21 @@ class CommentForm(forms.ModelForm):
             }),
         }
 
-class SessionForm(forms.ModelForm):
-    class Meta:
-        model = Session
-        fields = ['name', 'description', 'files_links', 'notes']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 50}),
-            'files_links': forms.URLInput(attrs={'class': 'form-control'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 50}),
-        }
-
+class StartSessionForm(forms.Form):
+    title = forms.CharField(
+        max_length=100, 
+        label='Session Title',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    section = forms.IntegerField(
+        label='Section Number',
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    num_students = forms.IntegerField(
+        label='Number of Students',
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    
 def validate_file_size(file):
     max_size_mb = 10  # Define your size limit in MB
     if file.size > max_size_mb * 1024 * 1024:
