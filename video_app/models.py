@@ -109,8 +109,8 @@ User = get_user_model()
 class Student(models.Model):
     name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-    section = models.IntegerField()
-    admin = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to the admin who created the student
+    section = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='students')
+    admin = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.name} ({self.section})"

@@ -226,7 +226,7 @@ def start_session(request):
             )
             
             # Generate students and save them to the database
-            generate_users_for_section(section, num_students, request.user)
+            generate_users_for_section(new_session, num_students, request.user)
             
             # Redirect to the session detail page or any other page
             return redirect('session_detail', session_pk=new_session.pk)
