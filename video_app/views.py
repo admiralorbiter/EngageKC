@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 
 from engagekc import settings
-from .models import Media, Session
+from .models import Media, Session, Student
 from .forms import MediaForm, LoginForm, StartSessionForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
@@ -177,35 +177,36 @@ def load_words():
 
 def generate_passcode(words):
     """Generates a 4-word passcode from the loaded word list."""
-    return '-'.join(random.sample(words, 4))
+    return '.'.join(random.sample(words, 2))
 
-def generate_users_for_section(section, num_students):
-    """Generates users with random names and passcodes for a given section."""
+def generate_users_for_section(section, num_students, admin):
+    """Generates students with random names and passcodes for a given section, saving them to the database."""
     names_list = load_names()
     words_list = load_words()
     
-    used_names = set()  # This could be a database query to check already used names
-    generated_users = []
+    generated_students = []
     
     for _ in range(num_students):
-        # Pick a unique name
+        # Pick a unique name that is not already used in the database
         while True:
             name = random.choice(names_list)
-            if name not in used_names:
-                used_names.add(name)
+            if not Student.objects.filter(name=name).exists():  # Check if name is already used in the database
                 break
         
         # Generate the 4-word passcode
         passcode = generate_passcode(words_list)
         
-        # Save the user (in reality, you would save to a database)
-        # For example, assuming you have a User model
-        # User.objects.create(name=name, passcode=passcode, section=section)
+        # Save the student to the database
+        student = Student.objects.create(
+            name=name,
+            password=passcode,
+            section=section,
+            admin=admin 
+        )
         
-        # For now, we just store in a list
-        generated_users.append({'name': name, 'passcode': passcode, 'section': section})
+        generated_students.append(student)
     
-    return generated_users  # This could return saved users from the database
+    return generated_students
 
 
 def start_session(request):
@@ -217,15 +218,15 @@ def start_session(request):
             section = form.cleaned_data['section']
             num_students = form.cleaned_data['num_students']
             
-            # Create the session object (you'll need to adjust this according to your actual model)
+            # Create the session object
             new_session = Session.objects.create(
-                name=title,  # Assuming 'name' field in your Session model corresponds to 'title'
-                section=section,  # Assuming there's a section field in your Session model
+                name=title,
+                section=section,
                 created_by=str(request.user)
             )
             
-            # Generate users for this section (you need to define this function)
-            print(generate_users_for_section(section, num_students))
+            # Generate students and save them to the database
+            generate_users_for_section(section, num_students, request.user)
             
             # Redirect to the session detail page or any other page
             return redirect('session_detail', session_pk=new_session.pk)
@@ -233,7 +234,6 @@ def start_session(request):
         form = StartSessionForm()
     
     return render(request, 'video_app/start_session.html', {'form': form})
-
 
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
@@ -271,4 +271,11 @@ def join_session(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_view(request):
-    return render(request, 'video_app/admin_view.html')
+    # Get all sessions and students related to the logged-in admin
+    sessions = Session.objects.filter(created_by=request.user)
+    students = Student.objects.filter(admin=request.user)
+
+    return render(request, 'video_app/admin_view.html', {
+        'sessions': sessions,
+        'students': students,
+    })

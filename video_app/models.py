@@ -5,8 +5,10 @@ from django.dispatch import receiver
 import os
 from django.utils import timezone
 from datetime import timedelta
-
+from django.contrib.auth import get_user_model
 from jsonschema import ValidationError
+
+from engagekc import settings
 
 class Session(models.Model):
     name = models.CharField(max_length=100)
@@ -101,3 +103,14 @@ class Comment(models.Model):
     
     def __str__(self):
         return f'Comment by {self.id} on {self.post.title}'
+
+
+User = get_user_model()  
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+    section = models.IntegerField()
+    admin = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to the admin who created the student
+
+    def __str__(self):
+        return f"{self.name} ({self.section})"
