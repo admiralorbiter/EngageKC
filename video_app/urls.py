@@ -18,4 +18,6 @@ urlpatterns = [
     path('post/<int:id>/', views.post_detail, name='post_detail'),
     path('admin_view/', views.admin_view, name='admin_view'),
     path('delete-student/<int:student_id>/', views.delete_student, name='delete_student'),
+    path('download-students/', views.download_students, name='download_students'),
+    path('generate-students/', views.generate_students, name='generate_students'),
 ]

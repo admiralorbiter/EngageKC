@@ -18,6 +18,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import Media, Comment
 from .forms import CommentForm
+from django.http import HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
+import openpyxl
+
 
 def post_detail(request, id):
     media = get_object_or_404(Media, id=id)
@@ -294,4 +298,53 @@ def delete_student(request, student_id):
         student.delete()
 
     # Redirect back to the admin view after deletion
+    return redirect('admin_view')
+
+@user_passes_test(lambda u: u.is_superuser)
+def download_students(request):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="students.xlsx"'
+
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+    worksheet.title = 'Students'
+
+    # Write the header
+    headers = ['Name', 'Passcode', 'Section']
+    for col_num, header in enumerate(headers, 1):
+        cell = worksheet.cell(row=1, column=col_num)
+        cell.value = header
+
+    # Write the data
+    students = Student.objects.all()
+    for row_num, student in enumerate(students, 2):
+        row = [
+            student.name,
+            student.password,
+            student.section.name if student.section else 'N/A'  # Use the session name instead of the entire object
+        ]
+        for col_num, cell_value in enumerate(row, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    workbook.save(response)
+    return response
+
+@user_passes_test(lambda u: u.is_superuser)
+def generate_students(request):
+    if request.method == 'POST':
+        num_students = int(request.POST.get('num_students', 0))
+        section_id = request.POST.get('section')
+        
+        if num_students > 0 and section_id:
+            try:
+                session = Session.objects.get(id=section_id)
+                generated_students = generate_users_for_section(session, num_students, request.user)
+                
+                messages.success(request, f"{len(generated_students)} new students generated for {session.name}")
+            except Session.DoesNotExist:
+                messages.error(request, "Invalid session selected. Please try again.")
+        else:
+            messages.error(request, "Invalid input. Please try again.")
+    
     return redirect('admin_view')

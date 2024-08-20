@@ -11,6 +11,29 @@
     </ul>
 
     <h2>Your Students</h2>
+    <div class="mb-3">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{% url 'download_students' %}" class="btn btn-success">Download Students Data</a>
+            </div>
+            <div class="col-md-6">
+                <form action="{% url 'generate_students' %}" method="post" class="form-inline">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="number" name="num_students" class="form-control" placeholder="Number of students" min="1" required>
+                        <select name="section" class="form-control" required>
+                            {% for session in sessions %}
+                                <option value="{{ session.id }}">{{ session.name }} - Section {{ session.section }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Generate
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
