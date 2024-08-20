@@ -17,6 +17,7 @@
                 <th>Name</th>
                 <th>Passcode</th>
                 <th>Section</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,12 @@
                     <td>{{ student.name }}</td>
                     <td>{{ student.password }}</td>
                     <td>{{ student.section }}</td>
+                    <td>
+                        <!-- Delete icon linked to the delete view -->
+                        <a href="{% url 'delete_student' student.id %}" class="text-danger" onclick="return confirm('Are you sure you want to delete this student?');">
+                            <i class="fas fa-trash"></i> <!-- Font Awesome trash icon -->
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

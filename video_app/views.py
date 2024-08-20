@@ -279,3 +279,14 @@ def admin_view(request):
         'sessions': sessions,
         'students': students,
     })
+
+def delete_student(request, student_id):
+    # Get the student object or return a 404 if not found
+    student = get_object_or_404(Student, id=student_id)
+
+    # Ensure the logged-in user is the admin of the student
+    if student.admin == request.user:
+        student.delete()
+
+    # Redirect back to the admin view after deletion
+    return redirect('admin_view')
