@@ -254,19 +254,24 @@ def session_detail(request, session_pk):
 
 def join_session(request):
     sessions = Session.objects.all()
-    print(request.method)
+    
     if request.method == 'POST':
-        session_code = request.POST.get('session_code')
+        session_password = request.POST.get('session_password')
         try:
-            print("test")
-            session_instance = Session.objects.get(session_code=session_code)
+            # Attempt to find a student with the given password
+            student_instance = Student.objects.get(password=session_password)
+            
+            # Retrieve the associated session via the section ForeignKey
+            session_instance = student_instance.section
+            
             # Store session information in user's session
             request.session['current_session_id'] = session_instance.id
             request.session['current_session_name'] = session_instance.name
-            print(f"Session code: {session_code}, Session name: {session_instance.name}")
+            
             return redirect('session_detail', session_pk=session_instance.pk)
-        except Session.DoesNotExist:
-            return render(request, 'video_app/join_session.html', {'error': 'Invalid session code', 'sessions': sessions})
+        except Student.DoesNotExist:
+            return render(request, 'video_app/join_session.html', {'error': 'Invalid session password', 'sessions': sessions})
+    
     return render(request, 'video_app/join_session.html', {'sessions': sessions})
 
 @user_passes_test(lambda u: u.is_superuser)
