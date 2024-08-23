@@ -14,8 +14,8 @@ body{
     margin: 10% 0;
 }
 .btn:hover {
-    background-color: #FEE1C7;
-    color: #00334C;
+    background-color: #DB2955;
+    color: white;
 }
 
 /* Flexbox container for the nav items and logo */
@@ -58,8 +58,8 @@ body{
 .nav-tabs .nav-link:hover,
 .nav-tabs .nav-link:focus,
 .nav-tabs .nav-link.active {
-    color: #FEE1C7;
-    border-bottom: 2px solid #FEE1C7;
+    color: #DB2955;
+    border-bottom: 2px solid #DB2955;
 }
 
 /* Device ID style */

@@ -261,20 +261,26 @@ def join_session(request):
     
     if request.method == 'POST':
         session_password = request.POST.get('session_password')
-        try:
-            # Attempt to find a student with the given password
-            student_instance = Student.objects.get(password=session_password)
-            
-            # Retrieve the associated session via the section ForeignKey
-            session_instance = student_instance.section
-            
-            # Store session information in user's session
-            request.session['current_session_id'] = session_instance.id
-            request.session['current_session_name'] = session_instance.name
-            
-            return redirect('session_detail', session_pk=session_instance.pk)
-        except Student.DoesNotExist:
-            return render(request, 'video_app/join_session.html', {'error': 'Invalid session password', 'sessions': sessions})
+        session_code = request.POST.get('session_code')
+        
+        if session_code:
+            try:
+                session_instance = Session.objects.get(session_code=session_code)
+                request.session['current_session_id'] = session_instance.id
+                request.session['current_session_name'] = session_instance.name
+                return redirect('session_detail', session_pk=session_instance.pk)
+            except Session.DoesNotExist:
+                return render(request, 'video_app/join_session.html', {'error': 'Invalid session code', 'sessions': sessions})
+        
+        elif session_password:
+            try:
+                student_instance = Student.objects.get(password=session_password)
+                session_instance = student_instance.section
+                request.session['current_session_id'] = session_instance.id
+                request.session['current_session_name'] = session_instance.name
+                return redirect('session_detail', session_pk=session_instance.pk)
+            except Student.DoesNotExist:
+                return render(request, 'video_app/join_session.html', {'error': 'Invalid session password', 'sessions': sessions})
     
     return render(request, 'video_app/join_session.html', {'sessions': sessions})
 
