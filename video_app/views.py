@@ -232,8 +232,8 @@ def start_session(request):
             # Generate students and save them to the database
             generate_users_for_section(new_session, num_students, request.user)
             
-            # Redirect to the session detail page or any other page
-            return redirect('session_detail', session_pk=new_session.pk)
+            # Redirect to the admin_view page after creating the session
+            return redirect('admin_view')
     else:
         form = StartSessionForm()
     
