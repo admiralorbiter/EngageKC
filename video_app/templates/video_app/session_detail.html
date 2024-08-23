@@ -9,6 +9,8 @@
         }
         .media-item {
             margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
         }
         .media-title {
             font-size: 1.2rem;
@@ -33,13 +35,26 @@
             background-color: #007bff;
             color: #fff !important; /* Ensure text color is always white */
         }
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
     </style>
     <div class="container mt-5">
         <div class="session-header">
             <h1 class="mb-3">Session: {{ session_instance.name }}</h1>
-            <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
-            <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y, g:i a" }}</p>
-            <p><strong>Created by:</strong> {{ session_instance.created_by }}</p>
+            <div class="row">
+                <p class="col"><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
+                <p class="col"><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y, g:i a" }}</p>
+                <p class="col"><strong>Created by:</strong> {{ session_instance.created_by }}</p>
+            </div>
             <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
         <div class="tag-buttons">
@@ -69,7 +84,7 @@
                                     <div class="like-section col">
                                         <form method="post" action="{% url 'like_media' media.id %}">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-primary like-button">+{{ media.likes }}</button>
+                                            <button type="submit" class="btn btn-primary like-button">+{{ media.likes|add:1 }}</button>
                                         </form>
                                         <a href="?tag={{ media.tag }}" class="btn btn-outline-secondary">{{ media.get_tag_display }}</a>
                                     </div>
