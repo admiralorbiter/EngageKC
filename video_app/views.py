@@ -21,6 +21,7 @@ from .forms import CommentForm
 from django.http import HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
 import openpyxl
+from django.core.paginator import Paginator
 
 
 def post_detail(request, id):
@@ -241,16 +242,22 @@ def start_session(request):
 
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
+    medias = Media.objects.filter(session=session_instance)
     tags = Media.TAG_CHOICES
     selected_tags = request.GET.getlist('tags')
+
+    # Apply tag filtering if any tags are selected
     if selected_tags:
-        medias = Media.objects.filter(session=session_instance, tag__in=selected_tags).distinct()
-    else:
-        medias = Media.objects.filter(session=session_instance)
+        medias = medias.filter(tag__in=selected_tags).distinct()
+
+    # Pagination
+    paginator = Paginator(medias, 6)  # Show 5 media items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
         'session_instance': session_instance,
-        'medias': medias,
+        'page_obj': page_obj,
         'tags': tags,
         'selected_tags': selected_tags,
     }

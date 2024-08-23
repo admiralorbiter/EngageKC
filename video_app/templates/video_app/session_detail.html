@@ -46,6 +46,33 @@
             flex-direction: column;
             justify-content: space-between;
         }
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination .step-links {
+            display: flex;
+            gap: 10px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #00334C; /* Default text color */
+            border: 1px solid #00334C; /* Border color */
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #DB2955; /* Hover background color */
+            color: #fff; /* Hover text color */
+        }
+        .pagination .current {
+            background-color: #00334C; /* Current page background color */
+            color: #fff; /* Current page text color */
+            border: 1px solid #00334C; /* Current page border color */
+            border-radius: 4px;
+        }
     </style>
     <div class="container mt-5">
         <div class="session-header">
@@ -70,7 +97,7 @@
         </div>
         <div class="media-list">
             <div class="row">
-                {% for media in medias %}
+                {% for media in page_obj %}
                     <div class="col-md-4 media-item">
                         <div class="card">
                             <a href="{% url 'post_detail' media.id %}">
@@ -99,6 +126,23 @@
                     </div>
                 {% endfor %}
             </div>
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">last &raquo;</a>
+                {% endif %}
+            </span>
         </div>
     </div>
     <script>
