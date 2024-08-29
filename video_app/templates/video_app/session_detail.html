@@ -1,7 +1,7 @@
 {% extends "video_app/base.html" %}
 {% block content %}
     <style>
-        .container{
+        .container-fluid{
             background-color: #ffffff; /* Solid white background */
             background-image: 
                 linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
@@ -105,7 +105,7 @@
             <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
     </div>
-    <div class="container">
+    <div class="container-fluid px-5">
         <!-- <div class="tag-buttons">
             <form id="tag-filter-form" method="get" action="">
                 <div class="btn-group" role="group" aria-label="Tag filter">
@@ -120,7 +120,7 @@
         <div class="media-list">
             <div class="row">
                 {% for media in page_obj %}
-                    <div class="col-md-4 media-item">
+                    <div class="col-md-3 media-item"> <!-- Changed from col-md-4 to col-md-3 -->
                         <div class="card">
                             <a href="{% url 'post_detail' media.id %}">
                                 <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
