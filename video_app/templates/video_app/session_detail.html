@@ -1,6 +1,13 @@
 {% extends "video_app/base.html" %}
 {% block content %}
     <style>
+        .container{
+            background-color: #ffffff; /* Solid white background */
+            background-image: 
+                linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
+            background-size: 50px 100%; /* Adjust line spacing */
+            padding: 20px;
+        }
         .session-header {
             margin-bottom: 2rem;
         }
@@ -39,12 +46,17 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card-body {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+        }
+        .card:hover {
+            transform: scale(1.05); /* Slightly enlarges the card */
+            box-shadow: 0 0 15px 5px rgba(134, 26, 134, 0.6); /* Adds a glow effect */
         }
         /* Pagination styles */
         .pagination {
@@ -73,10 +85,18 @@
             border: 1px solid #00334C; /* Current page border color */
             border-radius: 4px;
         }
+        .title-stylized {
+            font-family: 'Arial', sans-serif; /* Use your preferred font */
+            font-size: 3rem; /* Adjust size as needed */
+            font-weight: bold; /* Ensure the text is bold */
+            color: #a13a95; /* Use a similar color to the one in the image */
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1); /* Create a subtle shadow effect */
+        }
+
     </style>
-    <div class="container mt-5">
+    <div class="mx-auto" style="width: 75%;">
         <div class="session-header">
-            <h1 class="mb-3">Session: {{ session_instance.name }}</h1>
+            <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
             <div class="row">
                 <p class="col"><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
                 <p class="col"><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y, g:i a" }}</p>
@@ -84,7 +104,9 @@
             </div>
             <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
-        <div class="tag-buttons">
+    </div>
+    <div class="container">
+        <!-- <div class="tag-buttons">
             <form id="tag-filter-form" method="get" action="">
                 <div class="btn-group" role="group" aria-label="Tag filter">
                     {% for tag_value, tag_name in tags %}
@@ -94,7 +116,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary mt-2">Filter</button>
             </form>
-        </div>
+        </div> -->
         <div class="media-list">
             <div class="row">
                 {% for media in page_obj %}
