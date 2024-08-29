@@ -1,4 +1,5 @@
 {% extends "video_app/base.html" %}
+{% load static %}
 {% block content %}
     <style>
         .container-fluid{
@@ -28,71 +29,35 @@
             align-items: center;
         }
         .like-button {
-            margin-right: 0.5rem;
-        }
-        .tag-buttons {
-            margin-bottom: 1rem;
-        }
-        .tag-button {
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            color: #fff !important; /* Ensure text color is always white */
-        }
-        .tag-button.active {
-            background-color: #007bff;
-            color: #fff !important; /* Ensure text color is always white */
-        }
-        .card {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .card:hover {
-            transform: scale(1.05); /* Slightly enlarges the card */
-            box-shadow: 0 0 15px 5px rgba(134, 26, 134, 0.6); /* Adds a glow effect */
-        }
-        /* Pagination styles */
-        .pagination {
-            display: flex;
+            padding: 0;
+            margin-right: 5px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
             justify-content: center;
-            margin-top: 20px;
-        }
-        .pagination .step-links {
-            display: flex;
-            gap: 10px;
-        }
-        .pagination a, .pagination span {
-            padding: 8px 12px;
-            text-decoration: none;
-            color: #00334C; /* Default text color */
-            border: 1px solid #00334C; /* Border color */
-            border-radius: 4px;
-        }
-        .pagination a:hover {
-            background-color: #DB2955; /* Hover background color */
-            color: #fff; /* Hover text color */
-        }
-        .pagination .current {
-            background-color: #00334C; /* Current page background color */
-            color: #fff; /* Current page text color */
-            border: 1px solid #00334C; /* Current page border color */
-            border-radius: 4px;
-        }
-        .title-stylized {
-            font-family: 'Arial', sans-serif; /* Use your preferred font */
-            font-size: 3rem; /* Adjust size as needed */
-            font-weight: bold; /* Ensure the text is bold */
-            color: #a13a95; /* Use a similar color to the one in the image */
-            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1); /* Create a subtle shadow effect */
+            position: relative;
+            border: none;
+            background-color: transparent;
         }
 
+        .like-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .like-count {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
     </style>
     <div class="mx-auto" style="width: 75%;">
         <div class="session-header">
@@ -131,11 +96,18 @@
                                 </h5>
                                 <div class="row">
                                     <div class="like-section col">
-                                        <form method="post" action="{% url 'like_media' media.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-primary like-button">+{{ media.likes|add:1 }}</button>
-                                        </form>
-                                        <a href="?tag={{ media.tag }}" class="btn btn-outline-secondary">{{ media.get_tag_display }}</a>
+                                        <button class="btn btn-light like-button">
+                                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph" width="20" height="20">
+                                            <span class="like-count">0</span>
+                                        </button>
+                                        <button class="btn btn-light like-button">
+                                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye" width="20" height="20">
+                                            <span class="like-count">0</span>
+                                        </button>
+                                        <button class="btn btn-light like-button">
+                                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read" width="20" height="20">
+                                            <span class="like-count">0</span>
+                                        </button>
                                     </div>
                                     <div class="col text-end">
                                         {% if user.is_superuser %}
