@@ -58,6 +58,56 @@
             font-weight: bold;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card:hover {
+            transform: scale(1.05); /* Slightly enlarges the card */
+            box-shadow: 0 0 15px 5px rgba(134, 26, 134, 0.6); /* Adds a glow effect */
+        }
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination .step-links {
+            display: flex;
+            gap: 10px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #00334C; /* Default text color */
+            border: 1px solid #00334C; /* Border color */
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #DB2955; /* Hover background color */
+            color: #fff; /* Hover text color */
+        }
+        .pagination .current {
+            background-color: #00334C; /* Current page background color */
+            color: #fff; /* Current page text color */
+            border: 1px solid #00334C; /* Current page border color */
+            border-radius: 4px;
+        }
+        .title-stylized {
+            font-family: 'Arial', sans-serif; /* Use your preferred font */
+            font-size: 3rem; /* Adjust size as needed */
+            font-weight: bold; /* Ensure the text is bold */
+            color: #a13a95; /* Use a similar color to the one in the image */
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1); /* Create a subtle shadow effect */
+        }
     </style>
     <div class="mx-auto" style="width: 75%;">
         <div class="session-header">
@@ -91,11 +141,11 @@
                                 <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
                             </a>
                             <div class="card-body">
-                                <h5 class="card-title media-title">
-                                    <a href="{% url 'post_detail' media.id %}">Leave Feedback <i class="fa-solid fa-link"></i></a>
-                                </h5>
                                 <div class="row">
                                     <div class="like-section col">
+                                        <a href="{% url 'post_detail' media.id %}" class="btn btn-light p-0" style="width: 38px; height: 38px; overflow: hidden; background-color: transparent;">
+                                            <img src="{% static 'video_app/images/feedback-icon.png' %}" alt="Feedback" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </a>
                                         <button class="btn btn-light like-button">
                                             <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph" width="20" height="20">
                                             <span class="like-count">0</span>
@@ -108,10 +158,8 @@
                                             <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read" width="20" height="20">
                                             <span class="like-count">0</span>
                                         </button>
-                                    </div>
-                                    <div class="col text-end">
                                         {% if user.is_superuser %}
-                                            <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger">Delete</a>
+                                            <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                                         {% endif %}
                                     </div>
                                 </div>
