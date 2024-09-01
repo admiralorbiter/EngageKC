@@ -150,6 +150,7 @@ def upload_media(request, session_pk):
             password = form.cleaned_data['password']
             try:
                 student = Student.objects.get(password=password)
+                media.submitted_password = password  # Save the submitted password
             except Student.DoesNotExist:
                 form.add_error('password', 'Invalid password for this session')
                 return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})

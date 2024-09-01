@@ -115,6 +115,8 @@ class Media(models.Model):
     is_graph = models.BooleanField(default=False)
     variable_tag = models.CharField(max_length=50, choices=VARIABLE_TAG_CHOICES, blank=True, null=True)
 
+    submitted_password = models.CharField(max_length=100, blank=True, null=True)
+
     def clean(self):
         if self.media_type == 'video' and self.image_file:
             raise ValidationError('Cannot upload an image file for a video media type')
