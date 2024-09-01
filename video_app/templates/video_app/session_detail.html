@@ -132,10 +132,15 @@
         <div class="session-header col">
             <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
             <div class="row">
-                <p class="col"><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
-                <p class="col"><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y, g:i a" }}</p>
-                <p class="col"><strong>Created by:</strong> {{ session_instance.created_by }}</p>
-                <div class="badge-box col-6" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
+                <div class="col-3">
+                    <p class=""><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
+                <p class=""><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
+                <p class=""><strong>Created by:</strong> {{ session_instance.created_by }}</p>
+                <div class="row justify-content-center">
+                    <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3 col-6">Upload Media</a>
+                </div>
+                </div>
+                <div class="badge-box col" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
                     <p>Look through the posts from your classmates and react with one of the badges below:</p>
                     <div style="display: flex; justify-content: center; gap: 20px;">
                         <div class="badge-container" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
@@ -154,9 +159,6 @@
         <div class="col-3 mx-3">
             <div class="row">
             {% include "video_app/filter_comp.html" %}
-            </div>
-            <div class="row justify-content-center">
-                <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3 col-6">Upload Media</a>
             </div>
         </div>
     </div>
