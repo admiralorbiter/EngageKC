@@ -140,29 +140,25 @@ def upload_media(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
 
     if request.method == 'POST':
-        captured_image_data = request.POST.get('captured_image_data')
-        captured_video_data = request.POST.get('captured_video_data')
-
-        # Check if there's any captured image or video data
-        if captured_image_data:
-            format, imgstr = captured_image_data.split(';base64,')
-            ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name=f'captured_image.{ext}')
-            request.FILES['image_file'] = data
-
-        if captured_video_data:
-            format, vidstr = captured_video_data.split(';base64,')
-            ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(vidstr), name=f'captured_video.{ext}')
-            content_type = 'video/webm'  # Adjust this according to the actual video format you are using
-            video_file = SimpleUploadedFile(f'captured_video.{ext}', base64.b64decode(vidstr), content_type=content_type)
-            request.FILES['video_file'] = video_file
-
         form = MediaForm(request.POST, request.FILES)
         
         if form.is_valid():
             media = form.save(commit=False)
             media.session = session
+
+            # Get the student based on the password and session
+            password = form.cleaned_data['password']
+            try:
+                student = Student.objects.get(password=password)
+            except Student.DoesNotExist:
+                form.add_error('password', 'Invalid password for this session')
+                return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
+
+            # Generate the title
+            graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
+            variable_tag = dict(Media.VARIABLE_TAG_CHOICES)[form.cleaned_data['variable_tag']]
+            media.title = f"{student.name}'s {graph_tag} {variable_tag}"
+
             media.save()
             return redirect('session_detail', session_pk=session.pk)
         else:

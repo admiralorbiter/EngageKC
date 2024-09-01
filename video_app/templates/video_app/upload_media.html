@@ -10,19 +10,24 @@
         <form id="media-form" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="mb-3">
-                <label for="id_title" class="form-label">Title</label>
-                {{ form.title|add_class:"form-control" }}
-                <div class="invalid-feedback">Please provide a title.</div>
-            </div>
-            <div class="mb-3">
-                <label for="id_tag" class="form-label">Tag</label>
-                {{ form.tag|add_class:"form-select" }}
-                <div class="invalid-feedback">Please select a tag.</div>
-            </div>
-            <div class="mb-3">
                 <label for="id_image_file" class="form-label">Image File</label>
                 {{ form.image_file|add_class:"form-control" }}
                 <div class="invalid-feedback">Please upload an image file.</div>
+            </div>
+            <div class="mb-3">
+                <label for="id_graph_tag" class="form-label">Graph Tag</label>
+                {{ form.graph_tag|add_class:"form-select" }}
+                <div class="invalid-feedback">Please select a graph tag.</div>
+            </div>
+            <div class="mb-3">
+                <label for="id_variable_tag" class="form-label">Variable Tag</label>
+                {{ form.variable_tag|add_class:"form-select" }}
+                <div class="invalid-feedback">Please select a variable tag.</div>
+            </div>
+            <div class="mb-3">
+                <label for="id_password" class="form-label">Password</label>
+                {{ form.password|add_class:"form-control" }}
+                <div class="invalid-feedback">Please enter your password.</div>
             </div>
             <div class="d-flex justify-content-between">
                 <a href="{% url 'session_detail' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
