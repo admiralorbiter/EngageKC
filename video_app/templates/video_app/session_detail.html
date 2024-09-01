@@ -108,20 +108,57 @@
             color: #a13a95; /* Use a similar color to the one in the image */
             text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1); /* Create a subtle shadow effect */
         }
+        .badge-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .badge-container:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1;
+        }
     </style>
-    <div class="mx-auto" style="width: 75%;">
-        <div class="session-header">
+    <div class="mx-auto row" style="width: 75%;">
+        <div class="session-header col">
             <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
             <div class="row">
                 <p class="col"><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
                 <p class="col"><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y, g:i a" }}</p>
                 <p class="col"><strong>Created by:</strong> {{ session_instance.created_by }}</p>
+                <div class="badge-box col-6" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
+                    <p>Look through the posts from your classmates and react with one of the badges below:</p>
+                    <div style="display: flex; justify-content: center; gap: 20px;">
+                        <div class="badge-container" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon" style="width: 5vw; height: 5vw;">
+                        </div>
+                        <div class="badge-container" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon" style="width: 5w; height: 5vw;">
+                        </div>
+                        <div class="badge-container" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon" style="width: 5vw; height: 5vw;">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
-        
-        <!-- Include the filter component -->
-        {% include "video_app/filter_comp.html" %}
+        <div class="col-3 mx-3">
+            <div class="row">
+            {% include "video_app/filter_comp.html" %}
+            </div>
+            <div class="row justify-content-center">
+                <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3 col-6">Upload Media</a>
+            </div>
+        </div>
     </div>
     <div class="container-fluid px-5">
         <!-- <div class="tag-buttons">

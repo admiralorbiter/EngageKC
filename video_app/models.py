@@ -72,12 +72,11 @@ class Media(models.Model):
         ('numeric', 'Numerical'),
     ]
 
-    # New fields for graph and variable tags
+    # Use CharField for specific graph types
     graph_tag = models.CharField(max_length=50, choices=GRAPH_TAG_CHOICES, blank=True, null=True)
+    # Use BooleanField for general graph indicator
+    is_graph = models.BooleanField(default=False)
     variable_tag = models.CharField(max_length=50, choices=VARIABLE_TAG_CHOICES, blank=True, null=True)
-
-    # New field as per the clicked code block
-    graph_tag = models.BooleanField(default=False)
 
     def clean(self):
         if self.media_type == 'video' and self.image_file:

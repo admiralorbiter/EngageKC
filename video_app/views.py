@@ -266,15 +266,15 @@ def session_detail(request, session_pk):
 
     # Apply filters
     if graph_tag:
-        if graph_tag == 'line':
-            medias = medias.filter(graph_tag=True)
-        else:
+        if graph_tag == 'true':
+            medias = medias.filter(is_graph=True)
+        elif graph_tag in dict(Media.GRAPH_TAG_CHOICES).keys():
             medias = medias.filter(graph_tag=graph_tag)
     if variable_tag:
         medias = medias.filter(variable_tag=variable_tag)
 
     # Pagination
-    paginator = Paginator(medias, 6)  # Show 6 media items per page
+    paginator = Paginator(medias, 12)  # Show 6 media items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
