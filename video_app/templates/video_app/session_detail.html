@@ -80,6 +80,10 @@
             transform: scale(1.05); /* Slightly enlarges the card */
             box-shadow: 0 0 15px 5px rgba(134, 26, 134, 0.6); /* Adds a glow effect */
         }
+        .upload-button {
+            background-color: #a13a95; 
+            color: white;
+        }
         /* Pagination styles */
         .pagination {
             display: flex;
@@ -139,24 +143,24 @@
             <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
             <div class="row">
                 <div class="col-3">
-                    <p class=""><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
-                <p class=""><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
-                <p class=""><strong>Created by:</strong> {{ session_instance.created_by }}</p>
-                <div class="row justify-content-center">
-                    <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3 col-6">Upload Media</a>
-                </div>
+                    <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
+                    <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
+                    <p><strong>Created by:</strong> {{ session_instance.created_by }}</p>
                 </div>
                 <div class="badge-box col" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
                     <p>Look through the posts from your classmates and react with one of the badges below:</p>
-                    <div style="display: flex; justify-content: center; gap: 20px;">
-                        <div class="badge-container" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                    <div class="badge-container" style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
                             <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon" style="width: 5vw; height: 5vw;">
                         </div>
-                        <div class="badge-container" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
-                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon" style="width: 5w; height: 5vw;">
+                        <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon" style="width: 5vw; height: 5vw;">
                         </div>
-                        <div class="badge-container" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                        <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
                             <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon" style="width: 5vw; height: 5vw;">
+                        </div>
+                        <div class="col-3 align-items-center"">
+                            <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-light upload-button">Upload</a>
                         </div>
                     </div>
                 </div>
