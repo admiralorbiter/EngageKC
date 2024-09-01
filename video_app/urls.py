@@ -20,4 +20,5 @@ urlpatterns = [
     path('delete-student/<int:student_id>/', views.delete_student, name='delete_student'),
     path('download-students/', views.download_students, name='download_students'),
     path('generate-students/', views.generate_students, name='generate_students'),
+    path('like-media/<int:media_id>/<str:like_type>/', views.like_media, name='like_media'),
 ]

@@ -22,6 +22,8 @@ from django.http import HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
 import openpyxl
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 def post_detail(request, id):
@@ -63,20 +65,34 @@ def delete_session(request, session_pk):
     session.delete()
     return redirect('join_session')
 
-def like_media(request, media_id):
+@require_POST
+def like_media(request, media_id, like_type):
     media = get_object_or_404(Media, id=media_id)
-    liked_media = request.session.get('liked_media', [])
+    liked_media = request.session.get('liked_media', {})
     
-    if media_id not in liked_media:
-        media.likes += 1
+    if str(media_id) not in liked_media:
+        if like_type == 'graph':
+            media.graph_likes += 1
+        elif like_type == 'eye':
+            media.eye_likes += 1
+        elif like_type == 'read':
+            media.read_likes += 1
+        else:
+            return JsonResponse({'error': 'Invalid like type'}, status=400)
+        
         media.save()
-        liked_media.append(media_id)
+        liked_media[str(media_id)] = like_type
         request.session['liked_media'] = liked_media
-        messages.success(request, 'You liked this media.')
+        request.session.modified = True
+        
+        return JsonResponse({
+            'success': True,
+            'graph_likes': media.graph_likes,
+            'eye_likes': media.eye_likes,
+            'read_likes': media.read_likes
+        })
     else:
-        messages.info(request, 'You have already liked this media.')
-    
-    return redirect('session_detail', session_pk=media.session.pk)
+        return JsonResponse({'error': 'Already liked'}, status=400)
 
 
 class AdminLoginView(views.LoginView):

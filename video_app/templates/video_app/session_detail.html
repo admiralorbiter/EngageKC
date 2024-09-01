@@ -146,17 +146,17 @@
                                         <a href="{% url 'post_detail' media.id %}" class="btn btn-light p-0" style="width: 38px; height: 38px; overflow: hidden; background-color: transparent;">
                                             <img src="{% static 'video_app/images/feedback-icon.png' %}" alt="Feedback" style="width: 100%; height: 100%; object-fit: cover;">
                                         </a>
-                                        <button class="btn btn-light like-button">
+                                        <button class="btn btn-light like-button" data-media-id="{{ media.id }}" data-like-type="graph">
                                             <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph" width="20" height="20">
-                                            <span class="like-count">0</span>
+                                            <span class="like-count">{{ media.graph_likes }}</span>
                                         </button>
-                                        <button class="btn btn-light like-button">
+                                        <button class="btn btn-light like-button" data-media-id="{{ media.id }}" data-like-type="eye">
                                             <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye" width="20" height="20">
-                                            <span class="like-count">0</span>
+                                            <span class="like-count">{{ media.eye_likes }}</span>
                                         </button>
-                                        <button class="btn btn-light like-button">
+                                        <button class="btn btn-light like-button" data-media-id="{{ media.id }}" data-like-type="read">
                                             <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read" width="20" height="20">
-                                            <span class="like-count">0</span>
+                                            <span class="like-count">{{ media.read_likes }}</span>
                                         </button>
                                         {% if user.is_superuser %}
                                             <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
@@ -189,26 +189,73 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('.btn-check');
-            const form = document.getElementById('tag-filter-form');
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    const label = document.querySelector(`label[for="${checkbox.id}"]`);
-                    if (checkbox.checked) {
-                        label.classList.add('active');
-                    } else {
-                        label.classList.remove('active');
+            const likeButtons = document.querySelectorAll('.like-button');
+            const likedMedia = JSON.parse('{{ liked_media|default:"{}" | escapejs }}');
+            
+            likeButtons.forEach(button => {
+                const mediaId = button.dataset.mediaId;
+                const card = button.closest('.card');
+                
+                if (likedMedia[mediaId]) {
+                    disableCard(card, likedMedia[mediaId]);
+                }
+                
+                button.addEventListener('click', function() {
+                    const likeType = this.dataset.likeType;
+                    
+                    if (card.classList.contains('liked')) {
+                        return;
                     }
+                    
+                    fetch(`/like-media/${mediaId}/${likeType}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            disableCard(card, likeType);
+                            updateLikeCounts(card, data);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
                 });
             });
-
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const formData = new FormData(form);
-                const queryString = new URLSearchParams(formData).toString();
-                window.location.search = queryString;
-            });
+            
+            function disableCard(card, likeType) {
+                card.classList.add('liked');
+                card.querySelectorAll('.like-button').forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.dataset.likeType === likeType) {
+                        btn.classList.add('btn-primary');
+                        btn.classList.remove('btn-light');
+                    }
+                });
+            }
+            
+            function updateLikeCounts(card, data) {
+                card.querySelector('.like-button[data-like-type="graph"] .like-count').textContent = data.graph_likes;
+                card.querySelector('.like-button[data-like-type="eye"] .like-count').textContent = data.eye_likes;
+                card.querySelector('.like-button[data-like-type="read"] .like-count').textContent = data.read_likes;
+            }
+            
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
         });
     </script>
 {% endblock %}

@@ -54,8 +54,12 @@ class Media(models.Model):
     video_file = models.FileField(upload_to='videos', blank=True, null=True)
     image_file = models.ImageField(upload_to='images', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    likes = models.PositiveIntegerField(default=0)  # New field to track likes
     tag = models.CharField(max_length=50, choices=TAG_CHOICES, default='education')
+    
+    # New fields for likes
+    graph_likes = models.PositiveIntegerField(default=0)
+    eye_likes = models.PositiveIntegerField(default=0)
+    read_likes = models.PositiveIntegerField(default=0)
 
     def clean(self):
         if self.media_type == 'video' and self.image_file:
