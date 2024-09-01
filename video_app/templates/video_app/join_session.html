@@ -1,31 +1,88 @@
 {% extends "video_app/base.html" %}
 {% block content %}
-    <div class="container mt-5">
+    <style>
+        .session-box {
+            background-color: #861A86; /* Purple background */
+            border: none;
+            color: #FFFFFF; /* White text for main content */
+            margin-bottom: 10px;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .session-box h3 {
+            color: #F5F5F5; /* Off-white for headers */
+            margin-bottom: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .session-box p {
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+
+        .session-link {
+            color: #32A2C4 !important; /* Light blue for links */
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+
+        .session-link i {
+            margin-right: 5px;
+        }
+
+        .session-box .text-muted {
+            color: #FA7227 !important; /* Orange for muted text */
+            font-size: 0.9em;
+        }
+
+        .custom-button {
+            background-color: #00334C; /* Dark blue for buttons */
+            border: none;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            margin-left: 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .custom-button:hover {
+            background-color: #41B93D; /* Green for button hover */
+        }
+
+        .btn-group {
+            margin-top: 10px;
+        }
+    </style>
+
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="text-center">
-                    <h1 class="mb-4 text-center display-1">Join a Session</h1>
-                </div>
-                <div class="text-center">
-                    <h2 class="mt-5 text-center">Join a Session via Password</h2>
-                    <form method="post" class="needs-validation" novalidate>
-                        {% csrf_token %}
-                        {% if error %}
-                            <div class="alert alert-danger">{{ error }}</div>
-                        {% endif %}
-                        <div class="mb-3">
-                            <input type="text" id="session_password" name="session_password" class="form-control" required>
-                            <div class="invalid-feedback">
-                                Please enter the session password.
-                            </div>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-block">Join Session</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="text-center">
+                <h1 class="mb-4 text-center display-1">Join a Data Deck</h1>
             </div>
-            
+            <div class="text-center">
+                <h2 class="mt-5 text-center">Join via Password</h2>
+                <form method="post" class="needs-validation col-3 mx-auto" novalidate>
+                    {% csrf_token %}
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <input type="text" id="session_password" name="session_password" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please enter the session password.
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-block">Join Session</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row justify-content-center">
             {% if user.is_authenticated %}
             <div class="col-md-6">
                 <h2 class="mt-5 text-center">Available Sessions</h2>
@@ -57,12 +114,12 @@
                                     <form method="post" action="{% url 'join_session' %}" style="display:inline;">
                                         {% csrf_token %}
                                         <input type="hidden" name="session_code" value="{{ session.session_code }}">
-                                        <button type="submit" class="btn btn-link session-link" style="padding: 0; border: none; background: none; text-decoration: none;font-size:2em;">
+                                        <button type="submit" class="btn btn-link session-link" style="padding: 0; border: none; background: none; text-decoration: none;font-size:1.5em;">
                                             <i class="fa-solid fa-link"></i>Join - {{ session.session_code }}
                                         </button>
                                     </form>
                                 </div>
-                                <div class="col text-end">
+                                <div class="col-4 text-end">
                                     <br/>
                                     <small class="text-muted">Days until deletion: {{ session.days_until_deletion }}</small>
                                     <br/>
