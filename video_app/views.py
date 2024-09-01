@@ -259,23 +259,35 @@ def start_session(request):
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
     medias = Media.objects.filter(session=session_instance)
-    tags = Media.TAG_CHOICES
-    selected_tags = request.GET.getlist('tags')
+    
+    # Get filter parameters
+    graph_tag = request.GET.get('graph_tag')
+    variable_tag = request.GET.get('variable_tag')
 
-    # Apply tag filtering if any tags are selected
-    if selected_tags:
-        medias = medias.filter(tag__in=selected_tags).distinct()
+    # Apply filters
+    if graph_tag:
+        if graph_tag == 'line':
+            medias = medias.filter(graph_tag=True)
+        else:
+            medias = medias.filter(graph_tag=graph_tag)
+    if variable_tag:
+        medias = medias.filter(variable_tag=variable_tag)
 
     # Pagination
-    paginator = Paginator(medias, 6)  # Show 5 media items per page
+    paginator = Paginator(medias, 6)  # Show 6 media items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    graph_choices = Media.GRAPH_TAG_CHOICES
+    variable_choices = Media.VARIABLE_TAG_CHOICES
 
     context = {
         'session_instance': session_instance,
         'page_obj': page_obj,
-        'tags': tags,
-        'selected_tags': selected_tags,
+        'graph_choices': graph_choices,
+        'variable_choices': variable_choices,
+        'selected_graph_tag': graph_tag,
+        'selected_variable_tag': variable_tag,
     }
     return render(request, 'video_app/session_detail.html', context)
 
@@ -377,3 +389,16 @@ def generate_students(request):
             messages.error(request, "Invalid input. Please try again.")
     
     return redirect('admin_view')
+
+from django.shortcuts import redirect
+from django.urls import reverse
+
+def filter_media(request, session_pk):
+    tags = request.GET.getlist('tags')
+    
+    # Construct the URL with the selected tags
+    url = reverse('session_detail', kwargs={'session_pk': session_pk})
+    if tags:
+        url += '?' + '&'.join([f'tags={tag}' for tag in tags])
+    
+    return redirect(url)

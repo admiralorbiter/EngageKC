@@ -61,6 +61,24 @@ class Media(models.Model):
     eye_likes = models.PositiveIntegerField(default=0)
     read_likes = models.PositiveIntegerField(default=0)
 
+    GRAPH_TAG_CHOICES = [
+        ('bar', 'Bar Chart'),
+        ('line', 'Line Graph'),
+        ('pie', 'Pie Chart'),
+    ]
+    VARIABLE_TAG_CHOICES = [
+        ('time', 'Time-based'),
+        ('category', 'Categorical'),
+        ('numeric', 'Numerical'),
+    ]
+
+    # New fields for graph and variable tags
+    graph_tag = models.CharField(max_length=50, choices=GRAPH_TAG_CHOICES, blank=True, null=True)
+    variable_tag = models.CharField(max_length=50, choices=VARIABLE_TAG_CHOICES, blank=True, null=True)
+
+    # New field as per the clicked code block
+    graph_tag = models.BooleanField(default=False)
+
     def clean(self):
         if self.media_type == 'video' and self.image_file:
             raise ValidationError('Cannot upload an image file for a video media type')

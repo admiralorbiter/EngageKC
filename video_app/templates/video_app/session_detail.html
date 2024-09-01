@@ -119,6 +119,9 @@
             </div>
             <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
         </div>
+        
+        <!-- Include the filter component -->
+        {% include "video_app/filter_comp.html" %}
     </div>
     <div class="container-fluid px-5">
         <!-- <div class="tag-buttons">
