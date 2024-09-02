@@ -142,7 +142,8 @@
         <div class="session-header col">
             <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
             <div class="row">
-                <div class="col-3">
+                <div class="col-4">
+                    {{ session_instance.created_by.last_name}}
                     <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
                     <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
                     <p><strong>Created by:</strong> {{ session_instance.created_by }}</p>

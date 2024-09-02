@@ -219,12 +219,15 @@ def generate_users_for_section(section, num_students, admin):
             name=name,
             password=passcode,
             section=section,
-            admin=CustomAdmin
+            admin=admin
         )
         
         generated_students.append(student)
     
     return generated_students
+
+from django.contrib.auth import get_user_model
+from .models import CustomAdmin, Session
 
 def start_session(request):
     if request.method == 'POST':
@@ -235,15 +238,20 @@ def start_session(request):
             section = form.cleaned_data['section']
             num_students = form.cleaned_data['num_students']
             
+            # Get the CustomAdmin instance associated with the current user
+            User = get_user_model()
+            user = User.objects.get(username=request.user.username)
+            custom_admin = CustomAdmin.objects.get(id=user.id)
+            
             # Create the session object
             new_session = Session.objects.create(
                 name=title,
                 section=section,
-                created_by=str(request.user)
+                created_by=custom_admin
             )
             
             # Generate students and save them to the database
-            generate_users_for_section(new_session, num_students, request.user)
+            generate_users_for_section(new_session, num_students, custom_admin)
             
             # Redirect to the admin_view page after creating the session
             return redirect('admin_view')

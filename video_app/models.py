@@ -17,7 +17,7 @@ class Session(models.Model):
     section = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_paused = models.BooleanField(default=False)
-    created_by = models.CharField(max_length=255, blank=True, null=True)
+    created_by = models.ForeignKey('CustomAdmin', on_delete=models.SET_NULL, blank=True, null=True)
 
     def is_expired(self):
         return not self.is_paused and (timezone.now() > self.created_at + timedelta(days=7))
@@ -168,6 +168,8 @@ class Comment(models.Model):
 class CustomAdmin(AbstractUser):
     school = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
 
     groups = models.ManyToManyField(
         'auth.Group',
