@@ -81,7 +81,8 @@ body{
 }
 
 .comment{
-    background-color: #FA7E61;
+    background-color: rgba(161, 58, 149, 0.3) !important;
+    border-radius: 10px;
 }
 
 .comment-form textarea {
@@ -93,14 +94,14 @@ body{
 }
 .comment-form button {
     border-radius: 10px;
-    background-color: #007bff;
+    background-color: #00334C !important;
     color: #fff;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
 }
 .comment-form button:hover {
-    background-color: #0056b3;
+    background-color: #DB2955 !important;
 }
 /* Lightbox overlay */
 .lightbox {
