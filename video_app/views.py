@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 
 from engagekc import settings
-from .models import Media, Session, Student
+from .models import CustomAdmin, Media, Session, Student
 from .forms import MediaForm, LoginForm, StartSessionForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
@@ -219,13 +219,12 @@ def generate_users_for_section(section, num_students, admin):
             name=name,
             password=passcode,
             section=section,
-            admin=admin 
+            admin=CustomAdmin
         )
         
         generated_students.append(student)
     
     return generated_students
-
 
 def start_session(request):
     if request.method == 'POST':

@@ -1,7 +1,9 @@
 from django.urls import path, include
 from . import views
+from django.contrib import admin
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('upload/<int:session_pk>/', views.upload_media, name='upload_media'),  # Ensure session_id is included
     path('delete/<int:session_pk>/', views.delete_media, name='delete_media'),

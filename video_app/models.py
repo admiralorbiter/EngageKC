@@ -7,6 +7,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth import get_user_model
 from jsonschema import ValidationError
+from django.contrib.auth.models import AbstractUser
 
 from engagekc import settings
 
@@ -164,13 +165,34 @@ class Comment(models.Model):
     def __str__(self):
         return f'Comment by {self.id} on {self.post.title}'
 
+class CustomAdmin(AbstractUser):
+    school = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
 
-User = get_user_model()  
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_admin_set',
+        blank=True,
+        verbose_name='groups',
+        help_text='The groups this user belongs to.',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_admin_set',
+        blank=True,
+        verbose_name='user permissions',
+        help_text='Specific permissions for this user.',
+    )
+
+    def __str__(self):
+        return f"{self.username} - {self.school} ({self.district})"
+
 class Student(models.Model):
     name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     section = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='students')
-    admin = models.ForeignKey(User, on_delete=models.CASCADE)
+    admin = models.ForeignKey(CustomAdmin, on_delete=models.CASCADE)
+    device_id = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.section})"
