@@ -143,10 +143,10 @@
             <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
             <div class="row">
                 <div class="col-4">
-                    {{ session_instance.created_by.last_name}}
+                    <h2 class="text-center subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
+                    <p><strong>School: </strong> {{ session_instance.created_by.school }}</p>
                     <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
                     <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
-                    <p><strong>Created by:</strong> {{ session_instance.created_by }}</p>
                 </div>
                 <div class="badge-box col" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
                     <p>Look through the posts from your classmates and react with one of the badges below:</p>

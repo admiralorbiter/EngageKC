@@ -20,12 +20,12 @@
                         </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_view' %}">Admin View</a>
+                        <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
                     </li>
                 {% endif %}
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
+                    <a class="nav-link" href="{% url 'admin:login' %}">Teacher Login</a>
                 </li>
             {% endif %}
             {% if request.session.current_session_id %}
