@@ -1,7 +1,7 @@
 import os
 import random
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 
 from engagekc import settings
 from .models import CustomAdmin, Media, Session, Student
@@ -71,7 +71,7 @@ def pause_session(request, session_pk):
     session.save()
     return redirect('join_session')
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
 def delete_session(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
     session.delete()
@@ -125,6 +125,8 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def login(request):
+    print("Login view called")
+    print(request.user.is_authenticated)
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -182,7 +184,7 @@ def upload_media(request, session_pk):
     return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
    
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
 def delete_media(request, session_pk):
     media = get_object_or_404(Media, pk=session_pk)
     if request.method == 'POST':
@@ -308,7 +310,13 @@ def session_detail(request, session_pk):
     return render(request, 'video_app/session_detail.html', context)
 
 def join_session(request):
-    sessions = Session.objects.all()
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            sessions = Session.objects.all()
+        else:
+            sessions = Session.objects.filter(created_by=request.user)
+    else:
+        sessions = []
     
     if request.method == 'POST':
         session_password = request.POST.get('session_password')
@@ -333,9 +341,12 @@ def join_session(request):
             except Student.DoesNotExist:
                 return render(request, 'video_app/join_session.html', {'error': 'Invalid session password', 'sessions': sessions})
     
-    return render(request, 'video_app/join_session.html', {'sessions': sessions})
+    context = {
+        'sessions': sessions,
+    }
+    return render(request, 'video_app/join_session.html', context)
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
 def admin_view(request):
     # Get all sessions and students related to the logged-in admin
     sessions = Session.objects.filter(created_by=request.user)
@@ -357,7 +368,7 @@ def delete_student(request, student_id):
     # Redirect back to the admin view after deletion
     return redirect('admin_view')
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
 def download_students(request):
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="students.xlsx"'
@@ -387,7 +398,7 @@ def download_students(request):
     workbook.save(response)
     return response
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
 def generate_students(request):
     if request.method == 'POST':
         num_students = int(request.POST.get('num_students', 0))

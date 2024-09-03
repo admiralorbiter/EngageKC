@@ -88,45 +88,47 @@
                 <h2 class="mt-5 text-center">Available Sessions</h2>
                 <ul class="list-group">
                     {% for session in sessions %}
-                        <li class="list-group-item session-box">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h3 class="mb-1">{{ session.name }}</h3>
-                                    <p class="mb-1">{{ session.description }}</p>
+                        {% if user.is_superuser or session.created_by == user %}
+                            <li class="list-group-item session-box">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h3 class="mb-1">{{ session.name }}</h3>
+                                        <p class="mb-1">{{ session.description }}</p>
+                                    </div>
+                                    <div class="btn-group">
+                                        {% if user.is_authenticated %}
+                                        <form method="post" action="{% url 'pause_session' session.pk %}" class="m-1">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-warning btn-sm custom-button">
+                                                {% if session.is_paused %}Resume{% else %}Pause{% endif %}
+                                            </button>
+                                        </form>
+                                        <form method="post" action="{% url 'delete_session' session.pk %}" onsubmit="return confirmDelete()" class="m-1">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm custom-button">Delete</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                                <div class="btn-group">
-                                    {% if user.is_superuser %}
-                                    <form method="post" action="{% url 'pause_session' session.pk %}" class="m-1">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-warning btn-sm custom-button">
-                                            {% if session.is_paused %}Resume{% else %}Pause{% endif %}
-                                        </button>
-                                    </form>
-                                    <form method="post" action="{% url 'delete_session' session.pk %}" onsubmit="return confirmDelete()" class="m-1">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger btn-sm custom-button">Delete</button>
-                                    </form>
-                                    {% endif %}
+                                <div class="row">
+                                    <div class="col">
+                                        <form method="post" action="{% url 'join_session' %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="session_code" value="{{ session.session_code }}">
+                                            <button type="submit" class="btn btn-link session-link" style="padding: 0; border: none; background: none; text-decoration: none;font-size:1.5em;">
+                                                <i class="fa-solid fa-link"></i>Join - {{ session.session_code }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <br/>
+                                        <small class="text-muted">Days until deletion: {{ session.days_until_deletion }}</small>
+                                        <br/>
+                                        <small class="text-muted">Created by: {{ session.created_by }}</small>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <form method="post" action="{% url 'join_session' %}" style="display:inline;">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="session_code" value="{{ session.session_code }}">
-                                        <button type="submit" class="btn btn-link session-link" style="padding: 0; border: none; background: none; text-decoration: none;font-size:1.5em;">
-                                            <i class="fa-solid fa-link"></i>Join - {{ session.session_code }}
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="col-4 text-end">
-                                    <br/>
-                                    <small class="text-muted">Days until deletion: {{ session.days_until_deletion }}</small>
-                                    <br/>
-                                    <small class="text-muted">Created by: {{ session.created_by }}</small>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>

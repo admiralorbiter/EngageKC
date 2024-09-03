@@ -211,7 +211,7 @@
                                             <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read" width="20" height="20">
                                             <span class="like-count">{{ media.read_likes }}</span>
                                         </button>
-                                        {% if user.is_superuser %}
+                                        {% if user.is_authenticated %}
                                             <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                                         {% endif %}
                                     </div>

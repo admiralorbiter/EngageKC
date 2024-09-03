@@ -12,17 +12,15 @@
                 <a class="nav-link" href="{% url 'join_session' %}">Join Session</a>
             </li>
             {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                    <li class="nav-item">
-                        <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="nav-link">Logout</button>
-                        </form>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
-                    </li>
-                {% endif %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link">Logout</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
+                </li>
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'admin:login' %}">Teacher Login</a>
