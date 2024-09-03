@@ -19,10 +19,6 @@
     <form method="post" class="reply-form" style="display: none;">
         {% csrf_token %}
         <div class="mb-3">
-            <label for="id_name_{{ comment.id }}" class="form-label">Name</label>
-            <input type="text" name="name" id="id_name_{{ comment.id }}" class="form-control" required>
-        </div>
-        <div class="mb-3">
             <label for="id_password_{{ comment.id }}" class="form-label">Password</label>
             <input type="password" name="password" id="id_password_{{ comment.id }}" class="form-control" required>
         </div>
