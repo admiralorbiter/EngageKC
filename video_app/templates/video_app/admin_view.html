@@ -1,87 +1,103 @@
 {% extends "video_app/base.html" %}
 {% block content %}
 <div class="container mt-5">
-    <h1 class="">Admin View</h1>
+    <h1 class="mb-4">Admin View</h1>
 
-    <h2>Your Sections</h2>
-    <ul>
-        {% for session in sessions %}
-            <p>
-                <a href="{% url 'session_detail' session.id %}">{{ session.name }} - Section {{ session.section }}</a>
-            </p>
-        {% endfor %}
-    </ul>
-
-    <h2>Your Students</h2>
-    <div class="mb-3">
-        <div class="row">
-            <div class="col-md-6">
-                <a href="{% url 'download_students' %}" class="btn btn-success">Download Students Data</a>
+    <div class="row">
+        <!-- Sections column -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Your Sections</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for session in sessions %}
+                            <li class="list-group-item">
+                                <a href="{% url 'session_detail' session.id %}" class="text-decoration-none">
+                                    {{ session.name }} - Section {{ session.section }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <div class="col-md-6">
-                <form action="{% url 'generate_students' %}" method="post" class="form-inline">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <input type="number" name="num_students" class="form-control" placeholder="Number of students" min="1" required>
-                        <select name="section" class="form-control" required>
+            <!-- Space for future additions -->
+        </div>
+
+        <!-- Students column -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h2 class="h4 mb-0">Your Students</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary" id="downloadStudentsData">Download Students Data</button>
+                        </div>
+                        <div class="col-md-6">
+                            <form action="{% url 'generate_students' %}" method="post" class="form-inline">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input type="number" name="num_students" class="form-control" placeholder="Number of students" min="1" required>
+                                    <select name="section" class="form-select" required>
+                                        {% for session in sessions %}
+                                            <option value="{{ session.id }}">{{ session.name }} - Section {{ session.section }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-user-plus"></i> Generate
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sectionFilter" class="form-label">Filter by Section:</label>
+                        <select class="form-select" id="sectionFilter">
+                            <option value="">All Sections</option>
                             {% for session in sessions %}
                                 <option value="{{ session.id }}">{{ session.name }} - Section {{ session.section }}</option>
                             {% endfor %}
                         </select>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-user-plus"></i> Generate
-                        </button>
                     </div>
-                </form>
+                    <table class="table table-striped" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Passcode</th>
+                                <th>Section</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr data-section-id="{{ student.session.id }}">
+                                    <td>{{ student.name }}</td>
+                                    <td>{{ student.password }}</td>
+                                    <td>{{ student.section }}</td>
+                                    <td>
+                                        <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-danger delete-student" onclick="return confirm('Are you sure you want to delete this student?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Section filter dropdown -->
-    <div class="mb-3">
-        <label for="sectionFilter">Filter by Section:</label>
-        <select id="sectionFilter" class="form-control">
-            <option value="">All Sections</option>
-            {% for session in sessions %}
-                <option value="{{ session.id }}">{{ session.name }} - Section {{ session.section }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Passcode</th>
-                <th>Section</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="studentsTable">
-            {% for student in students %}
-                <tr data-section-id="{{ student.section.id }}">
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.password }}</td>
-                    <td>{{ student.section.section }}</td>
-                    <td>
-                        <!-- Delete icon linked to the delete view -->
-                        <a href="{% url 'delete_student' student.id %}" class="text-danger" onclick="return confirm('Are you sure you want to delete this student?');">
-                            <i class="fas fa-trash"></i> <!-- Font Awesome trash icon -->
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 </div>
 
 <script>
 document.getElementById('sectionFilter').addEventListener('change', function() {
     var selectedSectionId = this.value;
-    var rows = document.querySelectorAll('#studentsTable tr');
+    var rows = document.querySelectorAll('#studentsTable tbody tr');
     rows.forEach(function(row) {
-        var sectionId = row.getAttribute('data-section-id');
-        if (selectedSectionId === "" || sectionId === selectedSectionId) {
+        if (selectedSectionId === "" || row.getAttribute('data-section-id') === selectedSectionId) {
             row.style.display = "";
         } else {
             row.style.display = "none";
