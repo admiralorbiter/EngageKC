@@ -39,12 +39,30 @@
             position: relative;
             border: none;
             background-color: transparent;
+            overflow: hidden;
+        }
+
+        .like-button::after {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 100%;
+            bottom: 25%;
+            background-color: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .like-button:hover::after {
+            opacity: 1;  /* Change this to 1 for solid black */
         }
 
         .like-button img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            position: relative;  /* Add this line */
+            z-index: 1;  /* Add this line */
         }
 
         .like-count {
@@ -199,15 +217,15 @@
                                         <a href="{% url 'post_detail' media.id %}" class="btn btn-light p-0" style="width: 38px; height: 38px; overflow: hidden; background-color: transparent;">
                                             <img src="{% static 'video_app/images/feedback-icon.png' %}" alt="Feedback" style="width: 100%; height: 100%; object-fit: cover;">
                                         </a>
-                                        <button class="btn btn-light like-button" data-media-id="{{ media.id }}" data-like-type="graph">
+                                        <button class="like-button" data-media-id="{{ media.id }}" data-like-type="graph">
                                             <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph" width="20" height="20">
                                             <span class="like-count">{{ media.graph_likes }}</span>
                                         </button>
-                                        <button class="btn btn-light like-button" data-media-id="{{ media.id }}" data-like-type="eye">
+                                        <button class="like-button" data-media-id="{{ media.id }}" data-like-type="eye">
                                             <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye" width="20" height="20">
                                             <span class="like-count">{{ media.eye_likes }}</span>
                                         </button>
-                                        <button class="btn btn-light like-button" data-media-id="{{ media.id }}" data-like-type="read">
+                                        <button class="like-button" data-media-id="{{ media.id }}" data-like-type="read">
                                             <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read" width="20" height="20">
                                             <span class="like-count">{{ media.read_likes }}</span>
                                         </button>
