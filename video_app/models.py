@@ -160,10 +160,12 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    password = models.CharField(max_length=100)
     device_id = models.CharField(max_length=255, blank=True, null=True)
     
     def __str__(self):
-        return f'Comment by {self.id} on {self.post.title}'
+        return f'Comment by {self.name or "Anonymous"} on {self.media.title}'
 
 class CustomAdmin(AbstractUser):
     school = models.CharField(max_length=100)

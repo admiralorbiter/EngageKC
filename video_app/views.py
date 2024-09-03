@@ -34,15 +34,27 @@ def post_detail(request, id):
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.media = media
-            new_comment.device_id = request.POST.get('device_id')
-            print(new_comment.device_id)
-            if request.POST.get('parent_id'):
-                parent_id = int(request.POST.get('parent_id'))
-                new_comment.parent = Comment.objects.get(id=parent_id)
-            new_comment.save()
-            return redirect('post_detail', id=media.id)
+            name = request.POST.get('name')
+            password = request.POST.get('password')
+            device_id = request.POST.get('device_id')
+            
+            # Check if a student with this password exists
+            try:
+                student = Student.objects.get(password=password)
+                new_comment = comment_form.save(commit=False)
+                new_comment.media = media
+                new_comment.name = student.name
+                new_comment.password = password
+                new_comment.device_id = device_id or student.device_id
+                
+                parent_id = request.POST.get('parent_id')
+                if parent_id:
+                    new_comment.parent = Comment.objects.get(id=parent_id)
+                
+                new_comment.save()
+                return redirect('post_detail', id=media.id)
+            except Student.DoesNotExist:
+                comment_form.add_error('password', "Invalid password.")
     else:
         comment_form = CommentForm()
 

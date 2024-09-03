@@ -1,6 +1,6 @@
 <!-- comment.html -->
 <div class="comment m-1 p-1 bg-opacity-10 rounded-end" style="background-color: #FA7E61;">
-    <p><strong>{{comment.device_id}}</strong></p>
+    <p><strong>{{ comment.name|default:"Anonymous" }}</strong></p>
     <p class="mx-3">{{ comment.text }}</p>
     <div class="row">
         <div class="col">
@@ -18,12 +18,22 @@
 
     <form method="post" class="reply-form" style="display: none;">
         {% csrf_token %}
-        {{ comment_form.as_p }}
+        <div class="mb-3">
+            <label for="id_name_{{ comment.id }}" class="form-label">Name</label>
+            <input type="text" name="name" id="id_name_{{ comment.id }}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="id_password_{{ comment.id }}" class="form-label">Password</label>
+            <input type="password" name="password" id="id_password_{{ comment.id }}" class="form-control" required>
+        </div>
+        {{ comment_form.text.label_tag }}
+        {{ comment_form.text }}
         <input type="hidden" name="parent_id" value="{{ comment.id }}">
         <input type="hidden" name="device_id" id="device_id_{{ comment.id }}"> <!-- Hidden field for device ID -->
-        <button type="submit" class="btn btn-primary">Reply</button>
+        <button type="submit" class="btn btn-primary mt-2">Reply</button>
     </form>
 </div>
+
 <script>
     document.querySelectorAll('.reply').forEach(function(replyLink) {
         replyLink.addEventListener('click', function(event) {
@@ -34,4 +44,4 @@
             document.getElementById('device_id_' + commentId).value = localStorage.getItem('deviceID'); // Set the device ID in the hidden field
         });
     });
-</script>   
+</script>

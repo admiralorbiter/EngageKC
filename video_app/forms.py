@@ -4,15 +4,13 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
 class CommentForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
     class Meta:
         model = Comment
-        fields = ('text',)
+        fields = ['text']
         widgets = {
-            'text': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 2,
-                'style': 'border-radius: 10px; border: 1px solid #ccc; padding: 10px;',
-            }),
+            'text': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
         }
 
 class StartSessionForm(forms.Form):
