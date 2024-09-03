@@ -30,7 +30,7 @@ class Session(models.Model):
     def days_until_deletion(self):
         if self.is_paused:
             return 'Paused'
-        days_left = 7 - (timezone.now() - self.created_at).days
+        days_left = 360 - (timezone.now() - self.created_at).days
         return max(0, days_left)
 
     def __str__(self):
