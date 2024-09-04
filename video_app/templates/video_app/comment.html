@@ -19,8 +19,8 @@
     <form method="post" class="reply-form" style="display: none;">
         {% csrf_token %}
         <div class="mb-3">
-            <label for="id_password_{{ comment.id }}" class="form-label">Password</label>
-            <input type="password" name="password" id="id_password_{{ comment.id }}" class="form-control" required>
+            <label for="id_media_key_{{ comment.id }}" class="form-label">Password</label>
+            <input type="text" name="media_key" id="id_media_key_{{ comment.id }}" class="form-control" autocomplete="off" required>
         </div>
         {{ comment_form.text.label_tag }}
         {{ comment_form.text }}

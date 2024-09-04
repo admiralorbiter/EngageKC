@@ -22,9 +22,24 @@
                 <h3>Add a comment</h3>
                 <form method="post" class="comment-form">
                     {% csrf_token %}
-                    {{ comment_form.as_p }}
+                    {% for field in comment_form %}
+                        {% if field.name == 'password' %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">Password</label>
+                                <input type="text" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" autocomplete="off" {% if field.field.required %}required{% endif %}>
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                     <input type="hidden" name="device_id" id="device_id"> <!-- Hidden field for device ID -->
-                    <button type="submit" class="btn btn-primary">Add Comment</button>
+                    <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
                 </form>
             </div>
         </div>
