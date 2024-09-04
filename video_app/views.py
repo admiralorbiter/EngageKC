@@ -26,6 +26,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
 
+from django.contrib.auth import get_user_model
+
 def post_detail(request, id):
     media = get_object_or_404(Media, id=id)
     comments = media.comments.filter(parent__isnull=True)
@@ -34,27 +36,46 @@ def post_detail(request, id):
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
-            name = request.POST.get('name')
             password = request.POST.get('password')
             device_id = request.POST.get('device_id')
             
-            # Check if a student with this password exists
-            try:
-                student = Student.objects.get(password=password)
+            # Try to find a student with the given password
+            student = Student.objects.filter(password=password).first()
+            
+            # If no student found, check if it's an admin media password
+            if not student:
+                User = get_user_model()
+                admin = User.objects.filter(media_password=password).first()
+                
+                if admin:
+                    new_comment = comment_form.save(commit=False)
+                    new_comment.media = media
+                    new_comment.name = f"Admin: {admin.username}"
+                    new_comment.password = password
+                    new_comment.device_id = device_id
+                    new_comment.is_admin = True
+                else:
+                    comment_form.add_error('password', "Invalid password.")
+                    return render(request, 'video_app/post_detail.html', {
+                        'media': media,
+                        'comments': comments,
+                        'new_comment': new_comment,
+                        'comment_form': comment_form
+                    })
+            else:
                 new_comment = comment_form.save(commit=False)
                 new_comment.media = media
                 new_comment.name = student.name
                 new_comment.password = password
                 new_comment.device_id = device_id or student.device_id
-                
-                parent_id = request.POST.get('parent_id')
-                if parent_id:
-                    new_comment.parent = Comment.objects.get(id=parent_id)
-                
-                new_comment.save()
-                return redirect('post_detail', id=media.id)
-            except Student.DoesNotExist:
-                comment_form.add_error('password', "Invalid password.")
+                new_comment.is_admin = False
+
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                new_comment.parent = Comment.objects.get(id=parent_id)
+            
+            new_comment.save()
+            return redirect('post_detail', id=media.id)
     else:
         comment_form = CommentForm()
 
@@ -150,6 +171,8 @@ def login(request):
 def index(request):
     return render(request, 'video_app/index.html')
 
+from django.contrib.auth import get_user_model
+
 def upload_media(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
 
@@ -160,19 +183,31 @@ def upload_media(request, session_pk):
             media = form.save(commit=False)
             media.session = session
 
-            # Get the student based on the password and session
             password = form.cleaned_data['password']
-            try:
-                student = Student.objects.get(password=password)
-                media.submitted_password = password  # Save the submitted password
-            except Student.DoesNotExist:
-                form.add_error('password', 'Invalid password for this session')
-                return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
+            
+            # Try to find a student with the given password
+            student = Student.objects.filter(password=password, section=session).first()
+            
+            # If no student found, check if it's an admin media password
+            if not student:
+                User = get_user_model()
+                admin = User.objects.filter(media_password=password).first()
+                
+                if admin:
+                    # Use admin's username as the "student" name
+                    student_name = f"Admin: {admin.username}"
+                else:
+                    form.add_error('password', 'Invalid password for this session')
+                    return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
+            else:
+                student_name = student.name
+
+            media.submitted_password = password  # Save the submitted password
 
             # Generate the title
             graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
             variable_tag = dict(Media.VARIABLE_TAG_CHOICES)[form.cleaned_data['variable_tag']]
-            media.title = f"{student.name}'s {graph_tag} {variable_tag}"
+            media.title = f"{student_name}'s {graph_tag} {variable_tag}"
 
             media.save()
             return redirect('session_detail', session_pk=session.pk)
@@ -429,3 +464,15 @@ def filter_media(request, session_pk):
         url += '?' + '&'.join([f'tags={tag}' for tag in tags])
     
     return redirect(url)
+
+@login_required
+def set_media_password(request):
+    if request.method == 'POST':
+        media_password = request.POST.get('media_password')
+        if media_password:
+            request.user.media_password = media_password
+            request.user.save()
+            messages.success(request, 'Media password set successfully.')
+        else:
+            messages.error(request, 'Please provide a valid media password.')
+    return redirect('admin_view')

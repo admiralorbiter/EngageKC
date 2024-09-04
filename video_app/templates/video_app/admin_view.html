@@ -22,6 +22,24 @@
                     </ul>
                 </div>
             </div>
+            
+            <!-- New media password component -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h3 class="h5 mb-0">Set Media Password</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'set_media_password' %}" method="post" class="form-inline">
+                        {% csrf_token %}
+                        <div class="input-group mb-2">
+                            <input type="password" name="media_password" class="form-control" placeholder="Media Password" required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-key"></i> Set
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <!-- Space for future additions -->
         </div>
 

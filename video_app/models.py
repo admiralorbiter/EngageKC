@@ -160,18 +160,20 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     device_id = models.CharField(max_length=255, blank=True, null=True)
+    is_admin = models.BooleanField(default=False)
     
     def __str__(self):
-        return f'Comment by {self.name or "Anonymous"} on {self.media.title}'
+        return f'Comment by {self.name} on {self.media.title}'
 
 class CustomAdmin(AbstractUser):
     school = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    media_password = models.CharField(max_length=100, blank=True, null=True)
 
     groups = models.ManyToManyField(
         'auth.Group',

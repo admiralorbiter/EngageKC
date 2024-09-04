@@ -24,4 +24,5 @@ urlpatterns = [
     path('generate-students/', views.generate_students, name='generate_students'),
     path('like-media/<int:media_id>/<str:like_type>/', views.like_media, name='like_media'),
     path('filter_media/<int:session_pk>/', views.filter_media, name='filter_media'),
+    path('set-media-password/', views.set_media_password, name='set_media_password'),
 ]
