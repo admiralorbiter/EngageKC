@@ -309,6 +309,9 @@ def start_session(request):
     
     return render(request, 'video_app/start_session.html', {'form': form})
 
+from django.db.models import Count
+from random import shuffle
+
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
     medias = Media.objects.filter(session=session_instance)
@@ -326,8 +329,24 @@ def session_detail(request, session_pk):
     if variable_tag:
         medias = medias.filter(variable_tag=variable_tag)
 
+    # Order by comment count
+    medias = medias.annotate(comment_count=Count('comments')).order_by('comment_count')
+    
+    # Randomize order for media with the same comment count
+    medias = list(medias)
+    current_count = None
+    start_index = 0
+    for i, media in enumerate(medias):
+        if media.comment_count != current_count:
+            if i > start_index:
+                shuffle(medias[start_index:i])
+            current_count = media.comment_count
+            start_index = i
+    if len(medias) > start_index:
+        shuffle(medias[start_index:])
+
     # Pagination
-    paginator = Paginator(medias, 12)  # Show 6 media items per page
+    paginator = Paginator(medias, 12)  # Show 12 media items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

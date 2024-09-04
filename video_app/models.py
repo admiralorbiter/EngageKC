@@ -127,6 +127,12 @@ class Media(models.Model):
     def __str__(self):
         return self.title
 
+    def comment_count(self):
+        return self.comments.count()
+
+    class Meta:
+        ordering = ['id']  # Default ordering, will be overridden in the view
+
 @receiver(pre_delete, sender=Session)
 def delete_associated_media(sender, instance, **kwargs):
     media_files = instance.media.all()
