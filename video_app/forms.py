@@ -44,17 +44,20 @@ def validate_image_type(file):
         raise ValidationError('Invalid image file type')
 
 class MediaForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-
     class Meta:
         model = Media
-        fields = ['image_file', 'graph_tag', 'variable_tag']
+        fields = ['title', 'graph_tag', 'variable_tag']
+        widgets = {
+            'tag': forms.Select(attrs={'class': 'form-control'}),
+            'graph_tag': forms.Select(attrs={'class': 'form-control'}),
+            'variable_tag': forms.Select(attrs={'class': 'form-control'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['graph_tag'].widget = forms.Select(choices=Media.GRAPH_TAG_CHOICES)
-        self.fields['variable_tag'].widget = forms.Select(choices=Media.VARIABLE_TAG_CHOICES)
-    
+        self.fields['graph_tag'].required = False
+        self.fields['variable_tag'].required = False
+
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))

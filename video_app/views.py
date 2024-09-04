@@ -495,3 +495,33 @@ def set_media_password(request):
         else:
             messages.error(request, 'Please provide a valid media password.')
     return redirect('admin_view')
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Media
+from .forms import MediaForm  # You'll need to create this form
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from .models import Media
+from .forms import MediaForm
+
+def edit_media(request, pk):
+    media = get_object_or_404(Media, pk=pk)
+    
+    # Check if the user is authorized to edit this media
+    if not request.user.is_authenticated and request.session.get('device_id') != media.device_id:
+        return HttpResponseForbidden("You don't have permission to edit this media.")
+
+    if request.method == 'POST':
+        form = MediaForm(request.POST, request.FILES, instance=media)
+        if form.is_valid():
+            media = form.save(commit=False)
+            media.graph_tag = form.cleaned_data['graph_tag']
+            media.variable_tag = form.cleaned_data['variable_tag']
+            media.save()
+            return redirect('post_detail', id=media.id)
+    else:
+        form = MediaForm(instance=media)
+
+    return render(request, 'video_app/edit_media.html', {'form': form, 'media': media})

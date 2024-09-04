@@ -3,6 +3,7 @@ from . import views
 from django.contrib import admin
 
 urlpatterns = [
+    path('edit-media/<int:pk>/', views.edit_media, name='edit_media'),
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('upload/<int:session_pk>/', views.upload_media, name='upload_media'),  # Ensure session_id is included
@@ -25,4 +26,5 @@ urlpatterns = [
     path('like-media/<int:media_id>/<str:like_type>/', views.like_media, name='like_media'),
     path('filter_media/<int:session_pk>/', views.filter_media, name='filter_media'),
     path('set-media-password/', views.set_media_password, name='set_media_password'),
+    path('edit-media/<int:pk>/', views.edit_media, name='edit_media'),
 ]
