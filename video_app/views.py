@@ -28,6 +28,10 @@ from django.views.decorators.http import require_POST
 
 from django.contrib.auth import get_user_model
 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+@login_required
 def post_detail(request, id):
     media = get_object_or_404(Media, id=id)
     comments = media.comments.filter(parent__isnull=True)
@@ -36,55 +40,47 @@ def post_detail(request, id):
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
-            password = request.POST.get('password')
-            device_id = request.POST.get('device_id')
-            
-            # Try to find a student with the given password
-            student = Student.objects.filter(password=password).first()
-            
-            # If no student found, check if it's an admin media password
-            if not student:
-                User = get_user_model()
-                admin = User.objects.filter(media_password=password).first()
-                
-                if admin:
-                    new_comment = comment_form.save(commit=False)
-                    new_comment.media = media
-                    new_comment.name = f"Admin: {admin.username}"
-                    new_comment.password = password
-                    new_comment.device_id = device_id
-                    new_comment.is_admin = True
-                else:
-                    comment_form.add_error('password', "Invalid password.")
-                    return render(request, 'video_app/post_detail.html', {
-                        'media': media,
-                        'comments': comments,
-                        'new_comment': new_comment,
-                        'comment_form': comment_form
-                    })
-            else:
-                new_comment = comment_form.save(commit=False)
-                new_comment.media = media
+            new_comment = comment_form.save(commit=False)
+            new_comment.media = media
+
+            # Check if a student is logged in
+            student = None
+            if 'student_id' in request.session:
+                student = Student.objects.filter(id=request.session['student_id']).first()
+
+            if student:
                 new_comment.name = student.name
-                new_comment.password = password
-                new_comment.device_id = device_id or student.device_id
+                new_comment.password = student.password
                 new_comment.is_admin = False
+            elif request.user.is_staff or request.user.is_superuser:
+                # Admin is logged in
+                new_comment.name = f"Admin: {request.user.username}"
+                new_comment.password = request.user.media_password
+                new_comment.is_admin = True
+            else:
+                messages.error(request, 'You do not have permission to comment on this media.')
+                return redirect('post_detail', id=media.id)
 
             parent_id = request.POST.get('parent_id')
             if parent_id:
                 new_comment.parent = Comment.objects.get(id=parent_id)
             
             new_comment.save()
+            messages.success(request, 'Your comment has been added successfully.')
             return redirect('post_detail', id=media.id)
+        else:
+            messages.error(request, 'There was an error with your comment. Please try again.')
     else:
         comment_form = CommentForm()
 
-    return render(request, 'video_app/post_detail.html', {
+    context = {
         'media': media,
         'comments': comments,
         'new_comment': new_comment,
         'comment_form': comment_form
-    })
+    }
+
+    return render(request, 'video_app/post_detail.html', context)
 
 def pause_session(request, session_pk):
     session = get_object_or_404(Session, id=session_pk)
