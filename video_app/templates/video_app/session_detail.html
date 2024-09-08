@@ -195,6 +195,9 @@
                     <p><strong>School: </strong> {{ session_instance.created_by.school }}</p>
                     <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
                     <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
+                    {% if student %}
+                        <p><strong>Logged in as:</strong> {{ student.name }}</p>
+                    {% endif %}
                 </div>
                 <div class="badge-box col" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
                     <p>Look through the posts from your classmates and react with one of the badges below:</p>

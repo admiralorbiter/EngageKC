@@ -64,20 +64,20 @@
                 <h1 class="mb-4 text-center display-1">Join a Data Deck</h1>
             </div>
             <div class="text-center">
-                <h2 class="mt-5 text-center">Join via Password</h2>
+                <h2 class="mt-5 text-center">Student Login</h2>
                 <form method="post" class="needs-validation col-3 mx-auto" novalidate>
                     {% csrf_token %}
                     {% if error %}
                         <div class="alert alert-danger">{{ error }}</div>
                     {% endif %}
                     <div class="mb-3">
-                        <input type="text" id="session_password" name="session_password" class="form-control" required>
+                        <input type="password" id="student_password" name="student_password" class="form-control" placeholder="Enter your password" required>
                         <div class="invalid-feedback">
-                            Please enter the session password.
+                            Please enter your student password.
                         </div>
                     </div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-block">Join Session</button>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
                     </div>
                 </form>
             </div>

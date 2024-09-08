@@ -173,8 +173,14 @@ def index(request):
 
 from django.contrib.auth import get_user_model
 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+
+@login_required
 def upload_media(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
+    User = get_user_model()
 
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
@@ -183,26 +189,21 @@ def upload_media(request, session_pk):
             media = form.save(commit=False)
             media.session = session
 
-            password = form.cleaned_data['password']
-            
-            # Try to find a student with the given password
-            student = Student.objects.filter(password=password, section=session).first()
-            
-            # If no student found, check if it's an admin media password
-            if not student:
-                User = get_user_model()
-                admin = User.objects.filter(media_password=password).first()
-                
-                if admin:
-                    # Use admin's username as the "student" name
-                    student_name = f"Admin: {admin.username}"
-                else:
-                    form.add_error('password', 'Invalid password for this session')
-                    return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
-            else:
-                student_name = student.name
+            # Check if a student is logged in
+            student = None
+            if 'student_id' in request.session:
+                student = Student.objects.filter(id=request.session['student_id'], section=session).first()
 
-            media.submitted_password = password  # Save the submitted password
+            if student:
+                student_name = student.name
+                media.submitted_password = student.password  # Use student's password
+            elif request.user.is_staff or request.user.is_superuser:
+                # Admin is logged in
+                student_name = f"Admin: {request.user.username}"
+                media.submitted_password = request.user.media_password  # Assuming admins have a media_password field
+            else:
+                messages.error(request, 'You do not have permission to upload media to this session.')
+                return redirect('session_detail', session_pk=session.pk)
 
             # Generate the title
             graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
@@ -210,9 +211,10 @@ def upload_media(request, session_pk):
             media.title = f"{student_name}'s {graph_tag} {variable_tag}"
 
             media.save()
+            messages.success(request, 'Media uploaded successfully.')
             return redirect('session_detail', session_pk=session.pk)
         else:
-            print("Form errors:", form.errors)
+            messages.error(request, 'There was an error with your form. Please check and try again.')
     else:
         form = MediaForm()
 
@@ -353,6 +355,10 @@ def session_detail(request, session_pk):
     graph_choices = Media.GRAPH_TAG_CHOICES
     variable_choices = Media.VARIABLE_TAG_CHOICES
 
+    student = None
+    if 'student_id' in request.session:
+        student = Student.objects.filter(id=request.session['student_id']).first()
+
     context = {
         'session_instance': session_instance,
         'page_obj': page_obj,
@@ -360,10 +366,15 @@ def session_detail(request, session_pk):
         'variable_choices': variable_choices,
         'selected_graph_tag': graph_tag,
         'selected_variable_tag': variable_tag,
+        'student': student,  # Add this line
     }
     return render(request, 'video_app/session_detail.html', context)
 
+from django.contrib.auth import login
+from django.contrib.auth import get_user_model
+
 def join_session(request):
+    User = get_user_model()
     if request.user.is_authenticated:
         if request.user.is_superuser:
             sessions = Session.objects.all()
@@ -373,7 +384,7 @@ def join_session(request):
         sessions = []
     
     if request.method == 'POST':
-        session_password = request.POST.get('session_password')
+        student_password = request.POST.get('student_password')
         session_code = request.POST.get('session_code')
         
         if session_code:
@@ -385,15 +396,29 @@ def join_session(request):
             except Session.DoesNotExist:
                 return render(request, 'video_app/join_session.html', {'error': 'Invalid session code', 'sessions': sessions})
         
-        elif session_password:
+        elif student_password:
             try:
-                student_instance = Student.objects.get(password=session_password)
-                session_instance = student_instance.section
+                student = Student.objects.get(password=student_password)
+                session_instance = student.section
+                
+                # Create a user account for the student if it doesn't exist
+                username = f"student_{student.id}"
+                user, created = User.objects.get_or_create(username=username)
+                if created:
+                    user.set_password(student_password)
+                    user.is_staff = False
+                    user.is_superuser = False
+                    user.save()
+                
+                # Log in the student
+                login(request, user)
+                
                 request.session['current_session_id'] = session_instance.id
                 request.session['current_session_name'] = session_instance.name
+                request.session['student_id'] = student.id
                 return redirect('session_detail', session_pk=session_instance.pk)
             except Student.DoesNotExist:
-                return render(request, 'video_app/join_session.html', {'error': 'Invalid session password', 'sessions': sessions})
+                return render(request, 'video_app/join_session.html', {'error': 'Invalid student password', 'sessions': sessions})
     
     context = {
         'sessions': sessions,
