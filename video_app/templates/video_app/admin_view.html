@@ -23,20 +23,33 @@
                 </div>
             </div>
             
-            <!-- New media password component -->
+            <!-- Teacher Information Form -->
             <div class="card mb-4">
                 <div class="card-header bg-secondary text-white">
-                    <h3 class="h5 mb-0">Set Media Password</h3>
+                    <h3 class="h5 mb-0">Teacher Information</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{% url 'set_media_password' %}" method="post" class="form-inline">
+                    <form action="{% url 'update_teacher_info' %}" method="post">
                         {% csrf_token %}
-                        <div class="input-group mb-2">
-                            <input type="password" name="media_password" class="form-control" placeholder="Media Password" required>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-key"></i> Set
-                            </button>
+                        <div class="mb-3">
+                            <label for="district" class="form-label">District</label>
+                            <input type="text" class="form-control" id="district" name="district" value="{{ teacher.district }}" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="school" class="form-label">School</label>
+                            <input type="text" class="form-control" id="school" name="school" value="{{ teacher.school }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ teacher.first_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ teacher.last_name }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Information
+                        </button>
                     </form>
                 </div>
             </div>

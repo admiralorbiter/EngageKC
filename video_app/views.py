@@ -435,11 +435,27 @@ def admin_view(request):
     # Get all sessions and students related to the logged-in admin
     sessions = Session.objects.filter(created_by=request.user)
     students = Student.objects.filter(admin=request.user)
-
-    return render(request, 'video_app/admin_view.html', {
+    
+    # Add this to include the teacher's current information
+    teacher = request.user
+    context = {
         'sessions': sessions,
         'students': students,
-    })
+        'teacher': teacher,
+    }
+    return render(request, 'video_app/admin_view.html', context)
+
+@login_required
+def update_teacher_info(request):
+    if request.method == 'POST':
+        teacher = request.user
+        teacher.district = request.POST.get('district')
+        teacher.school = request.POST.get('school')
+        teacher.first_name = request.POST.get('first_name')
+        teacher.last_name = request.POST.get('last_name')
+        teacher.save()
+        messages.success(request, 'Teacher information updated successfully.')
+    return redirect('admin_view')
 
 def delete_student(request, student_id):
     # Get the student object or return a 404 if not found
