@@ -143,7 +143,7 @@ def signup(request):
 
 def login(request):
     print("Login view called")
-    print(request.user.is_authenticated)
+    print(request.user.is_staff)
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -371,7 +371,7 @@ from django.contrib.auth import get_user_model
 
 def join_session(request):
     User = get_user_model()
-    if request.user.is_authenticated:
+    if request.user.is_staff:
         if request.user.is_superuser:
             sessions = Session.objects.all()
         else:
@@ -531,7 +531,7 @@ def edit_media(request, pk):
     media = get_object_or_404(Media, pk=pk)
     
     # Check if the user is authorized to edit this media
-    if not request.user.is_authenticated and request.session.get('device_id') != media.device_id:
+    if not request.user.is_staff and request.session.get('device_id') != media.device_id:
         return HttpResponseForbidden("You don't have permission to edit this media.")
 
     if request.method == 'POST':

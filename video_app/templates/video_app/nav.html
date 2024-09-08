@@ -11,7 +11,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'join_session' %}">Join Session</a>
             </li>
-            {% if user.is_authenticated %}
+            {% if user.is_staff %}
                 <li class="nav-item">
                     <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
                         {% csrf_token %}
@@ -21,7 +21,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
                 </li>
-            {% else %}
+            {% elif not user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'admin:login' %}">Teacher Login</a>
                 </li>

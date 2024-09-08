@@ -56,7 +56,7 @@
     <div class="container-center">
         <div class="button-container">
             <a href="{% url 'join_session' %}" class="btn btn-primary index-btn-large fade-in">Join</a>
-            {% if user.is_authenticated %}
+            {% if user.is_staff %}
                 <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in" style="animation-delay: 0.2s;">Start Class</a>
             {% endif %}
         </div>
