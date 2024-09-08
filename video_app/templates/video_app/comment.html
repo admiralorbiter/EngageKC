@@ -1,4 +1,6 @@
 <!-- comment.html -->
+{% if not is_new_comment %}
+<!-- Existing comment display -->
 <div class="comment m-1 p-1 bg-opacity-10 rounded-end" style="background-color: #FA7E61;">
     <p><strong>{{ comment.name|default:"Anonymous" }}</strong></p>
     <p class="mx-3">{{ comment.text }}</p>
@@ -24,7 +26,28 @@
         <button type="submit" class="btn btn-primary mt-2">Reply</button>
     </form>
 </div>
+{% endif %}
 
+<!-- Comment form (for both new comments and replies) -->
+<form method="post" class="comment-form {% if not is_new_comment %}reply-form{% endif %}" {% if not is_new_comment %}style="display: none;"{% endif %}>
+    {% csrf_token %}
+    {% if is_new_comment %}<h3>Add a comment</h3>{% endif %}
+    {% for field in comment_form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% if not is_new_comment %}
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+    {% endif %}
+    <button type="submit" class="btn btn-primary mt-2">{% if is_new_comment %}Add Comment{% else %}Reply{% endif %}</button>
+</form>
+
+{% if not is_new_comment %}
 <script>
     document.querySelectorAll('.reply').forEach(function(replyLink) {
         replyLink.addEventListener('click', function(event) {
@@ -35,3 +58,4 @@
         });
     });
 </script>
+{% endif %}

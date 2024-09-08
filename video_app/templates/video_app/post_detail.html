@@ -15,24 +15,11 @@
                 <h1>Comments</h1>
                 <div class="comments">
                     {% for comment in comments %}
-                        {% include 'video_app/comment.html' with comment=comment %}
+                        {% include 'video_app/comment.html' with comment=comment comment_form=comment_form %}
                     {% endfor %}
                 </div>
 
-                <h3>Add a comment</h3>
-                <form method="post" class="comment-form">
-                    {% csrf_token %}
-                    {% for field in comment_form %}
-                        <div class="form-group">
-                            {{ field.label_tag }}
-                            {{ field }}
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
-                </form>
+                {% include 'video_app/comment.html' with comment_form=comment_form is_new_comment=True %}
             </div>
         </div>
     </div>

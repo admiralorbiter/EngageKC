@@ -263,7 +263,7 @@
                                             <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read" width="20" height="20">
                                             <span class="like-count">{{ media.read_likes }}</span>
                                         </button>
-                                        {% if user.is_staff or request.session.device_id == media.device_id %}
+                                        {% if user.is_staff %}
                                             <a href="{% url 'edit_media' media.pk %}" class="btn btn-primary"><i class="fa-solid fa-edit"></i></a>
                                             <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger mx-3"><i class="fa-solid fa-trash"></i></a>
                                         {% endif %}
