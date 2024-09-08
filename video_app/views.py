@@ -553,3 +553,14 @@ from django.shortcuts import redirect
 def student_logout(request):
     logout(request)
     return redirect('home')  # or any other appropriate page after logout
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    media_id = comment.media.id
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, 'Comment deleted successfully.')
+    else:
+        messages.error(request, 'Invalid request method.')
+    return redirect('post_detail', id=media_id)

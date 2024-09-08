@@ -28,4 +28,5 @@ urlpatterns = [
     path('set-media-password/', views.set_media_password, name='set_media_password'),
     path('edit-media/<int:pk>/', views.edit_media, name='edit_media'),
     path('student-logout/', views.student_logout, name='student_logout'),
+    path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
 ]
