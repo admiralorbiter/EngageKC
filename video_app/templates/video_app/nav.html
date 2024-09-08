@@ -21,7 +21,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
                 </li>
-            {% elif not user.is_authenticated %}
+            {% elif user.is_authenticated %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'student_logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link">Student Logout</button>
+                    </form>
+                </li>
+            {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'admin:login' %}">Teacher Login</a>
                 </li>

@@ -27,4 +27,5 @@ urlpatterns = [
     path('filter_media/<int:session_pk>/', views.filter_media, name='filter_media'),
     path('set-media-password/', views.set_media_password, name='set_media_password'),
     path('edit-media/<int:pk>/', views.edit_media, name='edit_media'),
+    path('student-logout/', views.student_logout, name='student_logout'),
 ]

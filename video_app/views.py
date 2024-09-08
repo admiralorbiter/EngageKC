@@ -546,3 +546,10 @@ def edit_media(request, pk):
         form = MediaForm(instance=media)
 
     return render(request, 'video_app/edit_media.html', {'form': form, 'media': media})
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def student_logout(request):
+    logout(request)
+    return redirect('home')  # or any other appropriate page after logout
