@@ -185,6 +185,64 @@
         .feedback-button:hover {
             background-color: transparent !important;
         }
+
+        .badge-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .badge-button {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin-right: 5px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .badge-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .badge-button:hover img {
+            filter: grayscale(0%);
+        }
+
+        .badge-button.graph:hover img, .badge-button.graph.selected img {
+            filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(350deg);
+        }
+
+        .badge-button.eye:hover img, .badge-button.eye.selected img {
+            filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(180deg);
+        }
+
+        .badge-button.read:hover img, .badge-button.read.selected img {
+            filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg);
+        }
+
+        .badge-button.selected {
+            pointer-events: none;
+        }
+
+        .badge-count {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
     </style>
     <div class="mx-auto row" style="width: 75%;">
         <div class="session-header col">
@@ -251,18 +309,20 @@
                                             <img src="{% static 'video_app/images/feedback-icon.png' %}" alt="Feedback" class="feedback-icon">
                                             <img src="{% static 'video_app/images/feedback-icon-filled.png' %}" alt="Feedback" class="feedback-icon-filled">
                                         </a>
-                                        <button class="like-button" data-media-id="{{ media.id }}" data-like-type="graph">
-                                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph" width="20" height="20">
-                                            <span class="like-count">{{ media.graph_likes }}</span>
-                                        </button>
-                                        <button class="like-button" data-media-id="{{ media.id }}" data-like-type="eye">
-                                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye" width="20" height="20">
-                                            <span class="like-count">{{ media.eye_likes }}</span>
-                                        </button>
-                                        <button class="like-button" data-media-id="{{ media.id }}" data-like-type="read">
-                                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read" width="20" height="20">
-                                            <span class="like-count">{{ media.read_likes }}</span>
-                                        </button>
+                                        <div class="badge-buttons">
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="graph">
+                                                <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph">
+                                                <span class="badge-count">{{ media.graph_likes }}</span>
+                                            </button>
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="eye">
+                                                <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye">
+                                                <span class="badge-count">{{ media.eye_likes }}</span>
+                                            </button>
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="read">
+                                                <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read">
+                                                <span class="badge-count">{{ media.read_likes }}</span>
+                                            </button>
+                                        </div>
                                         {% if user.is_staff %}
                                             <a href="{% url 'edit_media' media.pk %}" class="btn btn-primary"><i class="fa-solid fa-edit"></i></a>
                                             <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger mx-3"><i class="fa-solid fa-trash"></i></a>
@@ -295,25 +355,24 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const likeButtons = document.querySelectorAll('.like-button');
+            const badgeButtons = document.querySelectorAll('.badge-button');
             const likedMedia = JSON.parse('{{ liked_media|default:"{}" | escapejs }}');
             
-            likeButtons.forEach(button => {
+            badgeButtons.forEach(button => {
                 const mediaId = button.dataset.mediaId;
+                const badgeType = button.dataset.badgeType;
                 const card = button.closest('.card');
                 
-                if (likedMedia[mediaId]) {
-                    disableCard(card, likedMedia[mediaId]);
+                if (likedMedia[mediaId] === badgeType) {
+                    selectBadge(button);
                 }
                 
                 button.addEventListener('click', function() {
-                    const likeType = this.dataset.likeType;
-                    
                     if (card.classList.contains('liked')) {
                         return;
                     }
                     
-                    fetch(`/like-media/${mediaId}/${likeType}/`, {
+                    fetch(`/like-media/${mediaId}/${badgeType}/`, {
                         method: 'POST',
                         headers: {
                             'X-CSRFToken': getCookie('csrftoken'),
@@ -323,29 +382,28 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            disableCard(card, likeType);
-                            updateLikeCounts(card, data);
+                            selectBadge(button);
+                            updateBadgeCounts(card, data);
                         }
                     })
                     .catch(error => console.error('Error:', error));
                 });
             });
             
-            function disableCard(card, likeType) {
+            function selectBadge(selectedButton) {
+                const card = selectedButton.closest('.card');
                 card.classList.add('liked');
-                card.querySelectorAll('.like-button').forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.dataset.likeType === likeType) {
-                        btn.classList.add('btn-primary');
-                        btn.classList.remove('btn-light');
-                    }
+                card.querySelectorAll('.badge-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                    btn.classList.add(btn.dataset.badgeType);
                 });
+                selectedButton.classList.add('selected');
             }
             
-            function updateLikeCounts(card, data) {
-                card.querySelector('.like-button[data-like-type="graph"] .like-count').textContent = data.graph_likes;
-                card.querySelector('.like-button[data-like-type="eye"] .like-count').textContent = data.eye_likes;
-                card.querySelector('.like-button[data-like-type="read"] .like-count').textContent = data.read_likes;
+            function updateBadgeCounts(card, data) {
+                card.querySelector('.badge-button[data-badge-type="graph"] .badge-count').textContent = data.graph_likes;
+                card.querySelector('.badge-button[data-badge-type="eye"] .badge-count').textContent = data.eye_likes;
+                card.querySelector('.badge-button[data-badge-type="read"] .badge-count').textContent = data.read_likes;
             }
             
             function getCookie(name) {

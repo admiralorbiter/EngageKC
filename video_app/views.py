@@ -96,6 +96,15 @@ def delete_session(request, session_pk):
 
 @require_POST
 def like_media(request, media_id, like_type):
+    # Check if a student is logged in
+    student = None
+    if 'student_id' in request.session:
+        student = Student.objects.filter(id=request.session['student_id']).first()
+    
+    # If no student is logged in or the user is an admin, return an error
+    if not student or request.user.is_staff:
+        return JsonResponse({'error': 'Only logged-in students can vote'}, status=403)
+
     media = get_object_or_404(Media, id=media_id)
     liked_media = request.session.get('liked_media', {})
     
