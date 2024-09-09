@@ -136,24 +136,42 @@
             color: #a13a95; /* Use a similar color to the one in the image */
             text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1); /* Create a subtle shadow effect */
         }
-        .badge-container {
+        .badge-item {
             position: relative;
             display: inline-block;
         }
 
-        .badge-container:hover::after {
+        .badge-item:hover::after {
             content: attr(title);
             position: absolute;
-            bottom: 100%;
+            bottom: 150%;
             left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: #00334C;
             color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            white-space: nowrap;
-            z-index: 1;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            white-space: normal;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            width: 250px;
+            max-width: 300px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .badge-item:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 140%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 12px solid transparent;
+            border-top-color: #00334C;
+            z-index: 1001;
         }
 
         .feedback-button {
