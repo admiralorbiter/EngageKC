@@ -98,6 +98,8 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Media, Student, StudentMediaInteraction
+from django.db.models import F
+from django.db import transaction
 
 @require_POST
 def like_media(request, media_id, like_type):
@@ -112,27 +114,46 @@ def like_media(request, media_id, like_type):
 
     media = get_object_or_404(Media, id=media_id)
     
-    interaction, created = StudentMediaInteraction.objects.get_or_create(
-        student=student,
-        media=media
-    )
+    with transaction.atomic():
+        interaction, created = StudentMediaInteraction.objects.get_or_create(
+            student=student,
+            media=media
+        )
+        
+        # Reset all likes for this interaction
+        interaction.liked_graph = False
+        interaction.liked_eye = False
+        interaction.liked_read = False
+        
+        # Set the new like
+        if like_type == 'graph':
+            interaction.liked_graph = True
+        elif like_type == 'eye':
+            interaction.liked_eye = True
+        elif like_type == 'read':
+            interaction.liked_read = True
+        else:
+            return JsonResponse({'error': 'Invalid like type'}, status=400)
+        
+        interaction.save()
     
-    if like_type == 'graph' and not interaction.liked_graph:
-        interaction.liked_graph = True
-    elif like_type == 'eye' and not interaction.liked_eye:
-        interaction.liked_eye = True
-    elif like_type == 'read' and not interaction.liked_read:
-        interaction.liked_read = True
-    else:
-        return JsonResponse({'error': 'Invalid like type or already liked'}, status=400)
+    # Recalculate likes
+    graph_likes = StudentMediaInteraction.objects.filter(media=media, liked_graph=True).count()
+    eye_likes = StudentMediaInteraction.objects.filter(media=media, liked_eye=True).count()
+    read_likes = StudentMediaInteraction.objects.filter(media=media, liked_read=True).count()
     
-    interaction.save()
+    # Update Media object
+    media.graph_likes = graph_likes
+    media.eye_likes = eye_likes
+    media.read_likes = read_likes
+    media.save()
     
     return JsonResponse({
         'success': True,
-        'graph_likes': media.graph_likes_count(),
-        'eye_likes': media.eye_likes_count(),
-        'read_likes': media.read_likes_count()
+        'graph_likes': graph_likes,
+        'eye_likes': eye_likes,
+        'read_likes': read_likes,
+        'user_like': like_type
     })
 
 # Add this function to update comment count
@@ -340,6 +361,10 @@ from django.core.paginator import Paginator
 from random import shuffle
 from .models import Session, Media, Student, StudentMediaInteraction
 
+from django.db.models import Value
+from django.db.models.expressions import ExpressionWrapper
+from django.db.models import BooleanField
+
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
     medias = Media.objects.filter(session=session_instance)
@@ -377,7 +402,9 @@ def session_detail(request, session_pk):
             )
         )
     else:
-        medias = medias.annotate(has_user_comment=False)
+        medias = medias.annotate(
+            has_user_comment=ExpressionWrapper(Value(False), output_field=BooleanField())
+        )
     
     # Randomize order for media with the same comment count
     medias = list(medias)

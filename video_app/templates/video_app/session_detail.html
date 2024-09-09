@@ -372,10 +372,6 @@
                 }
                 
                 button.addEventListener('click', function() {
-                    if (card.classList.contains('liked')) {
-                        return;
-                    }
-                    
                     fetch(`/like-media/${mediaId}/${badgeType}/`, {
                         method: 'POST',
                         headers: {
@@ -386,28 +382,24 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            selectBadge(button);
-                            updateBadgeCounts(card, data);
+                            updateBadges(card, data);
                         }
                     })
                     .catch(error => console.error('Error:', error));
                 });
             });
             
-            function selectBadge(selectedButton) {
-                const card = selectedButton.closest('.card');
-                card.classList.add('liked');
+            function updateBadges(card, data) {
                 card.querySelectorAll('.badge-button').forEach(btn => {
                     btn.classList.remove('selected');
-                    btn.classList.add(btn.dataset.badgeType);
+                    const countSpan = btn.querySelector('.badge-count');
+                    const badgeType = btn.dataset.badgeType;
+                    countSpan.textContent = data[`${badgeType}_likes`];
                 });
-                selectedButton.classList.add('selected');
-            }
-            
-            function updateBadgeCounts(card, data) {
-                card.querySelector('.badge-button[data-badge-type="graph"] .badge-count').textContent = data.graph_likes;
-                card.querySelector('.badge-button[data-badge-type="eye"] .badge-count').textContent = data.eye_likes;
-                card.querySelector('.badge-button[data-badge-type="read"] .badge-count').textContent = data.read_likes;
+                const selectedButton = card.querySelector(`.badge-button[data-badge-type="${data.user_like}"]`);
+                if (selectedButton) {
+                    selectedButton.classList.add('selected');
+                }
             }
             
             function getCookie(name) {
