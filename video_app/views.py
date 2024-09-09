@@ -334,6 +334,12 @@ def start_session(request):
 from django.db.models import Count
 from random import shuffle
 
+from django.db.models import Exists, OuterRef, F, Count
+from django.shortcuts import get_object_or_404, render
+from django.core.paginator import Paginator
+from random import shuffle
+from .models import Session, Media, Student, StudentMediaInteraction
+
 def session_detail(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
     medias = Media.objects.filter(session=session_instance)
@@ -353,6 +359,25 @@ def session_detail(request, session_pk):
 
     # Order by comment count
     medias = medias.annotate(comment_count=Count('comments')).order_by('comment_count')
+    
+    student = request.session.get('student')
+    
+    student = None
+    if 'student_id' in request.session:
+        student = Student.objects.filter(id=request.session['student_id']).first()
+
+    if student:
+        medias = medias.annotate(
+            has_user_comment=Exists(
+                Comment.objects.filter(
+                    media=OuterRef('pk'),
+                    name=student.name,
+                    password=student.password
+                )
+            )
+        )
+    else:
+        medias = medias.annotate(has_user_comment=False)
     
     # Randomize order for media with the same comment count
     medias = list(medias)
@@ -375,9 +400,9 @@ def session_detail(request, session_pk):
     graph_choices = Media.GRAPH_TAG_CHOICES
     variable_choices = Media.VARIABLE_TAG_CHOICES
 
-    student = None
+    student_instance = None
     if 'student_id' in request.session:
-        student = Student.objects.filter(id=request.session['student_id']).first()
+        student_instance = Student.objects.filter(id=request.session['student_id']).first()
 
     context = {
         'session_instance': session_instance,
@@ -386,7 +411,7 @@ def session_detail(request, session_pk):
         'variable_choices': variable_choices,
         'selected_graph_tag': graph_tag,
         'selected_variable_tag': variable_tag,
-        'student': student,  # Add this line
+        'student': student_instance,
     }
     return render(request, 'video_app/session_detail.html', context)
 
