@@ -94,6 +94,11 @@ def delete_session(request, session_pk):
     session.delete()
     return redirect('join_session')
 
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import Media, Student, StudentMediaInteraction
+
 @require_POST
 def like_media(request, media_id, like_type):
     # Check if a student is logged in
@@ -106,31 +111,41 @@ def like_media(request, media_id, like_type):
         return JsonResponse({'error': 'Only logged-in students can vote'}, status=403)
 
     media = get_object_or_404(Media, id=media_id)
-    liked_media = request.session.get('liked_media', {})
     
-    if str(media_id) not in liked_media:
-        if like_type == 'graph':
-            media.graph_likes += 1
-        elif like_type == 'eye':
-            media.eye_likes += 1
-        elif like_type == 'read':
-            media.read_likes += 1
-        else:
-            return JsonResponse({'error': 'Invalid like type'}, status=400)
-        
-        media.save()
-        liked_media[str(media_id)] = like_type
-        request.session['liked_media'] = liked_media
-        request.session.modified = True
-        
-        return JsonResponse({
-            'success': True,
-            'graph_likes': media.graph_likes,
-            'eye_likes': media.eye_likes,
-            'read_likes': media.read_likes
-        })
+    interaction, created = StudentMediaInteraction.objects.get_or_create(
+        student=student,
+        media=media
+    )
+    
+    if like_type == 'graph' and not interaction.liked_graph:
+        interaction.liked_graph = True
+    elif like_type == 'eye' and not interaction.liked_eye:
+        interaction.liked_eye = True
+    elif like_type == 'read' and not interaction.liked_read:
+        interaction.liked_read = True
     else:
-        return JsonResponse({'error': 'Already liked'}, status=400)
+        return JsonResponse({'error': 'Invalid like type or already liked'}, status=400)
+    
+    interaction.save()
+    
+    return JsonResponse({
+        'success': True,
+        'graph_likes': media.graph_likes_count(),
+        'eye_likes': media.eye_likes_count(),
+        'read_likes': media.read_likes_count()
+    })
+
+# Add this function to update comment count
+def update_comment_count(student, media):
+    interaction, created = StudentMediaInteraction.objects.get_or_create(
+        student=student,
+        media=media
+    )
+    interaction.comment_count += 1
+    interaction.save()
+
+# In your post_detail view or wherever comments are added, call this function:
+# update_comment_count(student, media)
 
 
 class AdminLoginView(views.LoginView):

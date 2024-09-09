@@ -133,6 +133,15 @@ class Media(models.Model):
     class Meta:
         ordering = ['id']  # Default ordering, will be overridden in the view
 
+    def graph_likes_count(self):
+        return self.student_interactions.filter(liked_graph=True).count()
+
+    def eye_likes_count(self):
+        return self.student_interactions.filter(liked_eye=True).count()
+
+    def read_likes_count(self):
+        return self.student_interactions.filter(liked_read=True).count()
+
 @receiver(pre_delete, sender=Session)
 def delete_associated_media(sender, instance, **kwargs):
     media_files = instance.media.all()
@@ -208,3 +217,20 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.section})"
+
+    def get_media_interaction(self, media):
+        return self.media_interactions.filter(media=media).first()
+
+class StudentMediaInteraction(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='media_interactions')
+    media = models.ForeignKey(Media, on_delete=models.CASCADE, related_name='student_interactions')
+    liked_graph = models.BooleanField(default=False)
+    liked_eye = models.BooleanField(default=False)
+    liked_read = models.BooleanField(default=False)
+    comment_count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('student', 'media')
+
+    def __str__(self):
+        return f"{self.student.name} - {self.media.title} Interaction"
