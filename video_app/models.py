@@ -176,7 +176,6 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
     device_id = models.CharField(max_length=255, blank=True, null=True)
     is_admin = models.BooleanField(default=False)
     

@@ -50,12 +50,10 @@ def post_detail(request, id):
 
             if student:
                 new_comment.name = student.name
-                new_comment.password = student.password
                 new_comment.is_admin = False
             elif request.user.is_staff or request.user.is_superuser:
                 # Admin is logged in
                 new_comment.name = f"Admin: {request.user.username}"
-                new_comment.password = request.user.media_password
                 new_comment.is_admin = True
             else:
                 messages.error(request, 'You do not have permission to comment on this media.')
