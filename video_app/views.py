@@ -676,3 +676,18 @@ def delete_comment(request, comment_id):
     else:
         messages.error(request, 'Invalid request method.')
     return redirect('post_detail', id=media_id)
+
+from django.shortcuts import render, get_object_or_404
+from .models import Student, StudentMediaInteraction, Comment
+
+def student_detail(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    interactions = StudentMediaInteraction.objects.filter(student=student)
+    comments = Comment.objects.filter(student=student)
+
+    context = {
+        'student': student,
+        'interactions': interactions,
+        'comments': comments,
+    }
+    return render(request, 'video_app/student_detail.html', context)

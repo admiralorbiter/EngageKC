@@ -30,4 +30,5 @@ urlpatterns = [
     path('student-logout/', views.student_logout, name='student_logout'),
     path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
     path('update_teacher_info/', views.update_teacher_info, name='update_teacher_info'),
+    path('student/<int:student_id>/', views.student_detail, name='student_detail'),
 ]

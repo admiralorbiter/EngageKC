@@ -105,7 +105,9 @@
                         <tbody>
                             {% for student in students %}
                                 <tr data-section-id="{{ student.session.id }}">
-                                    <td>{{ student.name }}</td>
+                                    <td>
+                                        <a href="{% url 'student_detail' student.id %}">{{ student.name }}</a>
+                                    </td>
                                     <td>{{ student.password }}</td>
                                     <td>{{ student.section }}</td>
                                     <td>
@@ -138,7 +140,9 @@
                         <tbody>
                             {% for student in students %}
                                 <tr data-section-id="{{ student.section.id }}">
-                                    <td>{{ student.name }}</td>
+                                    <td>
+                                        <a href="{% url 'student_detail' student.id %}">{{ student.name }}</a>
+                                    </td>
                                     <td>{{ student.section.name }} - Section {{ student.section.section }}</td>
                                     <td>{{ student.total_votes }}</td>
                                     <td>{{ student.total_comments }}</td>

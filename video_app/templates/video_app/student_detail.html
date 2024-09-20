@@ -1,0 +1,65 @@
+{% extends "video_app/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Student Details: {{ student.name }}</h1>
+    <p>Section: {{ student.section.name }} - Section {{ student.section.section }}</p>
+
+    <h2>Media Interactions</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Media Title</th>
+                <th>Liked Graph</th>
+                <th>Liked Eye</th>
+                <th>Liked Read</th>
+                <th>Comment Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for interaction in interactions %}
+            <tr>
+                <td>{{ interaction.media.title }}</td>
+                <td>
+                    {% if interaction.liked_graph %}
+                    <i class="fas fa-check-circle text-success"></i>
+                    {% else %}
+                    <i class="fas fa-times-circle text-danger"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if interaction.liked_eye %}
+                    <i class="fas fa-check-circle text-success"></i>
+                    {% else %}
+                    <i class="fas fa-times-circle text-danger"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if interaction.liked_read %}
+                    <i class="fas fa-check-circle text-success"></i>
+                    {% else %}
+                    <i class="fas fa-times-circle text-danger"></i>
+                    {% endif %}
+                </td>
+                <td>{{ interaction.comment_count }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No interactions found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Comments</h2>
+    <ul class="list-group">
+        {% for comment in comments %}
+        <li class="list-group-item">
+            <strong>{{ comment.media.title }}</strong>: {{ comment.text }}
+            <small class="text-muted">({{ comment.created_at }})</small>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No comments found.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
