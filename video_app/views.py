@@ -525,10 +525,17 @@ def admin_view(request):
     # Add this to include the teacher's current information
     teacher = request.user
     
+    # Get top 10 media items for leaderboard
+    media_leaderboard = Media.objects.annotate(
+        total_votes=Sum(F('graph_likes') + F('eye_likes') + F('read_likes')),
+        total_comments=Count('comments')
+    ).order_by('-total_votes')[:10]  # Get top 10 media items
+
     context = {
         'sessions': sessions,
         'students': students,
         'teacher': teacher,
+        'media_leaderboard': media_leaderboard,
     }
     return render(request, 'video_app/admin_view.html', context)
 

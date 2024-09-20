@@ -152,6 +152,37 @@
                     </table>
                 </div>
             </div>
+
+            <!-- New section for media leaderboard -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="h4 mb-0">Media Leaderboard</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="mediaLeaderboardTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Title</th>
+                                <th>Total Votes</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for media in media_leaderboard %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'post_detail' id=media.id %}">{{ media.title }}</a>
+                                    </td>
+                                    <td>{{ media.total_votes }}</td>
+                                    <td>{{ media.total_comments }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
