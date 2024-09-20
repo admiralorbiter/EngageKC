@@ -24,7 +24,8 @@ import openpyxl
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-
+from django.db.models import Sum, Count, F, Q, Case, When, IntegerField
+from django.db.models.functions import Coalesce
 
 from django.contrib.auth import get_user_model
 
@@ -495,14 +496,30 @@ def join_session(request):
     }
     return render(request, 'video_app/join_session.html', context)
 
+
+
 @login_required
 def admin_view(request):
-    # Get all sessions and students related to the logged-in admin
+    # Get all sessions related to the logged-in admin
     sessions = Session.objects.filter(created_by=request.user)
-    students = Student.objects.filter(admin=request.user)
     
+    # Get students related to the logged-in admin with interaction data
+    students = Student.objects.filter(admin=request.user).annotate(
+        total_votes=Coalesce(Sum(
+            Case(
+                When(media_interactions__liked_graph=True, then=1),
+                When(media_interactions__liked_eye=True, then=1),
+                When(media_interactions__liked_read=True, then=1),
+                default=0,
+                output_field=IntegerField()
+            )
+        ), 0),
+        total_comments=Coalesce(Sum('media_interactions__comment_count'), 0)
+    ).select_related('section')
+
     # Add this to include the teacher's current information
     teacher = request.user
+    
     context = {
         'sessions': sessions,
         'students': students,

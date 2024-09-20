@@ -119,6 +119,35 @@
                     </table>
                 </div>
             </div>
+
+            <!-- New section for student interaction data -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h2 class="h4 mb-0">Student Interaction Data</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="studentInteractionTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Section</th>
+                                <th>Total Votes</th>
+                                <th>Total Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr data-section-id="{{ student.section.id }}">
+                                    <td>{{ student.name }}</td>
+                                    <td>{{ student.section.name }} - Section {{ student.section.section }}</td>
+                                    <td>{{ student.total_votes }}</td>
+                                    <td>{{ student.total_comments }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
