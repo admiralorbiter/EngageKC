@@ -169,19 +169,6 @@ def delete_associated_media(sender, instance, **kwargs):
                 print(f"Image file does not exist: {media.image_file.path}")
         media.delete()
 
-class Comment(models.Model):
-    media = models.ForeignKey(Media, related_name='comments', on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=100)
-    device_id = models.CharField(max_length=255, blank=True, null=True)
-    is_admin = models.BooleanField(default=False)
-    
-    def __str__(self):
-        return f'Comment by {self.name} on {self.media.title}'
-
 class CustomAdmin(AbstractUser):
     school = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
@@ -233,3 +220,17 @@ class StudentMediaInteraction(models.Model):
 
     def __str__(self):
         return f"{self.student.name} - {self.media.title} Interaction"
+
+class Comment(models.Model):
+    media = models.ForeignKey(Media, related_name='comments', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100)
+    device_id = models.CharField(max_length=255, blank=True, null=True)
+    is_admin = models.BooleanField(default=False)
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
+    
+    def __str__(self):
+        return f'Comment by {self.name} on {self.media.title}'

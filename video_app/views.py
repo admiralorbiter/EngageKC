@@ -44,7 +44,6 @@ def post_detail(request, id):
             new_comment = comment_form.save(commit=False)
             new_comment.media = media
 
-            # Check if a student is logged in
             student = None
             if 'student_id' in request.session:
                 student = Student.objects.filter(id=request.session['student_id']).first()
@@ -52,8 +51,8 @@ def post_detail(request, id):
             if student:
                 new_comment.name = student.name
                 new_comment.is_admin = False
+                new_comment.student = student  # Set the student field
             elif request.user.is_staff or request.user.is_superuser:
-                # Admin is logged in
                 new_comment.name = f"Admin: {request.user.username}"
                 new_comment.is_admin = True
             else:
@@ -65,6 +64,13 @@ def post_detail(request, id):
                 new_comment.parent = Comment.objects.get(id=parent_id)
             
             new_comment.save()
+            
+            # Update the comment count for the student's media interaction
+            if student:
+                interaction, _ = StudentMediaInteraction.objects.get_or_create(student=student, media=media)
+                interaction.comment_count += 1
+                interaction.save()
+
             messages.success(request, 'Your comment has been added successfully.')
             return redirect('post_detail', id=media.id)
         else:
@@ -395,8 +401,7 @@ def session_detail(request, session_pk):
             has_user_comment=Exists(
                 Comment.objects.filter(
                     media=OuterRef('pk'),
-                    name=student.name,
-                    password=student.password
+                    name=student.name
                 )
             )
         )
