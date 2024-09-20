@@ -7,12 +7,14 @@
         justify-content: center;
         align-items: center;
     }
+
     .button-container {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 20px;
     }
+
     .index-btn-large {
         font-size: 1.5em;
         padding: 15px 0;
@@ -23,6 +25,7 @@
         position: relative;
         overflow: hidden;
     }
+
     .index-btn-large::before {
         content: '';
         position: absolute;
@@ -30,34 +33,44 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-            120deg,
-            transparent,
-            rgba(255, 255, 255, 0.3),
-            transparent
-        );
+        background: linear-gradient(120deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent);
         transition: all 0.5s;
     }
+
     .index-btn-large:hover::before {
         left: 100%;
     }
+
     .index-btn-large:active {
         transform: scale(0.95);
     }
+
     .fade-in {
         animation: fadeIn 1s ease-in;
     }
+
     @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
 <div class="container mt-5">
     <div class="container-center">
         <div class="button-container">
-            <a href="{% url 'join_session' %}" class="btn btn-primary index-btn-large fade-in">Join</a>
+            <a href="{% url 'join_session' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
             {% if user.is_staff %}
-                <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in" style="animation-delay: 0.2s;">Start Class</a>
+            <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in"
+                style="animation-delay: 0.2s;">Create Section</a>
             {% endif %}
         </div>
     </div>

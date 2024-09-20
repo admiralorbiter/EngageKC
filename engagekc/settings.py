@@ -48,15 +48,15 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
+    '127.0.0.1', 'localhost',
     'da1e4a43-a582-482a-9f0b-0ff075e026ca-00-44w0qiqqdybg.worf.replit.dev',
-    'jlane.pythonanywhere.com',
+    '42d4b43d-020c-4c8f-825a-792d21945254-00-1vdpmgorpm3kr.picard.replit.dev'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://da1e4a43-a582-482a-9f0b-0ff075e026ca-00-44w0qiqqdybg.worf.replit.dev',
     'https://jlane.pythonanywhere.com',
+    'https://42d4b43d-020c-4c8f-825a-792d21945254-00-1vdpmgorpm3kr.picard.replit.dev'
 ]
 
 # Application definition
