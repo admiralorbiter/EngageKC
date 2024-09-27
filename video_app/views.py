@@ -699,17 +699,17 @@ def student_detail(request, student_id):
     posts = Media.objects.filter(session=session)
 
     # Calculate feedback stats
-    improvement_count = interactions.filter(liked_graph=True).count()
-    knowledge_count = interactions.filter(liked_eye=True).count()
-    participation_count = interactions.filter(liked_read=True).count()
+    graph_count = interactions.filter(liked_graph=True).count()
+    eye_count = interactions.filter(liked_eye=True).count()
+    read_count = interactions.filter(liked_read=True).count()
 
     context = {
         'student': student,
         'interactions': interactions,
         'comments': comments,
         'student_posts': posts,
-        'improvement_count': improvement_count,
-        'knowledge_count': knowledge_count,
-        'participation_count': participation_count,
+        'graph_count': graph_count,
+        'eye_count': eye_count,
+        'read_count': read_count,
     }
     return render(request, 'video_app/student_detail.html', context)
