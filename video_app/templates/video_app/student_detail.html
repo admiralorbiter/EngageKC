@@ -59,13 +59,15 @@
                 {% for interaction in interactions %}
                 <div class="feedback-item">
                     <p>{{ interaction.media.title }}</p>
-                    {% if interaction.liked_graph %}
-                        <p>Liked for improvement</p>
-                    {% elif interaction.liked_eye %}
-                        <p>Liked for knowledge</p>
-                    {% elif interaction.liked_read %}
-                        <p>Liked for participation</p>
-                    {% endif %}
+                    <p class="feedback-comment">
+                        {% if interaction.liked_graph %}
+                            Latest comment I left as feedback for somebody else!
+                        {% elif interaction.liked_eye %}
+                            Latest comment I left as feedback for somebody else!
+                        {% elif interaction.liked_read %}
+                            Latest comment I left as feedback for somebody else!
+                        {% endif %}
+                    </p>
                 </div>
                 {% empty %}
                 <p>No feedback given yet.</p>
@@ -108,6 +110,56 @@
 }
 
 .post-comment {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.student-feedback {
+    width: 48%;
+    float: right;
+}
+
+.feedback-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat img {
+    width: 40px;
+    height: 40px;
+}
+
+.stat span {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.feedback-list {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.feedback-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.feedback-item p {
+    margin: 5px 0;
+}
+
+.feedback-comment {
     font-size: 0.9em;
     color: #666;
 }
