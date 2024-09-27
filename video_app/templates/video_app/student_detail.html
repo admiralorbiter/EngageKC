@@ -5,19 +5,33 @@
 <div class="profile-container">
     <!-- Profile Header -->
     <div class="profile-header">
-        <div class="profile-icon">
-            <img src="{% static 'video_app/images/avatar.png' %}" alt="Minnie Mouse Icon">
-        </div>
-        <div class="profile-info">
-            <div class="posting-as">
-                <h2>YOU are posting as:</h2>
-                <h1>{{ student.name }}</h1>
-            </div>
-            <div class="character-description">
-                <p>Minnie Mouse is an American cartoon character created by the Walt Disney Company. As the longtime sweetheart of Mickey Mouse, she is an anthropomorphic mouse with white gloves, a red or pink bow, blue (or pink or red) polka-dotted dress, white bloomers and yellow low-heeled shoes occasionally with ribbons on them.</p>
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <!-- Left component: Posting as -->
+                <div class="col-md-3">
+                    <div class="posting-as">
+                        <h2>YOU are posting as:</h2>
+                        <h1>{{ student.name }}</h1>
+                    </div>
+                </div>
+                
+                <!-- Middle component: Character description -->
+                <div class="col-md-6">
+                    <div class="character-description">
+                        <p>{{ student.description }}Character description here.</p>
+                    </div>
+                </div>
+                
+                <!-- Right component: Avatar -->
+                <div class="col-md-3">
+                    <div class="profile-icon">
+                        <img src="{% static 'video_app/images/avatar.png' %}" alt="{{ student.name }} Icon">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="background-lines">
         <!-- Main Content Area -->
         <div class="content-area">
@@ -97,14 +111,55 @@
     }
 
     .profile-container {
-        max-width: 1200px;
+        max-width: 1600px;
         margin: 0 auto;
         background-color: transparent;
     }
 
     .profile-header {
         background-color: #003366;
-        /* ... (rest of profile header styles) ... */
+        padding: 20px 0;
+        color: white;
+    }
+
+    .posting-as {
+        background-color: #002244;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .posting-as h2 {
+        font-size: 1em;
+        margin: 0;
+    }
+
+    .posting-as h1 {
+        font-size: 1.5em;
+        margin: 0;
+        color: #ffff00;
+    }
+
+    .character-description {
+        font-size: 0.9em;
+        line-height: 1.4;
+        padding: 10px;
+        background-color: #004488;
+        border-radius: 10px;
+    }
+
+    .profile-icon {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto;
+        border: 5px solid #ffff00;
+    }
+
+    .profile-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .content-area {
