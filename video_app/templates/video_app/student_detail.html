@@ -18,82 +18,145 @@
             </div>
         </div>
     </div>
-
-    <!-- Main Content Area -->
-    <div class="content-area">
-        <!-- Student Posts -->
-        <div class="student-posts">
-            <h3>YOUR POSTS:</h3>
-            <div class="posts-list">
-                {% for post in student_posts %}
-                <div class="post">
-                    {% if post.image_file %}
-                        <img src="{{ post.image_file.url }}" alt="Post Image">
-                    {% endif %}
-                    <p class="post-title">{{ post.title }}</p>
-                    <p class="post-comment">Latest comment left on the post that I made.</p>
-                </div>
-                {% empty %}
-                <p>No posts yet.</p>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Student Feedback -->
-        <div class="student-feedback">
-            <h3>YOUR FEEDBACK:</h3>
-            <div class="feedback-stats">
-                <div class="stat">
-                    <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Improvement">
-                    <span>{{ graph_count }}</span>
-                </div>
-                <div class="stat">
-                    <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Knowledge">
-                    <span>{{ eye_count }}</span>
-                </div>
-                <div class="stat">
-                    <img src="{% static 'video_app/images/read-icon.png' %}" alt="Participation">
-                    <span>{{ read_count }}</span>
-                </div>
-            </div>
-            <div class="feedback-list">
-                {% for interaction in interactions %}
-                <div class="feedback-item">
-                    <p>{{ interaction.media.title }}</p>
-                    <p class="feedback-comment">
-                        {% if interaction.liked_graph %}
-                            Latest comment I left as feedback for somebody else!
-                        {% elif interaction.liked_eye %}
-                            Latest comment I left as feedback for somebody else!
-                        {% elif interaction.liked_read %}
-                            Latest comment I left as feedback for somebody else!
+    <div class="background-lines">
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Student Posts -->
+            <div class="student-posts">
+                <h3>YOUR POSTS:</h3>
+                <div class="posts-list">
+                    {% for post in student_posts %}
+                    <div class="post">
+                        {% if post.image_file %}
+                            <img src="{{ post.image_file.url }}" alt="Post Image">
                         {% endif %}
-                    </p>
+                        <p class="post-title">{{ post.title }}</p>
+                        <p class="post-comment">Latest comment left on the post that I made.</p>
+                    </div>
+                    {% empty %}
+                    <p>No posts yet.</p>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <p>No feedback given yet.</p>
-                {% endfor %}
+            </div>
+
+            <!-- Student Feedback -->
+            <div class="student-feedback">
+                <h3>YOUR FEEDBACK:</h3>
+                <div class="feedback-stats">
+                    <div class="stat">
+                        <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Improvement">
+                        <span>{{ graph_count }}</span>
+                    </div>
+                    <div class="stat">
+                        <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Knowledge">
+                        <span>{{ eye_count }}</span>
+                    </div>
+                    <div class="stat">
+                        <img src="{% static 'video_app/images/read-icon.png' %}" alt="Participation">
+                        <span>{{ read_count }}</span>
+                    </div>
+                </div>
+                <div class="feedback-list">
+                    {% for interaction in interactions %}
+                    <div class="feedback-item">
+                        <p>{{ interaction.media.title }}</p>
+                        <p class="feedback-comment">
+                            {% if interaction.liked_graph %}
+                                Latest comment I left as feedback for somebody else!
+                            {% elif interaction.liked_eye %}
+                                Latest comment I left as feedback for somebody else!
+                            {% elif interaction.liked_read %}
+                                Latest comment I left as feedback for somebody else!
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% empty %}
+                    <p>No feedback given yet.</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    .background-lines {
+        background-color: #ffffff; /* Solid white background */
+        background-image: 
+            linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
+        background-size: 50px 100%; /* Adjust line spacing */
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
     .profile-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 20px;
-        background-color: #f0f8ff;
+        background-color: transparent;
     }
 
     .profile-header {
-        display: flex;
-        align-items: flex-start;
         background-color: #003366;
-        color: white;
+        /* ... (rest of profile header styles) ... */
+    }
+
+    .content-area {
+        display: flex;
+        justify-content: space-between;
         padding: 20px;
+    }
+
+    .student-posts,
+    .student-feedback {
+        width: 48%;
+        background-color: #FFA500; /* Orange background */
         border-radius: 10px;
-        margin-bottom: 20px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-posts h3,
+    .student-feedback h3 {
+        color: #003366; /* Dark blue color for the headers */
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .posts-list,
+    .feedback-list {
+        background-color: white;
+        border-radius: 5px;
+        padding: 10px;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .post,
+    .feedback-item {
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .feedback-stats {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 15px;
+    }
+
+    .stat {
+        text-align: center;
+        background-color: white;
+        border-radius: 5px;
+        padding: 5px;
     }
 
     .profile-icon {
@@ -219,6 +282,14 @@
 .feedback-comment {
     font-size: 0.9em;
     color: #666;
+}
+
+.background-lines {
+    background-color: #ffffff; /* Solid white background */
+    background-image: 
+        linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
+    background-size: 50px 100%; /* Adjust line spacing */
+    padding: 20px;
 }
 </style>
 {% endblock %}
