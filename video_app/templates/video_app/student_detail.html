@@ -1,65 +1,76 @@
 {% extends "video_app/base.html" %}
+{% load static %}
+
 {% block content %}
-<div class="container mt-5">
-    <h1>Student Details: {{ student.name }}</h1>
-    <p>Section: {{ student.section.name }} - Section {{ student.section.section }}</p>
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-icon">
+            <!-- Add a default or placeholder student icon -->
+            <img src="{% static 'video_app/images/student_icon.png' %}" alt="Student Icon">
+        </div>
+        <div class="profile-info">
+            <h2>YOU are posting as:</h2>
+            <h1>{{ student.name }}</h1>
+        </div>
+        <div class="student-details">
+            <p>Session: {{ student.section.name }}</p>
+        </div>
+    </div>
 
-    <h2>Media Interactions</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Media Title</th>
-                <th>Liked Graph</th>
-                <th>Liked Eye</th>
-                <th>Liked Read</th>
-                <th>Comment Count</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for interaction in interactions %}
-            <tr>
-                <td>{{ interaction.media.title }}</td>
-                <td>
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Student Posts -->
+        <div class="student-posts">
+            <h3>YOUR POSTS:</h3>
+            <div class="posts-list">
+                {% for post in student_posts %}
+                <div class="post">
+                    {% if post.image_file %}
+                        <img src="{{ post.image_file.url }}" alt="Post Image">
+                    {% endif %}
+                    <p>{{ post.title }}</p>
+                </div>
+                {% empty %}
+                <p>No posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Student Feedback -->
+        <div class="student-feedback">
+            <h3>YOUR FEEDBACK:</h3>
+            <div class="feedback-stats">
+                <div class="stat">
+                    <img src="{% static 'video_app/images/improvement_icon.png' %}" alt="Improvement">
+                    <span>{{ improvement_count }}</span>
+                </div>
+                <div class="stat">
+                    <img src="{% static 'video_app/images/knowledge_icon.png' %}" alt="Knowledge">
+                    <span>{{ knowledge_count }}</span>
+                </div>
+                <div class="stat">
+                    <img src="{% static 'video_app/images/participation_icon.png' %}" alt="Participation">
+                    <span>{{ participation_count }}</span>
+                </div>
+            </div>
+            <div class="feedback-list">
+                {% for interaction in interactions %}
+                <div class="feedback-item">
+                    <p>{{ interaction.media.title }}</p>
                     {% if interaction.liked_graph %}
-                    <i class="fas fa-check-circle text-success"></i>
-                    {% else %}
-                    <i class="fas fa-times-circle text-danger"></i>
+                        <p>Liked for improvement</p>
+                    {% elif interaction.liked_eye %}
+                        <p>Liked for knowledge</p>
+                    {% elif interaction.liked_read %}
+                        <p>Liked for participation</p>
                     {% endif %}
-                </td>
-                <td>
-                    {% if interaction.liked_eye %}
-                    <i class="fas fa-check-circle text-success"></i>
-                    {% else %}
-                    <i class="fas fa-times-circle text-danger"></i>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if interaction.liked_read %}
-                    <i class="fas fa-check-circle text-success"></i>
-                    {% else %}
-                    <i class="fas fa-times-circle text-danger"></i>
-                    {% endif %}
-                </td>
-                <td>{{ interaction.comment_count }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5">No interactions found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <h2>Comments</h2>
-    <ul class="list-group">
-        {% for comment in comments %}
-        <li class="list-group-item">
-            <strong>{{ comment.media.title }}</strong>: {{ comment.text }}
-            <small class="text-muted">({{ comment.created_at }})</small>
-        </li>
-        {% empty %}
-        <li class="list-group-item">No comments found.</li>
-        {% endfor %}
-    </ul>
+                </div>
+                {% empty %}
+                <p>No feedback given yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

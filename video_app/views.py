@@ -691,10 +691,25 @@ def student_detail(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     interactions = StudentMediaInteraction.objects.filter(student=student)
     comments = Comment.objects.filter(student=student)
+    
+    # Get the student's session
+    session = student.section
+    
+    # Get posts from the student's session
+    posts = Media.objects.filter(session=session)
+
+    # Calculate feedback stats
+    improvement_count = interactions.filter(liked_graph=True).count()
+    knowledge_count = interactions.filter(liked_eye=True).count()
+    participation_count = interactions.filter(liked_read=True).count()
 
     context = {
         'student': student,
         'interactions': interactions,
         'comments': comments,
+        'student_posts': posts,
+        'improvement_count': improvement_count,
+        'knowledge_count': knowledge_count,
+        'participation_count': participation_count,
     }
     return render(request, 'video_app/student_detail.html', context)
