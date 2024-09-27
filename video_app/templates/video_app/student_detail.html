@@ -29,7 +29,8 @@
                     {% if post.image_file %}
                         <img src="{{ post.image_file.url }}" alt="Post Image">
                     {% endif %}
-                    <p>{{ post.title }}</p>
+                    <p class="post-title">{{ post.title }}</p>
+                    <p class="post-comment">Latest comment left on the post that I made.</p>
                 </div>
                 {% empty %}
                 <p>No posts yet.</p>
@@ -73,4 +74,42 @@
         </div>
     </div>
 </div>
+<style>
+    .student-posts {
+    width: 48%; /* Adjust as needed */
+    margin-right: 2%;
+    float: left;
+}
+
+.posts-list {
+    max-height: 500px; /* Adjust height as needed */
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.post {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.post img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.post-title {
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.post-comment {
+    font-size: 0.9em;
+    color: #666;
+}
+</style>
 {% endblock %}
