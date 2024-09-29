@@ -200,6 +200,8 @@ class Student(models.Model):
     section = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='students')
     admin = models.ForeignKey(CustomAdmin, on_delete=models.CASCADE)
     device_id = models.CharField(max_length=255, blank=True, null=True)
+    character_description = models.TextField(blank=True, null=True)
+    avatar_image_path = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.section})"

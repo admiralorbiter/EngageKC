@@ -1,3 +1,4 @@
+import csv
 import os
 import random
 from django.shortcuts import render, redirect, get_object_or_404
@@ -291,32 +292,44 @@ def load_words():
         return [line.strip() for line in f]
 
 def generate_passcode(words):
-    """Generates a 4-word passcode from the loaded word list."""
+    """Generates a 2-word passcode from the loaded word list."""
     return '.'.join(random.sample(words, 2))
 
+def load_marvel_characters():
+    """Load Marvel characters from the CSV file."""
+    characters = []
+    csv_path = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'characters - marvel.csv')
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            characters.append(row)
+    return characters
+
 def generate_users_for_section(section, num_students, admin):
-    """Generates students with random names and passcodes for a given section, saving them to the database."""
-    names_list = load_names()
-    words_list = load_words()
+    """Generates students with Marvel character names and details for a given section, saving them to the database."""
+    words_list = load_words()  # Keep this for generating passcodes
+    marvel_characters = load_marvel_characters()
     
     generated_students = []
     
     for _ in range(num_students):
-        # Pick a unique name that is not already used in the database
+        # Pick a unique character that is not already used in the database
         while True:
-            name = random.choice(names_list)
-            if not Student.objects.filter(name=name).exists():  # Check if name is already used in the database
+            character = random.choice(marvel_characters)
+            if not Student.objects.filter(name=character['name']).exists():
                 break
         
-        # Generate the 4-word passcode
+        # Generate the 2-word passcode
         passcode = generate_passcode(words_list)
         
         # Save the student to the database
         student = Student.objects.create(
-            name=name,
+            name=character['name'],
             password=passcode,
             section=section,
-            admin=admin
+            admin=admin,
+            character_description=character['description'],
+            avatar_image_path=character['filename']
         )
         
         generated_students.append(student)
