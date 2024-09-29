@@ -197,8 +197,36 @@
         background-color: white;
         border-radius: 5px;
         padding: 10px;
-        max-height: 500px;
-        overflow-y: auto;
+        height: 750px; /* Changed from max-height to height */
+        overflow-y: scroll; /* Changed from auto to scroll */
+        scrollbar-width: auto; /* Changed from none to auto for Firefox */
+        -ms-overflow-style: auto; /* Changed from none to auto for IE and Edge */
+    }
+
+    .posts-list::-webkit-scrollbar,
+    .feedback-list::-webkit-scrollbar {
+        width: 30px; /* Much wider scrollbar */
+    }
+
+    .posts-list::-webkit-scrollbar-track,
+    .feedback-list::-webkit-scrollbar-track {
+        background: #FFA500; /* Orange background */
+        border-radius: 15px;
+        margin: 10px 0; /* Add some space at the top and bottom */
+    }
+
+    .posts-list::-webkit-scrollbar-thumb,
+    .feedback-list::-webkit-scrollbar-thumb {
+        background-color: #ffffff; /* White thumb */
+        border-radius: 15px;
+        border: 8px solid #FFA500; /* Thick orange border for bubble effect */
+    }
+
+    /* Custom scrollbar for Firefox */
+    .posts-list,
+    .feedback-list {
+        scrollbar-color: #ffffff #FFA500;
+        scrollbar-width: auto;
     }
 
     .post,
@@ -268,7 +296,7 @@
 }
 
 .posts-list {
-    max-height: 500px; /* Adjust height as needed */
+    max-height: 750px; /* Increased from 500px to 750px (50% increase) */
     overflow-y: auto;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
@@ -325,7 +353,7 @@
 }
 
 .feedback-list {
-    max-height: 500px;
+    max-height: 750px; /* Increased from 500px to 750px (50% increase) */
     overflow-y: auto;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
