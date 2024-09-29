@@ -695,8 +695,8 @@ def student_detail(request, student_id):
     # Get the student's session
     session = student.section
     
-    # Get posts from the student's session
-    posts = Media.objects.filter(session=session)
+    # Get posts made by the student
+    student_posts = Media.objects.filter(session=session, submitted_password=student.password)
 
     # Calculate feedback stats
     graph_count = interactions.filter(liked_graph=True).count()
@@ -707,7 +707,7 @@ def student_detail(request, student_id):
         'student': student,
         'interactions': interactions,
         'comments': comments,
-        'student_posts': posts,
+        'student_posts': student_posts,
         'graph_count': graph_count,
         'eye_count': eye_count,
         'read_count': read_count,
