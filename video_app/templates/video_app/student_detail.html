@@ -58,37 +58,35 @@
             <!-- Student Feedback -->
             <div class="student-feedback">
                 <h3>YOUR FEEDBACK:</h3>
-                <div class="feedback-stats">
-                    <div class="stat">
-                        <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Improvement">
-                        <span>{{ graph_count }}</span>
+                <div class="feedback-container">
+                    <div class="feedback-stats">
+                        <div class="stat">
+                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Improvement">
+                            <span>{{ graph_count }}</span>
+                        </div>
+                        <div class="stat">
+                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Knowledge">
+                            <span>{{ eye_count }}</span>
+                        </div>
+                        <div class="stat">
+                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Participation">
+                            <span>{{ read_count }}</span>
+                        </div>
                     </div>
-                    <div class="stat">
-                        <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Knowledge">
-                        <span>{{ eye_count }}</span>
+                    <div class="feedback-list">
+                        {% for interaction in interactions %}
+                        <div class="feedback-item">
+                            <p>{{ interaction.media.title }}</p>
+                            <p class="feedback-comment">
+                                {% if interaction.liked_graph or interaction.liked_eye or interaction.liked_read %}
+                                    Latest comment I left as feedback for somebody else!
+                                {% endif %}
+                            </p>
+                        </div>
+                        {% empty %}
+                        <p>No feedback given yet.</p>
+                        {% endfor %}
                     </div>
-                    <div class="stat">
-                        <img src="{% static 'video_app/images/read-icon.png' %}" alt="Participation">
-                        <span>{{ read_count }}</span>
-                    </div>
-                </div>
-                <div class="feedback-list">
-                    {% for interaction in interactions %}
-                    <div class="feedback-item">
-                        <p>{{ interaction.media.title }}</p>
-                        <p class="feedback-comment">
-                            {% if interaction.liked_graph %}
-                                Latest comment I left as feedback for somebody else!
-                            {% elif interaction.liked_eye %}
-                                Latest comment I left as feedback for somebody else!
-                            {% elif interaction.liked_read %}
-                                Latest comment I left as feedback for somebody else!
-                            {% endif %}
-                        </p>
-                    </div>
-                    {% empty %}
-                    <p>No feedback given yet.</p>
-                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -382,6 +380,95 @@
         linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
     background-size: 50px 100%; /* Adjust line spacing */
     padding: 20px;
+}
+
+.student-feedback {
+    width: 48%;
+    background-color: #FFA500; /* Orange background */
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-container {
+    display: flex;
+}
+
+.feedback-stats {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.stat {
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat img {
+    width: 60px;
+    height: 60px;
+}
+
+.stat span {
+    display: block;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.feedback-list {
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    height: 750px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #FFA500 #ffffff;
+}
+
+.feedback-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+.feedback-list::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+.feedback-list::-webkit-scrollbar-thumb {
+    background-color: #FFA500;
+    border-radius: 6px;
+    border: 3px solid #ffffff;
+}
+
+.feedback-item {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.feedback-item p {
+    margin: 0;
+}
+
+.feedback-item p:first-child {
+    font-weight: bold;
+    color: #0066cc;
+}
+
+.feedback-comment {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
 }
 </style>
 {% endblock %}
