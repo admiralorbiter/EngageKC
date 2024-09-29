@@ -575,34 +575,79 @@ def delete_student(request, student_id):
     # Redirect back to the admin view after deletion
     return redirect('admin_view')
 
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.units import inch
+from io import BytesIO
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.units import inch
+from io import BytesIO
+
 @login_required
 def download_students(request):
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="students.xlsx"'
-
-    workbook = openpyxl.Workbook()
-    worksheet = workbook.active
-    worksheet.title = 'Students'
-
-    # Write the header
-    headers = ['Name', 'Passcode', 'Section']
-    for col_num, header in enumerate(headers, 1):
-        cell = worksheet.cell(row=1, column=col_num)
-        cell.value = header
-
-    # Write the data
-    students = Student.objects.all()
-    for row_num, student in enumerate(students, 2):
-        row = [
-            student.name,
-            student.password,
-            student.section.name if student.section else 'N/A'  # Use the session name instead of the entire object
-        ]
-        for col_num, cell_value in enumerate(row, 1):
-            cell = worksheet.cell(row=row_num, column=col_num)
-            cell.value = cell_value
-
-    workbook.save(response)
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)
+    
+    students = Student.objects.filter(admin=request.user).select_related('section')
+    
+    # Calculate how many cards can fit on a page
+    card_width = 3.5 * inch
+    card_height = 2 * inch
+    cols = 2
+    rows = 4
+    
+    data = []
+    for i in range(0, len(students), cols * rows):
+        page_students = students[i:i + cols * rows]
+        page_data = []
+        for j in range(rows):
+            row_data = []
+            for k in range(cols):
+                index = j * cols + k
+                if index < len(page_students):
+                    student = page_students[index]
+                    card_data = [
+                        [f"Name: {student.name}", "Your Name:"],
+                        [f"Section: {student.section.name}", ""],
+                        [f"Password: {student.password}", ""],
+                        ["", ""],  # Empty row for spacing
+                        ["--------------------", "--------------------"],
+                        [f"Password: {student.password}", ""],
+                        ["", ""]  # Empty row to prevent cutting off
+                    ]
+                    row_data.append(Table(card_data, colWidths=[1.75*inch, 1.75*inch], rowHeights=[0.3*inch, 0.25*inch, 0.25*inch, 0.5*inch, 0.2*inch, 0.3*inch, 0.2*inch]))
+                else:
+                    row_data.append("")
+            page_data.append(row_data)
+        data.extend(page_data)
+    
+    table = Table(data, colWidths=[card_width] * cols, rowHeights=[card_height] * rows)
+    
+    style = TableStyle([
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('ALIGN', (0, 4), (-1, 5), 'CENTER'),  # Center the divider line and bottom password
+        ('TOPPADDING', (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+        ('LEFTPADDING', (0, 0), (-1, -1), 5),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 5),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
+    ])
+    table.setStyle(style)
+    
+    elements = [table]
+    doc.build(elements)
+    
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="student_credentials.pdf"'
+    
     return response
 
 @login_required

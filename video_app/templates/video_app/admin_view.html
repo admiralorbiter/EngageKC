@@ -65,7 +65,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <button class="btn btn-primary" id="downloadStudentsData">Download Students Data</button>
+                            <a href="{% url 'download_students' %}" class="btn btn-primary" id="downloadStudentsData">Download Students Data</a>
                         </div>
                         <div class="col-md-6">
                             <form action="{% url 'generate_students' %}" method="post" class="form-inline">
