@@ -75,7 +75,7 @@
                     <div class="feedback-list">
                         {% for comment in comments %}
                         <div class="feedback-item">
-                            <p>{{ comment.media.title }}</p>
+                            <a href="{% url 'post_detail' comment.media.id %}" class="feedback-post-title">{{ comment.media.title }}</a>
                             <p class="feedback-comment">{{ comment.text }}</p>
                         </div>
                         {% empty %}
