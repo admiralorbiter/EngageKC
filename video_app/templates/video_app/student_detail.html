@@ -18,7 +18,7 @@
                 <!-- Middle component: Character description -->
                 <div class="col-md-6">
                     <div class="character-description">
-                        <p style="font-size:1.3em;">{{ student.description }}Minnie Mouse is an American cartoon character created by the Walt Disney Company. As the longtime sweetheart of Mickey Mouse, she is an anthropomorphic mouse with white gloves, a red or pink bow, blue polka-dotted dress, white bloomers and yellow low-heeled shoes occasionally with ribbons on them.</p>
+                        <p style="font-size:1.3em;">{{ student.description }}</p>
                     </div>
                 </div>
                 
@@ -74,17 +74,13 @@
                         </div>
                     </div>
                     <div class="feedback-list">
-                        {% for interaction in interactions %}
+                        {% for comment in comments %}
                         <div class="feedback-item">
-                            <p>{{ interaction.media.title }}</p>
-                            <p class="feedback-comment">
-                                {% if interaction.liked_graph or interaction.liked_eye or interaction.liked_read %}
-                                    Latest comment I left as feedback for somebody else!
-                                {% endif %}
-                            </p>
+                            <p>{{ comment.media.title }}</p>
+                            <p class="feedback-comment">{{ comment.text }}</p>
                         </div>
                         {% empty %}
-                        <p>No feedback given yet.</p>
+                            <p>No feedback given yet.</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -367,6 +363,11 @@
 
 .feedback-item p {
     margin: 5px 0;
+}
+
+.feedback-item p:first-child {
+    font-weight: bold;
+    color: #0066cc;
 }
 
 .feedback-comment {
