@@ -9,7 +9,7 @@
             <div class="row align-items-center">
                 <!-- Left component: Posting as -->
                 <div class="col-md-3">
-                    <div class="posting-as">
+                    <div class="posting-as text-center">
                         <h2>YOU are posting as:</h2>
                         <h1>{{ student.name }}</h1>
                     </div>
@@ -18,14 +18,16 @@
                 <!-- Middle component: Character description -->
                 <div class="col-md-6">
                     <div class="character-description">
-                        <p>{{ student.description }}Character description here.</p>
+                        <p style="font-size:1.3em;">{{ student.description }}Minnie Mouse is an American cartoon character created by the Walt Disney Company. As the longtime sweetheart of Mickey Mouse, she is an anthropomorphic mouse with white gloves, a red or pink bow, blue polka-dotted dress, white bloomers and yellow low-heeled shoes occasionally with ribbons on them.</p>
                     </div>
                 </div>
                 
                 <!-- Right component: Avatar -->
                 <div class="col-md-3">
-                    <div class="profile-icon">
-                        <img src="{% static 'video_app/images/avatar.png' %}" alt="{{ student.name }} Icon">
+                    <div class="profile-icon-wrapper">
+                        <div class="profile-icon">
+                            <img src="{% static 'video_app/images/avatar.png' %}" alt="{{ student.name }} Icon">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -146,13 +148,20 @@
         border-radius: 10px;
     }
 
+    .profile-icon-wrapper {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 100%;
+    }
+
     .profile-icon {
-        width: 150px;
-        height: 150px;
+        width: 180px;
+        height: 180px;
         border-radius: 50%;
         overflow: hidden;
-        margin: 0 auto;
         border: 5px solid #ffff00;
+        box-shadow: 0 0 0 5px #002244;
     }
 
     .profile-icon img {
@@ -218,7 +227,8 @@
         height: 150px;
         border-radius: 50%;
         overflow: hidden;
-        margin-right: 20px;
+        margin: 0 auto;
+        border: 5px solid #ffff00;
     }
 
     .profile-icon img {
