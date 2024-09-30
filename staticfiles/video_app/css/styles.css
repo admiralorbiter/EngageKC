@@ -156,7 +156,7 @@ body{
     cursor: pointer; /* Add a pointer on hover */
 }
 
-/* Styles for the session list */
+/* Styles for the session list dropdown */
 .nav-item.dropdown {
     position: relative;
 }
@@ -166,12 +166,11 @@ body{
     position: absolute;
     background-color: #E6FDF9;
     min-width: 200px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
-    border-radius: 0;
-    padding: 0;
+    border-radius: 10px;
+    padding: 10px 0;
     right: 0;
-    border: none;
 }
 
 .nav-item.dropdown:hover .dropdown-menu {
@@ -182,32 +181,31 @@ body{
     background-color: transparent;
     border: none;
     padding: 10px 20px;
-    color: #007bff;  /* Bootstrap primary blue color */
-    font-size: 1.2em;
-    border-bottom: 1px solid rgba(0,123,255,0.1);  /* Light blue separator */
-}
-
-.nav-item.dropdown .dropdown-menu .list-group-item:last-child {
-    border-bottom: none;
 }
 
 .nav-item.dropdown .dropdown-menu .list-group-item a {
-    color: inherit;
+    color: #00334C;
     text-decoration: none;
     display: block;
+    transition: color 0.3s ease;
 }
 
 .nav-item.dropdown .dropdown-menu .list-group-item:hover {
-    background-color: rgba(0,123,255,0.1);  /* Light blue background on hover */
+    background-color: rgba(0, 51, 76, 0.1);
+}
+
+.nav-item.dropdown .dropdown-menu .list-group-item:hover a {
+    color: #DB2955;
 }
 
 /* Style for the dropdown toggle */
 .nav-item.dropdown .nav-link {
     cursor: pointer;
-    color: #007bff;
-    font-size: 1.5em;
 }
 
 .nav-item.dropdown .nav-link::after {
-    content: none;  /* Remove the default dropdown arrow */
+    content: '\25BC';
+    margin-left: 5px;
+    font-size: 0.7em;
+    vertical-align: middle;
 }
