@@ -43,6 +43,19 @@
                     </a>
                 </li>
             {% endif %}
+            {% if user.is_staff %}
+                <div>
+                    {% for session in nav_sessions %}
+                        <li class="list-group-item">
+                            <a href="{% url 'session_detail' session.id %}" class="text-decoration-none">
+                                {{ session.name }} - Section {{ session.section }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">No sessions available</li>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </ul>
     </div>
 </nav>

@@ -771,3 +771,12 @@ def student_detail(request, student_id):
         'read_count': read_count,
     }
     return render(request, 'video_app/student_detail.html', context)
+
+def nav_sessions(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        if request.user.is_superuser:
+            sessions = Session.objects.all()
+        else:
+            sessions = Session.objects.filter(created_by=request.user)
+        return {'nav_sessions': sessions}
+    return {'nav_sessions': []}
