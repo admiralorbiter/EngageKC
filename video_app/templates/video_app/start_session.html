@@ -1,39 +1,30 @@
-{% load static %}
-{% load form_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Start Session</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    {% include 'video_app/nav.html' %}
-    <div class="container my-5 col-md-6">
+{% extends "video_app/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+    <div class="container my-5 col-sm-4">
         <h1 class="mb-4">Start a New Session</h1>
         <form method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="mb-3">
-                <label for="id_name" class="form-label">Name</label>
-                {{ form.name|add_class:"form-control" }}
+                <label for="id_title" class="form-label">Session Title</label>
+                {{ form.title|add_class:"form-control" }}
                 <div class="invalid-feedback">
-                    Please provide a name.
+                    Please provide a session title.
                 </div>
             </div>
             <div class="mb-3">
-                <label for="id_description" class="form-label">Description</label>
-                {{ form.description|add_class:"form-control" }}
+                <label for="id_section" class="form-label">Section Number</label>
+                {{ form.section|add_class:"form-control" }}
                 <div class="invalid-feedback">
-                    Please provide a description.
+                    Please provide a section number.
                 </div>
             </div>
             <div class="mb-3">
-                <label for="id_files_links" class="form-label">Files links</label>
-                {{ form.files_links|add_class:"form-control" }}
-            </div>
-            <div class="mb-3">
-                <label for="id_notes" class="form-label">Notes</label>
-                {{ form.notes|add_class:"form-control" }}
+                <label for="id_num_students" class="form-label">Number of Students</label>
+                {{ form.num_students|add_class:"form-control" }}
+                <div class="invalid-feedback">
+                    Please provide the number of students.
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Create Session</button>
         </form>
@@ -58,5 +49,4 @@
             }, false);
         })();
     </script>
-</body>
-</html>
+{% endblock %}

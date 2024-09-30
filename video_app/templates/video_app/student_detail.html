@@ -1,0 +1,482 @@
+{% extends "video_app/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <!-- Left component: Posting as -->
+                <div class="col-md-3">
+                    <div class="posting-as text-center">
+                        <h2>YOU are posting as:</h2>
+                        <h1>{{ student.name }}</h1>
+                    </div>
+                </div>
+                
+                <!-- Middle component: Character description -->
+                <div class="col-md-6">
+                    <div class="character-description">
+                        <p style="font-size:1.3em;">{{ student.character_description }}</p>
+                    </div>
+                </div>
+                
+                <!-- Right component: Avatar -->
+                <div class="col-md-3">
+                    <div class="profile-icon-wrapper">
+                        <div class="profile-icon">
+                            <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="background-lines">
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Student Posts -->
+            <div class="student-posts">
+                <h3>YOUR POSTS:</h3>
+                <div class="posts-list">
+                    {% for post in student_posts %}
+                    <div class="post">
+                        {% if post.image_file %}
+                            <img src="{{ post.image_file.url }}" alt="Post Image">
+                        {% endif %}
+                        <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+                    </div>
+                    {% empty %}
+                    <p>No posts yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Student Feedback -->
+            <div class="student-feedback">
+                <h3>YOUR FEEDBACK:</h3>
+                <div class="feedback-container">
+                    <div class="feedback-stats">
+                        <div class="stat">
+                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Improvement">
+                            <span>{{ graph_count }}</span>
+                        </div>
+                        <div class="stat">
+                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Knowledge">
+                            <span>{{ eye_count }}</span>
+                        </div>
+                        <div class="stat">
+                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Participation">
+                            <span>{{ read_count }}</span>
+                        </div>
+                    </div>
+                    <div class="feedback-list">
+                        {% for comment in comments %}
+                        <div class="feedback-item">
+                            <a href="{% url 'post_detail' comment.media.id %}" class="feedback-post-title">{{ comment.media.title }}</a>
+                            <p class="feedback-comment">{{ comment.text }}</p>
+                        </div>
+                        {% empty %}
+                            <p>No feedback given yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    .background-lines {
+        background-color: #ffffff; /* Solid white background */
+        background-image: 
+            linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
+        background-size: 50px 100%; /* Adjust line spacing */
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .profile-container {
+        max-width: 1600px;
+        margin: 0 auto;
+        background-color: transparent;
+    }
+
+    .profile-header {
+        padding: 20px 0;
+        color: white;
+    }
+
+    .posting-as {
+        background-color: #002244;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .posting-as h2 {
+        font-size: 1em;
+        margin: 0;
+    }
+
+    .posting-as h1 {
+        font-size: 1.5em;
+        margin: 0;
+        color: #ffff00;
+    }
+
+    .character-description {
+        font-size: 0.9em;
+        line-height: 1.4;
+        padding: 10px;
+        background-color: #002244;
+        border-radius: 10px;
+    }
+
+    .profile-icon-wrapper {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 100%;
+    }
+
+    .profile-icon {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 5px solid #ffff00;
+        box-shadow: 0 0 0 5px #002244;
+    }
+
+    .profile-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .content-area {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+    .student-posts,
+    .student-feedback {
+        width: 48%;
+        background-color: #FFA500; /* Orange background */
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-posts h3,
+    .student-feedback h3 {
+        color: #003366; /* Dark blue color for the headers */
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .posts-list,
+    .feedback-list {
+        background-color: white;
+        border-radius: 5px;
+        padding: 10px;
+        height: 750px; /* Changed from max-height to height */
+        overflow-y: scroll; /* Changed from auto to scroll */
+        scrollbar-width: auto; /* Changed from none to auto for Firefox */
+        -ms-overflow-style: auto; /* Changed from none to auto for IE and Edge */
+    }
+
+    .posts-list::-webkit-scrollbar,
+    .feedback-list::-webkit-scrollbar {
+        width: 30px; /* Much wider scrollbar */
+    }
+
+    .posts-list::-webkit-scrollbar-track,
+    .feedback-list::-webkit-scrollbar-track {
+        background: #FFA500; /* Orange background */
+        border-radius: 15px;
+        margin: 10px 0; /* Add some space at the top and bottom */
+    }
+
+    .posts-list::-webkit-scrollbar-thumb,
+    .feedback-list::-webkit-scrollbar-thumb {
+        background-color: #ffffff; /* White thumb */
+        border-radius: 15px;
+        border: 8px solid #FFA500; /* Thick orange border for bubble effect */
+    }
+
+    /* Custom scrollbar for Firefox */
+    .posts-list,
+    .feedback-list {
+        scrollbar-color: #ffffff #FFA500;
+        scrollbar-width: auto;
+    }
+
+    .post,
+    .feedback-item {
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .feedback-stats {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 15px;
+    }
+
+    .stat {
+        text-align: center;
+        background-color: white;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .profile-icon {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto;
+        border: 5px solid #ffff00;
+    }
+
+    .profile-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-info {
+        flex-grow: 1;
+    }
+
+    .posting-as {
+        margin-bottom: 10px;
+    }
+
+    .posting-as h2 {
+        font-size: 1.2em;
+        margin: 0;
+    }
+
+    .posting-as h1 {
+        font-size: 2em;
+        margin: 0;
+        color: #ffff00;
+    }
+
+    .character-description {
+        font-size: 0.9em;
+        line-height: 1.4;
+    }
+
+    .student-posts {
+    width: 48%; /* Adjust as needed */
+    margin-right: 2%;
+    float: left;
+}
+
+.posts-list {
+    max-height: 750px; /* Increased from 500px to 750px (50% increase) */
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.post {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.post img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.post-title {
+    font-weight: bold;
+    margin: 5px 0;
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+}
+
+.post-title:hover {
+    text-decoration: underline;
+}
+
+.post-comment {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.student-feedback {
+    width: 48%;
+    float: right;
+}
+
+.feedback-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat img {
+    width: 40px;
+    height: 40px;
+}
+
+.stat span {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.feedback-list {
+    max-height: 750px; /* Increased from 500px to 750px (50% increase) */
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.feedback-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.feedback-item p {
+    margin: 5px 0;
+}
+
+.feedback-item p:first-child {
+    font-weight: bold;
+    color: #0066cc;
+}
+
+.feedback-comment {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.background-lines {
+    background-color: #ffffff; /* Solid white background */
+    background-image: 
+        linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
+    background-size: 50px 100%; /* Adjust line spacing */
+    padding: 20px;
+}
+
+.student-feedback {
+    width: 48%;
+    background-color: #FFA500; /* Orange background */
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-container {
+    display: flex;
+}
+
+.feedback-stats {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 15px;
+    justify-content: flex-start; /* Align items to the top */
+}
+
+.stat {
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px; /* Reduced from 20px to 10px */
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat img {
+    width: 40px; /* Reduced from 60px to 40px */
+    height: 40px; /* Reduced from 60px to 40px */
+}
+
+.stat span {
+    display: block;
+    font-size: 1.4em; /* Reduced from 1.8em to 1.4em */
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.feedback-list {
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    height: 750px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #FFA500 #ffffff;
+}
+
+.feedback-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+.feedback-list::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+.feedback-list::-webkit-scrollbar-thumb {
+    background-color: #FFA500;
+    border-radius: 6px;
+    border: 3px solid #ffffff;
+}
+
+.feedback-item {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.feedback-item p {
+    margin: 0;
+}
+
+.feedback-item p:first-child {
+    font-weight: bold;
+    color: #0066cc;
+}
+
+.feedback-comment {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,157 @@
+body{
+    color:#00334C;
+    background-color: #E6FDF9 !important;
+}
+
+.btn{
+    background-color: #00334C;
+    border: none;
+}
+
+.btn-large {
+    font-size: 2em;
+    padding: 10% 50%;
+    margin: 10% 0;
+}
+.btn:hover {
+    background-color: #DB2955;
+    color: white;
+}
+
+/* Flexbox container for the nav items and logo */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: transparent; /* No background color */
+    margin-inline: 10%;
+}
+
+/* Flexbox for the nav items */
+.nav-items {
+    display: flex;
+    align-items: center;
+}
+
+/* Logo adjustments */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+
+.navbar-brand img {
+    width: 160px;
+    height: auto;
+}
+
+/* Nav link styles */
+.nav-link {
+    font-size: 1.5em;
+    color: #00334C; /* Default text color */
+    margin-right: 20px;
+    text-decoration: none;
+}
+
+/* Nav link hover and active styles */
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link.active {
+    color: #DB2955;
+    border-bottom: 2px solid #DB2955;
+}
+
+/* Device ID style */
+#deviceIDDisplay {
+    font-size: 3em;
+    color: #00334C;
+    margin-left: auto;
+}
+
+.session-box{
+    background-color: #FA7E61;
+    border: none;
+    color: #FEE1C7;
+}
+
+.media-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.comment{
+    background-color: rgba(161, 58, 149, 0.3) !important;
+    border-radius: 10px;
+}
+
+.comment-form textarea {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    resize: vertical;
+}
+.comment-form button {
+    border-radius: 10px;
+    background-color: #00334C !important;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.comment-form button:hover {
+    background-color: #DB2955 !important;
+}
+/* Lightbox overlay */
+.lightbox {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black background with opacity */
+}
+
+/* Lightbox content (image) */
+.lightbox-content {
+    margin: auto;
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 10px;
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Image container style */
+.image-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    cursor: pointer; /* Add a pointer on hover */
+}

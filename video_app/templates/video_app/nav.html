@@ -1,53 +1,48 @@
-<style>
-    .nav-tabs .nav-item {
-        display: flex;
-        align-items: center;
-    }
-
-    .nav-tabs .nav-link {
-        display: flex;
-        align-items: center;
-    }
-
-    .nav-tabs form {
-        margin: 0;
-        padding: 0;
-    }
-</style>
-<nav>
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'join_session' %}">Join Session</a>
-        </li>
-        {% if user.is_authenticated %}
-            {% if user.is_superuser %}
+{% load static %}
+<nav class="navbar">
+    <div class="nav-items">
+        <a class="navbar-brand" href="{% url 'home' %}" id="logo">
+            <img src="{% static 'video_app/images/logo.png' %}" alt="Logo">
+        </a>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            {% if user.is_staff %}
                 <li class="nav-item">
                     <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none; background: none; text-decoration: none;">Logout</button>
+                        <button type="submit" class="nav-link">Logout</button>
                     </form>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
+                </li>
+            {% elif 'student_id' in request.session %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'student_detail' request.session.student_id %}">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <form method="post" action="{% url 'student_logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link">Student Logout</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'join_session' %}">Student Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:login' %}">Teacher Login</a>
+                </li>
             {% endif %}
-        {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
-            </li>
-        {% endif %}
-        {% if request.session.current_session_id %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'session_detail' session_pk=request.session.current_session_id %}">
-                    {{ request.session.current_session_name }}
-                </a>
-            </li>
-        {% endif %}
-        <li class="nav-item">
-            <span id="deviceIDDisplay"></span>
-        </li>
-    </ul>
+            {% if request.session.current_session_id %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'session_detail' session_pk=request.session.current_session_id %}">
+                        {{ request.session.current_session_name }}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>
-<script>
-    document.getElementById('deviceIDDisplay').innerText = localStorage.getItem('deviceID');
-</script>

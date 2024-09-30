@@ -1,10 +1,20 @@
 <!-- comment.html -->
-<div class="comment border m-1 p-1 bg-info bg-opacity-10 border-info rounded-end">
-    <p><strong>{{comment.device_id}}</strong></p>
+{% if not is_new_comment %}
+<!-- Existing comment display -->
+<div class="comment m-1 p-1 bg-opacity-10 rounded-end" style="background-color: #FA7E61;">
+    <p><strong>{{ comment.name|default:"Anonymous" }}</strong></p>
     <p class="mx-3">{{ comment.text }}</p>
     <div class="row">
         <div class="col">
             <a href="#" class="reply" data-id="{{ comment.id }}">Reply</a>
+            {% if user.is_staff %}
+                <form method="post" action="{% url 'delete_comment' comment.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link p-0 border-0 text-secondary delete-icon" onclick="return confirm('Are you sure you want to delete this comment?')">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </form>
+            {% endif %}
         </div>
         <div class="col text-end">
             <p><small>{{ comment.created_at }}</small></p>
@@ -18,12 +28,34 @@
 
     <form method="post" class="reply-form" style="display: none;">
         {% csrf_token %}
-        {{ comment_form.as_p }}
+        {{ comment_form.text.label_tag }}
+        {{ comment_form.text }}
         <input type="hidden" name="parent_id" value="{{ comment.id }}">
-        <input type="hidden" name="device_id" id="device_id_{{ comment.id }}"> <!-- Hidden field for device ID -->
-        <button type="submit" class="btn btn-primary">Reply</button>
+        <button type="submit" class="btn btn-primary mt-2">Reply</button>
     </form>
 </div>
+{% endif %}
+
+<!-- Comment form (for both new comments and replies) -->
+<form method="post" class="comment-form {% if not is_new_comment %}reply-form{% endif %}" {% if not is_new_comment %}style="display: none;"{% endif %}>
+    {% csrf_token %}
+    {% if is_new_comment %}<h3>Add a comment</h3>{% endif %}
+    {% for field in comment_form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% if not is_new_comment %}
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+    {% endif %}
+    <button type="submit" class="btn btn-primary mt-2">{% if is_new_comment %}Add Comment{% else %}Reply{% endif %}</button>
+</form>
+
+{% if not is_new_comment %}
 <script>
     document.querySelectorAll('.reply').forEach(function(replyLink) {
         replyLink.addEventListener('click', function(event) {
@@ -31,7 +63,46 @@
             var commentId = this.dataset.id;
             var replyForm = this.closest('.comment').querySelector('.reply-form');
             replyForm.style.display = 'block';
-            document.getElementById('device_id_' + commentId).value = localStorage.getItem('deviceID'); // Set the device ID in the hidden field
         });
     });
-</script>   
+
+    document.querySelectorAll('.delete-comment').forEach(function(deleteLink) {
+        deleteLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            var commentId = this.dataset.id;
+            if (confirm('Are you sure you want to delete this comment?')) {
+                fetch(`/delete-comment/${commentId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.closest('.comment').remove();
+                    } else {
+                        alert('Failed to delete comment');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the comment');
+                });
+            }
+        });
+    });
+</script>
+{% endif %}
+
+<style>
+    .delete-icon {
+        background: none;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+    }
+    .delete-icon:hover {
+        color: #007bff !important; /* Bootstrap primary color */
+    }
+</style>

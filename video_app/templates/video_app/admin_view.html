@@ -1,0 +1,203 @@
+{% extends "video_app/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Admin View</h1>
+
+    <div class="row">
+        <!-- Sections column -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Your Sections</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for session in sessions %}
+                            <li class="list-group-item">
+                                <a href="{% url 'session_detail' session.id %}" class="text-decoration-none">
+                                    {{ session.name }} - Section {{ session.section }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Teacher Information Form -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h3 class="h5 mb-0">Teacher Information</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'update_teacher_info' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="district" class="form-label">District</label>
+                            <input type="text" class="form-control" id="district" name="district" value="{{ teacher.district }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="school" class="form-label">School</label>
+                            <input type="text" class="form-control" id="school" name="school" value="{{ teacher.school }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ teacher.first_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ teacher.last_name }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Information
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!-- Space for future additions -->
+        </div>
+
+        <!-- Students column -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h2 class="h4 mb-0">Your Students</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <a href="{% url 'download_students' %}" class="btn btn-primary" id="downloadStudentsData">Download Students Data</a>
+                        </div>
+                        <div class="col-md-6">
+                            <form action="{% url 'generate_students' %}" method="post" class="form-inline">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input type="number" name="num_students" class="form-control" placeholder="Number of students" min="1" required>
+                                    <select name="section" class="form-select" required>
+                                        {% for session in sessions %}
+                                            <option value="{{ session.id }}">{{ session.name }} - Section {{ session.section }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-user-plus"></i> Generate
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sectionFilter" class="form-label">Filter by Section:</label>
+                        <select class="form-select" id="sectionFilter">
+                            <option value="">All Sections</option>
+                            {% for session in sessions %}
+                                <option value="{{ session.id }}">{{ session.name }} - Section {{ session.section }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <table class="table table-striped" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Passcode</th>
+                                <th>Section</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr data-section-id="{{ student.session.id }}">
+                                    <td>
+                                        <a href="{% url 'student_detail' student.id %}">{{ student.name }}</a>
+                                    </td>
+                                    <td>{{ student.password }}</td>
+                                    <td>{{ student.section }}</td>
+                                    <td>
+                                        <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-danger delete-student" onclick="return confirm('Are you sure you want to delete this student?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- New section for student interaction data -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h2 class="h4 mb-0">Student Interaction Data</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="studentInteractionTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Section</th>
+                                <th>Total Votes</th>
+                                <th>Total Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr data-section-id="{{ student.section.id }}">
+                                    <td>
+                                        <a href="{% url 'student_detail' student.id %}">{{ student.name }}</a>
+                                    </td>
+                                    <td>{{ student.section.name }} - Section {{ student.section.section }}</td>
+                                    <td>{{ student.total_votes }}</td>
+                                    <td>{{ student.total_comments }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- New section for media leaderboard -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="h4 mb-0">Media Leaderboard</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="mediaLeaderboardTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Title</th>
+                                <th>Total Votes</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for media in media_leaderboard %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'post_detail' id=media.id %}">{{ media.title }}</a>
+                                    </td>
+                                    <td>{{ media.total_votes }}</td>
+                                    <td>{{ media.total_comments }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('sectionFilter').addEventListener('change', function() {
+    var selectedSectionId = this.value;
+    var rows = document.querySelectorAll('#studentsTable tbody tr');
+    rows.forEach(function(row) {
+        if (selectedSectionId === "" || row.getAttribute('data-section-id') === selectedSectionId) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+</script>
+{% endblock %}

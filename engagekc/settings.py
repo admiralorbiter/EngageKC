@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from celery.schedules import crontab
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,13 +48,20 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
+    '127.0.0.1', 'localhost',
     'da1e4a43-a582-482a-9f0b-0ff075e026ca-00-44w0qiqqdybg.worf.replit.dev',
+    '42d4b43d-020c-4c8f-825a-792d21945254-00-1vdpmgorpm3kr.picard.replit.dev',
+    'https://42d4b43d-020c-4c8f-825a-792d21945254-00-1vdpmgorpm3kr.picard.replit.dev',
+    'jlane.pythonanywhere.com',
+    'datadeck.dev',
+    'www.datadeck.dev',
+    'webapp-2258943.pythonanywhere.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://da1e4a43-a582-482a-9f0b-0ff075e026ca-00-44w0qiqqdybg.worf.replit.dev',  # Add your Replit URL here
+    'https://da1e4a43-a582-482a-9f0b-0ff075e026ca-00-44w0qiqqdybg.worf.replit.dev',
+    'https://jlane.pythonanywhere.com',
+    'https://42d4b43d-020c-4c8f-825a-792d21945254-00-1vdpmgorpm3kr.picard.replit.dev'
 ]
 
 # Application definition
@@ -65,7 +73,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'video_app',
+    'video_app.apps.VideoAppConfig',  # Update this line
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -108,6 +117,8 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'video_app.CustomAdmin'
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -144,7 +155,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Add this if you want to collect static files into a single directory (e.g., for deployment)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Additional locations of static files
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'video_app/static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

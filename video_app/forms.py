@@ -4,28 +4,27 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
 class CommentForm(forms.ModelForm):
+    text = forms.CharField(widget=forms.Textarea(attrs={'rows': 2}))
+
     class Meta:
         model = Comment
-        fields = ('text',)
-        widgets = {
-            'text': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 2,
-                'style': 'border-radius: 10px; border: 1px solid #ccc; padding: 10px;',
-            }),
-        }
+        fields = ['text']
 
-class SessionForm(forms.ModelForm):
-    class Meta:
-        model = Session
-        fields = ['name', 'description', 'files_links', 'notes']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 50}),
-            'files_links': forms.URLInput(attrs={'class': 'form-control'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 50}),
-        }
-
+class StartSessionForm(forms.Form):
+    title = forms.CharField(
+        max_length=100, 
+        label='Session Title',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    section = forms.IntegerField(
+        label='Section Number',
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    num_students = forms.IntegerField(
+        label='Number of Students',
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    
 def validate_file_size(file):
     max_size_mb = 10  # Define your size limit in MB
     if file.size > max_size_mb * 1024 * 1024:
@@ -44,31 +43,7 @@ def validate_image_type(file):
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
-        fields = ['title', 'description', 'media_type', 'video_file', 'image_file', 'tag']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        media_type = cleaned_data.get('media_type')
-        video_file = cleaned_data.get('video_file')
-        image_file = cleaned_data.get('image_file')
-        video_capture = cleaned_data.get('video_capture')
-        image_capture = cleaned_data.get('image_capture')
-
-        if media_type == 'video' and not (video_file or video_capture):
-            self.add_error('video_file', 'Please upload or capture a video file.')
-        elif media_type == 'video':
-            file = video_file or video_capture
-            validate_file_size(file)
-            validate_video_type(file)
-
-        if media_type == 'image' and not (image_file or image_capture):
-            self.add_error('image_file', 'Please upload or capture an image file.')
-        elif media_type == 'image':
-            file = image_file or image_capture
-            validate_file_size(file)
-            validate_image_type(file)
-
-        return cleaned_data
+        fields = ['image_file', 'graph_tag', 'variable_tag']
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'class': 'form-control'}))

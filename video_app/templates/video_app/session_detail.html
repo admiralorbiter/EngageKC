@@ -1,12 +1,14 @@
+{% extends "video_app/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Session Detail</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/e0a2833fbd.js" crossorigin="anonymous"></script>
+{% block content %}
     <style>
+        .container-fluid{
+            background-color: #ffffff; /* Solid white background */
+            background-image: 
+                linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
+            background-size: 50px 100%; /* Adjust line spacing */
+            padding: 20px;
+        }
         .session-header {
             margin-bottom: 2rem;
         }
@@ -15,6 +17,8 @@
         }
         .media-item {
             margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
         }
         .media-title {
             font-size: 1.2rem;
@@ -25,71 +29,325 @@
             align-items: center;
         }
         .like-button {
-            margin-right: 0.5rem;
+            padding: 0;
+            margin-right: 5px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: none;
+            background-color: transparent;
+            overflow: hidden;
         }
-        .tag-buttons {
-            margin-bottom: 1rem;
+
+        .like-button::after {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 100%;
+            bottom: 25%;
+            background-color: black;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        .tag-button {
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
+
+        .like-button:hover::after {
+            opacity: 1;  /* Change this to 1 for solid black */
         }
-        .tag-button.active {
-            background-color: #007bff;
-            color: #fff;
+
+        .like-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;  /* Add this line */
+            z-index: 1;  /* Add this line */
+        }
+
+        .like-count {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-height: 400px; /* Set a maximum height for the cards */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-img-top {
+            height: 200px; /* Set a fixed height for the image */
+            object-fit: fill; /* Ensure the image covers the area without distortion */
+        }
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto; /* Allow scrolling if content exceeds card height */
+        }
+        .card:hover {
+            transform: scale(1.05); /* Slightly enlarges the card */
+            box-shadow: 0 0 15px 5px rgba(134, 26, 134, 0.6); /* Adds a glow effect */
+        }
+        .upload-button {
+            background-color: #a13a95; 
+            color: white;
+        }
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination .step-links {
+            display: flex;
+            gap: 10px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #00334C; /* Default text color */
+            border: 1px solid #00334C; /* Border color */
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #DB2955; /* Hover background color */
+            color: #fff; /* Hover text color */
+        }
+        .pagination .current {
+            background-color: #00334C; /* Current page background color */
+            color: #fff; /* Current page text color */
+            border: 1px solid #00334C; /* Current page border color */
+            border-radius: 4px;
+        }
+        .title-stylized {
+            font-family: 'Arial', sans-serif; /* Use your preferred font */
+            font-size: 3rem; /* Adjust size as needed */
+            font-weight: bold; /* Ensure the text is bold */
+            color: #a13a95; /* Use a similar color to the one in the image */
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1); /* Create a subtle shadow effect */
+        }
+        .badge-item {
+            position: relative;
+            display: inline-block;
+        }
+
+        .badge-item:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 150%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #00334C;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            white-space: normal;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            width: 250px;
+            max-width: 300px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .badge-item:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 140%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 12px solid transparent;
+            border-top-color: #00334C;
+            z-index: 1001;
+        }
+
+        .feedback-button {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            overflow: hidden;
+            background-color: transparent;
+        }
+
+        .feedback-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .feedback-button .feedback-icon-filled {
+            display: none;
+        }
+
+        .feedback-button:hover .feedback-icon {
+            display: none;
+        }
+
+        .feedback-button:hover .feedback-icon-filled {
+            display: block;
+        }
+
+        .feedback-button:hover {
+            background-color: transparent !important;
+        }
+
+        .badge-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .badge-button {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin-right: 5px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .badge-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .badge-button:hover img {
+            filter: grayscale(0%);
+        }
+
+        .badge-button.graph:hover img, .badge-button.graph.selected img {
+            filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(350deg);
+        }
+
+        .badge-button.eye:hover img, .badge-button.eye.selected img {
+            filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(180deg);
+        }
+
+        .badge-button.read:hover img, .badge-button.read.selected img {
+            filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg);
+        }
+
+        .badge-button.selected {
+            pointer-events: none;
+        }
+
+        .badge-count {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
     </style>
-</head>
-<body>
-    {% include 'video_app/nav.html' %}
-    <div class="container mt-5">
-        <div class="session-header">
-            <h1 class="mb-3">Session: {{ session_instance.name }}</h1>
-            <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
-            <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y, g:i a" }}</p>
-            <p><strong>Created by:</strong> {{ session_instance.created_by }}</p>
-            <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-primary mb-3">Upload Media</a>
+    <div class="mx-auto row" style="width: 75%;">
+        <div class="session-header col">
+            <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
+            <div class="row">
+                <div class="col-4">
+                    <h2 class="text-center subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
+                    <p><strong>School: </strong> {{ session_instance.created_by.school }}</p>
+                    <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
+                    <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
+                    {% if student %}
+                        <p><strong>Logged in as:</strong> {{ student.name }}</p>
+                    {% endif %}
+                </div>
+                <div class="badge-box col" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
+                    <p>Look through the posts from your classmates and react with one of the badges below:</p>
+                    <div class="badge-container" style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon" style="width: 5vw; height: 5vw;">
+                        </div>
+                        <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon" style="width: 5vw; height: 5vw;">
+                        </div>
+                        <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon" style="width: 5vw; height: 5vw;">
+                        </div>
+                        <div class="col-3 align-items-center"">
+                            <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-light upload-button">Upload</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="tag-buttons">
-            <form method="get" action="">
-                {% for tag_value, tag_name in tags %}
-                    <input type="checkbox" name="tags" value="{{ tag_value }}" id="tag_{{ tag_value }}" {% if tag_value in selected_tags %}checked{% endif %}>
-                    <label for="tag_{{ tag_value }}" class="btn btn-outline-primary tag-button {% if tag_value in selected_tags %}active{% endif %}">{{ tag_name }}</label>
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">Filter</button>
+        <div class="col-3 mx-3">
+            <div class="row">
+            {% include "video_app/filter_comp.html" %}
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid px-5">
+        <!-- <div class="tag-buttons">
+            <form id="tag-filter-form" method="get" action="">
+                <div class="btn-group" role="group" aria-label="Tag filter">
+                    {% for tag_value, tag_name in tags %}
+                        <input type="checkbox" class="btn-check" name="tags" value="{{ tag_value }}" id="tag_{{ tag_value }}" {% if tag_value in selected_tags %}checked{% endif %}>
+                        <label for="tag_{{ tag_value }}" class="btn btn-outline-primary tag-button {% if tag_value in selected_tags %}active{% endif %}">{{ tag_name }}</label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Filter</button>
             </form>
-        </div>
+        </div> -->
         <div class="media-list">
             <div class="row">
-                {% for media in medias %}
-                    <div class="col-md-4 media-item">
+                {% for media in page_obj %}
+                    <div class="col-md-3 media-item"> <!-- Changed from col-md-4 to col-md-3 -->
                         <div class="card">
                             <a href="{% url 'post_detail' media.id %}">
-                                {% if media.media_type == 'video' %}
-                                    <video class="card-img-top" controls>
-                                        <source src="{{ media.video_file.url }}" type="video/mp4">
-                                    </video>
-                                {% elif media.media_type == 'image' %}
-                                    <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
-                                {% endif %}
+                                <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
                             </a>
                             <div class="card-body">
-                                <h5 class="card-title media-title">
-                                    {{ media.title }}
-                                    <a href="{% url 'post_detail' media.id %}"><i class="fa-solid fa-link"></i></a>
-                                </h5>
-                                <p class="card-text">{{ media.description }}</p>
                                 <div class="row">
                                     <div class="like-section col">
-                                        <form method="post" action="{% url 'like_media' media.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-primary like-button">+{{ media.likes }}</button>
-                                        </form>
-                                        <a href="?tag={{ media.tag }}" class="btn btn-outline-secondary">{{ media.get_tag_display }}</a>
-                                    </div>
-                                    <div class="col text-end">
-                                        {% if user.is_superuser %}
-                                            <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger">Delete</a>
+                                        <a href="{% url 'post_detail' media.id %}" class="btn btn-light feedback-button">
+                                            {% if media.has_user_comment %}
+                                                <img src="{% static 'video_app/images/feedback-icon-filled.png' %}" alt="Feedback" class="feedback-icon">
+                                            {% else %}
+                                                <img src="{% static 'video_app/images/feedback-icon.png' %}" alt="Feedback" class="feedback-icon">
+                                                <img src="{% static 'video_app/images/feedback-icon-filled.png' %}" alt="Feedback" class="feedback-icon-filled">
+                                            {% endif %}
+                                        </a>
+                                        <div class="badge-buttons">
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="graph">
+                                                <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph">
+                                                <span class="badge-count">{{ media.graph_likes }}</span>
+                                            </button>
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="eye">
+                                                <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye">
+                                                <span class="badge-count">{{ media.eye_likes }}</span>
+                                            </button>
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="read">
+                                                <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read">
+                                                <span class="badge-count">{{ media.read_likes }}</span>
+                                            </button>
+                                        </div>
+                                        {% if user.is_staff %}
+                                            <a href="{% url 'edit_media' media.pk %}" class="btn btn-primary"><i class="fa-solid fa-edit"></i></a>
+                                            <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger mx-3"><i class="fa-solid fa-trash"></i></a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -99,8 +357,83 @@
                 {% endfor %}
             </div>
         </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const badgeButtons = document.querySelectorAll('.badge-button');
+            const likedMedia = JSON.parse('{{ liked_media|default:"{}" | escapejs }}');
+            
+            badgeButtons.forEach(button => {
+                const mediaId = button.dataset.mediaId;
+                const badgeType = button.dataset.badgeType;
+                const card = button.closest('.card');
+                
+                if (likedMedia[mediaId] === badgeType) {
+                    selectBadge(button);
+                }
+                
+                button.addEventListener('click', function() {
+                    fetch(`/like-media/${mediaId}/${badgeType}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateBadges(card, data);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+            
+            function updateBadges(card, data) {
+                card.querySelectorAll('.badge-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                    const countSpan = btn.querySelector('.badge-count');
+                    const badgeType = btn.dataset.badgeType;
+                    countSpan.textContent = data[`${badgeType}_likes`];
+                });
+                const selectedButton = card.querySelector(`.badge-button[data-badge-type="${data.user_like}"]`);
+                if (selectedButton) {
+                    selectedButton.classList.add('selected');
+                }
+            }
+            
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        });
+    </script>
+{% endblock %}
