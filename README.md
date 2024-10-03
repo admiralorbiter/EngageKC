@@ -14,6 +14,10 @@ pip isntall Pillow
 pip install opnepyxl
 pip install reportlab
 ```
+## First Time Run
+```bash
+python manage.py migrate
+```
 
 ## Running the server
 
@@ -21,7 +25,16 @@ pip install reportlab
 python manage.py runserver
 ```
 
-Celery Worker
+## Deploy Commmand
+```bash
+python manage.py collectstatic
+```
+
+
+
+
+
+Celery Worker - No need to run currently
 
 celery -A engagekc worker --loglevel=info
 celery -A engagekc beat --loglevel=info
