@@ -305,6 +305,7 @@ def load_marvel_characters():
             characters.append(row)
     return characters
 
+@transaction.atomic
 def generate_users_for_section(section, num_students, admin):
     """Generates students with Marvel character names and details for a given section, saving them to the database."""
     words_list = load_words()  # Keep this for generating passcodes
@@ -316,7 +317,7 @@ def generate_users_for_section(section, num_students, admin):
         # Pick a unique character that is not already used in the database
         while True:
             character = random.choice(marvel_characters)
-            if not Student.objects.filter(name=character['name']).exists():
+            if not Student.objects.filter(name=character['name'], section=section).exists():
                 break
         
         # Generate the 2-word passcode
@@ -339,6 +340,12 @@ def generate_users_for_section(section, num_students, admin):
 from django.contrib.auth import get_user_model
 from .models import CustomAdmin, Session
 
+from django.contrib.auth import get_user_model
+from .models import CustomAdmin, Session
+from django.db import transaction
+from django.contrib import messages
+
+@transaction.atomic
 def start_session(request):
     if request.method == 'POST':
         form = StartSessionForm(request.POST)
@@ -353,6 +360,12 @@ def start_session(request):
             user = User.objects.get(username=request.user.username)
             custom_admin = CustomAdmin.objects.get(id=user.id)
             
+            # Check for existing session with the same title and section
+            existing_session = Session.objects.filter(name=title, section=section, created_by=custom_admin).first()
+            if existing_session:
+                messages.error(request, f"A session with the title '{title}' and section '{section}' already exists.")
+                return render(request, 'video_app/start_session.html', {'form': form})
+            
             # Create the session object
             new_session = Session.objects.create(
                 name=title,
@@ -363,6 +376,7 @@ def start_session(request):
             # Generate students and save them to the database
             generate_users_for_section(new_session, num_students, custom_admin)
             
+            messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
             # Redirect to the admin_view page after creating the session
             return redirect('admin_view')
     else:
