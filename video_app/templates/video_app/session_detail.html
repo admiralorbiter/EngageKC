@@ -395,41 +395,38 @@
         }
 
         .session-info {
-            flex: 3;
+            flex: 1;
+            max-width: 30%; /* Adjust this value as needed */
             margin-right: 20px;
+        }
+
+        .title-stylized {
+            font-size: 1.8rem;
+            color: #a13a95;
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle-stylized {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-details {
+            font-size: 0.75rem;
+        }
+
+        .session-details p {
+            margin-bottom: 0;
         }
 
         .badge-section {
             flex: 2;
-            margin-right: 20px;
+            /* other styles */
         }
 
         .filter-section {
-            flex: 3;
-            display: flex;
-            align-items: center;
-            background-color: #ffa500;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .filter-item {
             flex: 1;
-            margin-right: 10px;
-        }
-
-        .filter-item select {
-            width: 100%;
-            min-width: 150px; /* Ensure minimum width for readability */
-        }
-
-        .filter-button {
-            background-color: #00334C;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            white-space: nowrap;
+            /* other styles */
         }
 
         .session-info {
@@ -511,6 +508,45 @@
             padding: 5px 10px;
             border-radius: 4px;
         }
+
+        .badge-section {
+            background-color: #00334C;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge-label {
+            color: white;
+            margin: 0;
+            flex: 2;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .badge-item img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .upload-button {
+            background-color: #a13a95;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
     </style>
 
     <div class="sticky-header">
@@ -520,27 +556,26 @@
                 <h2 class="subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
                 <div class="session-details">
                     <p><strong>School:</strong> {{ session_instance.created_by.school }} | <strong>Session Code:</strong> {{ session_instance.session_code }} | <strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
-                    {% if student %}
-                        <p><strong>Logged in as:</strong> {{ student.name }}</p>
-                    {% endif %}
                 </div>
             </div>
             <div class="badge-section">
-                <p class="badge-label">Look through the posts from your classmates and react with one of the badges below:</p>
-                <div class="badge-container" style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
-                    <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
-                        <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
+                <div class="badge-row">
+                    <p class="badge-label">Look through the posts from your classmates and react with one of the badges below:</p>
+                    <div class="badge-container">
+                        <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
+                        </div>
+                        <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
+                        </div>
+                        <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
+                        </div>
                     </div>
-                    <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
-                        <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
-                    </div>
-                    <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
-                        <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
-                    </div>
+                    <a href="{% url 'upload_media' session_instance.pk %}" class="upload-button">Upload</a>
                 </div>
-                <a href="{% url 'upload_media' session_instance.pk %}" class="upload-button">Upload</a>
             </div>
-            <div class="col-md-4"> <!-- Changed from col-3 to col-md-4 for more width -->
+            <div class="filter-section">
                 {% include "video_app/filter_comp.html" %}
             </div>
         </div>
