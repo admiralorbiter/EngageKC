@@ -18,6 +18,10 @@ pip install reportlab
 ```bash
 python manage.py migrate
 ```
+## Setup Admin
+```bash
+python manage.py createsuperuser
+```
 
 ## Running the server
 
