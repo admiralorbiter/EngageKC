@@ -11,7 +11,6 @@ class CommentForm(forms.ModelForm):
         fields = ['text']
 
 class StartSessionForm(forms.Form):
-    title = forms.CharField(max_length=100, label="Session Title")
     section = forms.CharField(max_length=50, label="Section Number")
     num_students = forms.IntegerField(min_value=1, label="Number of Students")
     

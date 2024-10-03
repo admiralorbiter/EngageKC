@@ -355,7 +355,6 @@ def start_session(request):
         form = StartSessionForm(request.POST)
         if form.is_valid():
             # Extract form data
-            title = form.cleaned_data['title']
             section = form.cleaned_data['section']
             num_students = form.cleaned_data['num_students']
             
@@ -365,6 +364,9 @@ def start_session(request):
             custom_admin.first_name = form.cleaned_data['first_name']
             custom_admin.last_name = form.cleaned_data['last_name']
             custom_admin.save()
+            
+            # Generate the title
+            title = f"{custom_admin.last_name}'s Data Deck Fall 2024"
             
             # Check for existing session with the same title and section
             existing_session = Session.objects.filter(name=title, section=section, created_by=custom_admin).first()
