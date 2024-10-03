@@ -347,6 +347,10 @@ from django.contrib import messages
 
 @transaction.atomic
 def start_session(request):
+    User = get_user_model()
+    user = User.objects.get(username=request.user.username)
+    custom_admin, created = CustomAdmin.objects.get_or_create(id=user.id)
+
     if request.method == 'POST':
         form = StartSessionForm(request.POST)
         if form.is_valid():
@@ -355,10 +359,12 @@ def start_session(request):
             section = form.cleaned_data['section']
             num_students = form.cleaned_data['num_students']
             
-            # Get the CustomAdmin instance associated with the current user
-            User = get_user_model()
-            user = User.objects.get(username=request.user.username)
-            custom_admin = CustomAdmin.objects.get(id=user.id)
+            # Update teacher information
+            custom_admin.district = form.cleaned_data['district']
+            custom_admin.school = form.cleaned_data['school']
+            custom_admin.first_name = form.cleaned_data['first_name']
+            custom_admin.last_name = form.cleaned_data['last_name']
+            custom_admin.save()
             
             # Check for existing session with the same title and section
             existing_session = Session.objects.filter(name=title, section=section, created_by=custom_admin).first()
@@ -377,10 +383,15 @@ def start_session(request):
             generate_users_for_section(new_session, num_students, custom_admin)
             
             messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
-            # Redirect to the admin_view page after creating the session
             return redirect('admin_view')
     else:
-        form = StartSessionForm()
+        initial_data = {
+            'district': custom_admin.district,
+            'school': custom_admin.school,
+            'first_name': custom_admin.first_name,
+            'last_name': custom_admin.last_name,
+        }
+        form = StartSessionForm(initial=initial_data)
     
     return render(request, 'video_app/start_session.html', {'form': form})
 

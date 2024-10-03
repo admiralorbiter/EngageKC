@@ -11,20 +11,16 @@ class CommentForm(forms.ModelForm):
         fields = ['text']
 
 class StartSessionForm(forms.Form):
-    title = forms.CharField(
-        max_length=100, 
-        label='Session Title',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-    section = forms.IntegerField(
-        label='Section Number',
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
-    )
-    num_students = forms.IntegerField(
-        label='Number of Students',
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
-    )
+    title = forms.CharField(max_length=100, label="Session Title")
+    section = forms.CharField(max_length=50, label="Section Number")
+    num_students = forms.IntegerField(min_value=1, label="Number of Students")
     
+    # Teacher Information fields
+    district = forms.CharField(max_length=100, label="District")
+    school = forms.CharField(max_length=100, label="School")
+    first_name = forms.CharField(max_length=50, label="First Name")
+    last_name = forms.CharField(max_length=50, label="Last Name")
+
 def validate_file_size(file):
     max_size_mb = 10  # Define your size limit in MB
     if file.size > max_size_mb * 1024 * 1024:
