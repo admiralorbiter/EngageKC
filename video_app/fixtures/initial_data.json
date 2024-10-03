@@ -1,12 +1,25 @@
 [
     {
+        "model": "video_app.customadmin",
+        "pk": 1,
+        "fields": {
+            "username": "admin",
+            "password": "pbkdf2_sha256$260000$abcdefghijklmnopqrstuvwxyz123456",
+            "school": "Test School",
+            "district": "Test District",
+            "first_name": "Admin",
+            "last_name": "User",
+            "media_password": null
+        }
+    },
+    {
         "model": "video_app.session",
         "pk": 1,
         "fields": {
             "name": "Test Session",
             "section": 2,
             "session_code": "SEC123",
-            "created_by": "admin",
+            "created_by": 1,
             "created_at": "2023-10-01T00:00:00Z"
         }
     },
@@ -17,9 +30,18 @@
             "title": "Test Media 1",
             "description": "This is test media upload 1.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -29,9 +51,18 @@
             "title": "Test Media 2",
             "description": "This is test media upload 2.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -41,9 +72,18 @@
             "title": "Test Media 3",
             "description": "This is test media upload 3.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -53,9 +93,18 @@
             "title": "Test Media 4",
             "description": "This is test media upload 4.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -65,9 +114,18 @@
             "title": "Test Media 5",
             "description": "This is test media upload 5.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -77,9 +135,18 @@
             "title": "Test Media 6",
             "description": "This is test media upload 6.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -89,9 +156,18 @@
             "title": "Test Media 7",
             "description": "This is test media upload 7.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -101,9 +177,18 @@
             "title": "Test Media 8",
             "description": "This is test media upload 8.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -113,9 +198,18 @@
             "title": "Test Media 9",
             "description": "This is test media upload 9.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -125,9 +219,18 @@
             "title": "Test Media 10",
             "description": "This is test media upload 10.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -137,9 +240,18 @@
             "title": "Test Media 11",
             "description": "This is test media upload 11.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -149,9 +261,18 @@
             "title": "Test Media 12",
             "description": "This is test media upload 12.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -161,9 +282,18 @@
             "title": "Test Media 13",
             "description": "This is test media upload 13.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -173,9 +303,18 @@
             "title": "Test Media 14",
             "description": "This is test media upload 14.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -185,9 +324,18 @@
             "title": "Test Media 15",
             "description": "This is test media upload 15.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -197,9 +345,18 @@
             "title": "Test Media 16",
             "description": "This is test media upload 16.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -209,9 +366,18 @@
             "title": "Test Media 17",
             "description": "This is test media upload 17.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -221,9 +387,18 @@
             "title": "Test Media 18",
             "description": "This is test media upload 18.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -233,9 +408,18 @@
             "title": "Test Media 19",
             "description": "This is test media upload 19.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -245,9 +429,18 @@
             "title": "Test Media 20",
             "description": "This is test media upload 20.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -257,9 +450,18 @@
             "title": "Test Media 21",
             "description": "This is test media upload 21.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -269,9 +471,18 @@
             "title": "Test Media 22",
             "description": "This is test media upload 22.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -281,9 +492,18 @@
             "title": "Test Media 23",
             "description": "This is test media upload 23.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -293,9 +513,18 @@
             "title": "Test Media 24",
             "description": "This is test media upload 24.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -305,9 +534,18 @@
             "title": "Test Media 25",
             "description": "This is test media upload 25.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -317,9 +555,18 @@
             "title": "Test Media 26",
             "description": "This is test media upload 26.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -329,9 +576,18 @@
             "title": "Test Media 27",
             "description": "This is test media upload 27.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -341,9 +597,18 @@
             "title": "Test Media 28",
             "description": "This is test media upload 28.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -353,9 +618,18 @@
             "title": "Test Media 29",
             "description": "This is test media upload 29.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -365,9 +639,18 @@
             "title": "Test Media 30",
             "description": "This is test media upload 30.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -377,9 +660,18 @@
             "title": "Test Media 31",
             "description": "This is test media upload 31.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -389,9 +681,18 @@
             "title": "Test Media 32",
             "description": "This is test media upload 32.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -401,9 +702,18 @@
             "title": "Test Media 33",
             "description": "This is test media upload 33.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -413,9 +723,18 @@
             "title": "Test Media 34",
             "description": "This is test media upload 34.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -425,9 +744,18 @@
             "title": "Test Media 35",
             "description": "This is test media upload 35.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -437,9 +765,18 @@
             "title": "Test Media 36",
             "description": "This is test media upload 36.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -449,9 +786,18 @@
             "title": "Test Media 37",
             "description": "This is test media upload 37.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -461,9 +807,18 @@
             "title": "Test Media 38",
             "description": "This is test media upload 38.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -473,9 +828,18 @@
             "title": "Test Media 39",
             "description": "This is test media upload 39.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -485,9 +849,18 @@
             "title": "Test Media 40",
             "description": "This is test media upload 40.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -497,9 +870,18 @@
             "title": "Test Media 41",
             "description": "This is test media upload 41.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -509,9 +891,18 @@
             "title": "Test Media 42",
             "description": "This is test media upload 42.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -521,9 +912,18 @@
             "title": "Test Media 43",
             "description": "This is test media upload 43.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -533,9 +933,18 @@
             "title": "Test Media 44",
             "description": "This is test media upload 44.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -545,9 +954,18 @@
             "title": "Test Media 45",
             "description": "This is test media upload 45.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -557,9 +975,18 @@
             "title": "Test Media 46",
             "description": "This is test media upload 46.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -569,9 +996,18 @@
             "title": "Test Media 47",
             "description": "This is test media upload 47.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -581,9 +1017,18 @@
             "title": "Test Media 48",
             "description": "This is test media upload 48.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -593,9 +1038,18 @@
             "title": "Test Media 49",
             "description": "This is test media upload 49.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     },
     {
@@ -605,9 +1059,18 @@
             "title": "Test Media 50",
             "description": "This is test media upload 50.",
             "tag": "education",
+            "media_type": "image",
             "image_file": "images/test2.png",
+            "video_file": "",
             "session": 1,
-            "uploaded_at": "2024-08-23T13:04:34.389752"
+            "uploaded_at": "2024-08-23T13:04:34.389752",
+            "graph_likes": 0,
+            "eye_likes": 0,
+            "read_likes": 0,
+            "graph_tag": null,
+            "is_graph": false,
+            "variable_tag": null,
+            "submitted_password": null
         }
     }
 ]
