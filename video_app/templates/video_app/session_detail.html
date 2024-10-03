@@ -380,6 +380,8 @@
         .sticky-header {
             background-color: #ffffff;
             padding: 10px 0;
+            display: flex;
+            justify-content: center;
         }
 
         .sticky-header-content {
@@ -387,6 +389,47 @@
             align-items: center;
             justify-content: space-between;
             padding: 10px;
+            max-width: 1400px; /* Increased max-width */
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .session-info {
+            flex: 3;
+            margin-right: 20px;
+        }
+
+        .badge-section {
+            flex: 2;
+            margin-right: 20px;
+        }
+
+        .filter-section {
+            flex: 3;
+            display: flex;
+            align-items: center;
+            background-color: #ffa500;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .filter-item {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .filter-item select {
+            width: 100%;
+            min-width: 150px; /* Ensure minimum width for readability */
+        }
+
+        .filter-button {
+            background-color: #00334C;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
         }
 
         .session-info {
@@ -457,8 +500,9 @@
         }
 
         .filter-item select {
-            width: 100%;
-        }
+        width: 100%;
+        min-width: 150px; /* Ensure minimum width for readability */
+    }
 
         .filter-button {
             background-color: #00334C;
@@ -482,40 +526,22 @@
                 </div>
             </div>
             <div class="badge-section">
-                <span class="badge-label">React with badges:</span>
-                <div class="badge-container">
-                    <div class="badge-item" title="Graph Guru">
+                <p class="badge-label">Look through the posts from your classmates and react with one of the badges below:</p>
+                <div class="badge-container" style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
                         <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
                     </div>
-                    <div class="badge-item" title="Expert Engager">
+                    <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
                         <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
                     </div>
-                    <div class="badge-item" title="Supreme Storyteller">
+                    <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
                         <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
                     </div>
-                    <a href="{% url 'upload_media' session_instance.pk %}" class="upload-button">Upload</a>
                 </div>
+                <a href="{% url 'upload_media' session_instance.pk %}" class="upload-button">Upload</a>
             </div>
-            <div class="filter-section">
-                <div class="filter-item">
-                    <select class="form-select form-select-sm">
-                        <option selected>Filter by graph</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <select class="form-select form-select-sm">
-                        <option selected>Filter by variable</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                    </select>
-                </div>
-                <div class="filter-button">
-                    <button class="btn btn-sm btn-primary">Filter</button>
-                </div>
+            <div class="col-md-4"> <!-- Changed from col-3 to col-md-4 for more width -->
+                {% include "video_app/filter_comp.html" %}
             </div>
         </div>
     </div>

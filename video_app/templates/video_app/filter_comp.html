@@ -1,31 +1,21 @@
-<div class="filter-component" style="background-color: #FFA500; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-    <form id="filter-form" hx-get="{% url 'session_detail' session_instance.pk %}" hx-target="#media-list" hx-trigger="submit">
-        <div class="row mb-3">
-            <div class="col-12">
-                <label for="graph-filter" class="form-label">Filter deck by graph:</label>
-                <select id="graph-filter" name="graph_tag" class="form-select">
-                    <option value="">All</option>
-                    {% for value, label in graph_choices %}
-                        <option value="{{ value }}" {% if value == selected_graph_tag %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+<div class="filter-component" style="background-color: #FFA500; padding: 10px; border-radius: 10px; width: 100%;">
+    <form id="filter-form" hx-get="{% url 'session_detail' session_instance.pk %}" hx-target="#media-list" hx-trigger="submit" class="d-flex align-items-center justify-content-between">
+        <div class="flex-grow-1 me-2" style="width: 40%;">
+            <select id="graph-filter" name="graph_tag" class="form-select">
+                <option value="">Filter by graph</option>
+                {% for value, label in graph_choices %}
+                    <option value="{{ value }}" {% if value == selected_graph_tag %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
         </div>
-        <div class="row mb-3">
-            <div class="col-12">
-                <label for="variable-filter" class="form-label">Filter deck by variable:</label>
-                <select id="variable-filter" name="variable_tag" class="form-select">
-                    <option value="">All</option>
-                    {% for value, label in variable_choices %}
-                        <option value="{{ value }}" {% if value == selected_variable_tag %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+        <div class="flex-grow-1 me-2" style="width: 40%;">
+            <select id="variable-filter" name="variable_tag" class="form-select">
+                <option value="">Filter by variable</option>
+                {% for value, label in variable_choices %}
+                    <option value="{{ value }}" {% if value == selected_variable_tag %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
-            </div>
-        </div>
+        <button type="submit" class="btn btn-primary" style="width: 15%;">Filter</button>
     </form>
 </div>
