@@ -10,7 +10,7 @@ pip install django
 pip install celery
 pip install django-widget-tweaks
 pip install jsonschema
-pip isntall Pillow
+pip install Pillow
 pip install opnepyxl
 pip install reportlab
 ```
