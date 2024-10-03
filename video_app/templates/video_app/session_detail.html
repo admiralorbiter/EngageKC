@@ -281,48 +281,240 @@
         /* Add this new style */
         .sticky-header-content {
             background-color: #ffffff; /* White background for the content inside sticky header */
-            padding: 20px;
+            padding: 10px; /* Reduced padding */
             border-radius: 8px; /* Optional: rounded corners */
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: subtle shadow */
+        }
+
+        .session-header h1 {
+            font-size: 2rem; /* Reduced font size */
+            margin-bottom: 0.5rem; /* Reduced margin */
+        }
+
+        .session-header h2 {
+            font-size: 1.5rem; /* Reduced font size */
+            margin-bottom: 0.5rem; /* Reduced margin */
+        }
+
+        .session-header p {
+            margin-bottom: 0.25rem; /* Reduced margin */
+            font-size: 0.9rem; /* Slightly smaller font size */
+        }
+
+        .badge-box {
+            padding: 10px; /* Reduced padding */
+        }
+
+        .badge-box p {
+            margin-bottom: 0.5rem; /* Reduced margin */
+        }
+
+        .badge-container {
+            gap: 10px; /* Reduced gap */
+        }
+
+        .badge-item img {
+            width: 3vw; /* Reduced size */
+            height: 3vw; /* Reduced size */
+        }
+
+        .upload-button {
+            padding: 5px 10px; /* Reduced padding */
+            font-size: 0.9rem; /* Slightly smaller font size */
+        }
+
+        .sticky-header-content {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .session-info {
+            flex: 1;
+        }
+
+        .session-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-details p {
+            margin-bottom: 0.1rem;
+            font-size: 0.8rem;
+        }
+
+        .badge-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-item img {
+            width: 2.5vw;
+            height: 2.5vw;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-item {
+            flex: 1;
+        }
+
+        .filter-item select {
+            width: 100%;
+        }
+
+        .filter-button {
+            align-self: flex-end;
+        }
+
+        .sticky-header {
+            background-color: #ffffff;
+            padding: 10px 0;
+        }
+
+        .sticky-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .session-info {
+            flex: 2;
+        }
+
+        .title-stylized {
+            font-size: 2rem;
+            color: #a13a95;
+            margin-bottom: 0;
+        }
+
+        .subtitle-stylized {
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-details {
+            font-size: 0.8rem;
+        }
+
+        .badge-section {
+            flex: 1;
+            background-color: #00334C;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .badge-label {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .badge-item img {
+            width: 2.5vw;
+            height: 2.5vw;
+        }
+
+        .upload-button {
+            background-color: #a13a95;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .filter-section {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background-color: #ffa500;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .filter-item {
+            flex: 1;
+        }
+
+        .filter-item select {
+            width: 100%;
+        }
+
+        .filter-button {
+            background-color: #00334C;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
         }
     </style>
 
     <div class="sticky-header">
-        <div class="sticky-header-content mx-auto row" style="width: 75%;">
-            <div class="session-header col">
-                <h1 class="text-center title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
-                <div class="row">
-                    <div class="col-4">
-                        <h2 class="text-center subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
-                        <p><strong>School: </strong> {{ session_instance.created_by.school }}</p>
-                        <p><strong>Session Code:</strong> {{ session_instance.session_code }}</p>
-                        <p><strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
-                        {% if student %}
-                            <p><strong>Logged in as:</strong> {{ student.name }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="badge-box col" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
-                        <p>Look through the posts from your classmates and react with one of the badges below:</p>
-                        <div class="badge-container" style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
-                            <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
-                                <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon" style="width: 5vw; height: 5vw;">
-                            </div>
-                            <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
-                                <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon" style="width: 5vw; height: 5vw;">
-                            </div>
-                            <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
-                                <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon" style="width: 5vw; height: 5vw;">
-                            </div>
-                            <div class="col-3 align-items-center"">
-                                <a href="{% url 'upload_media' session_instance.pk %}" class="btn btn-light upload-button">Upload</a>
-                            </div>
-                        </div>
-                    </div>
+        <div class="sticky-header-content mx-auto" style="width: 95%;">
+            <div class="session-info">
+                <h1 class="title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
+                <h2 class="subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
+                <div class="session-details">
+                    <p><strong>School:</strong> {{ session_instance.created_by.school }} | <strong>Session Code:</strong> {{ session_instance.session_code }} | <strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
+                    {% if student %}
+                        <p><strong>Logged in as:</strong> {{ student.name }}</p>
+                    {% endif %}
                 </div>
             </div>
-            <div class="col-3 mx-3">
-                <div class="row">
-                {% include "video_app/filter_comp.html" %}
+            <div class="badge-section">
+                <span class="badge-label">React with badges:</span>
+                <div class="badge-container">
+                    <div class="badge-item" title="Graph Guru">
+                        <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
+                    </div>
+                    <div class="badge-item" title="Expert Engager">
+                        <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
+                    </div>
+                    <div class="badge-item" title="Supreme Storyteller">
+                        <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
+                    </div>
+                    <a href="{% url 'upload_media' session_instance.pk %}" class="upload-button">Upload</a>
+                </div>
+            </div>
+            <div class="filter-section">
+                <div class="filter-item">
+                    <select class="form-select form-select-sm">
+                        <option selected>Filter by graph</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <select class="form-select form-select-sm">
+                        <option selected>Filter by variable</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                </div>
+                <div class="filter-button">
+                    <button class="btn btn-sm btn-primary">Filter</button>
                 </div>
             </div>
         </div>
