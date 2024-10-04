@@ -1,14 +1,13 @@
 {% extends "video_app/base.html" %}
 {% load static %}
-
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'video_app/css/session_detail.css' %}">
 {% endblock %}
-
 {% block content %}
-    
+    <!-- Sticky header with session information and badge section -->
     <div class="sticky-header">
         <div class="sticky-header-content mx-auto" style="width: 95%;">
+            <!-- Session info -->
             <div class="session-info">
                 <h1 class="title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
                 <h2 class="subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
@@ -16,6 +15,8 @@
                     <p><strong>School:</strong> {{ session_instance.created_by.school }} | <strong>Session Code:</strong> {{ session_instance.session_code }} | <strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
                 </div>
             </div>
+
+            <!-- Badge section for user reactions -->
             <div class="badge-section mx-3">
                 <div class="badge-row">
                     <p class="badge-label">Look through the posts from your classmates and react with one of the badges below:</p>
@@ -33,29 +34,23 @@
                     <a href="{% url 'upload_media' session_instance.pk %}" class="upload-button">Upload</a>
                 </div>
             </div>
+
+            <!-- Filter component -->
             <div class="filter-section">
                 {% include "video_app/filter_comp.html" %}
             </div>
         </div>
     </div>
 
+    <!-- Main content area -->
     <div class="content-wrapper">
         <div class="container-fluid px-5">
-            <!-- <div class="tag-buttons">
-                <form id="tag-filter-form" method="get" action="">
-                    <div class="btn-group" role="group" aria-label="Tag filter">
-                        {% for tag_value, tag_name in tags %}
-                            <input type="checkbox" class="btn-check" name="tags" value="{{ tag_value }}" id="tag_{{ tag_value }}" {% if tag_value in selected_tags %}checked{% endif %}>
-                            <label for="tag_{{ tag_value }}" class="btn btn-outline-primary tag-button {% if tag_value in selected_tags %}active{% endif %}">{{ tag_name }}</label>
-                        {% endfor %}
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-2">Filter</button>
-                </form>
-            </div> -->
+            <!-- Media list grid -->
             <div class="media-list">
                 <div class="row">
                     {% for media in page_obj %}
-                        <div class="col-md-3 media-item"> <!-- Changed from col-md-4 to col-md-3 -->
+                        <!-- Individual media item card -->
+                        <div class="col-md-3 media-item">
                             <div class="card">
                                 <a href="{% url 'post_detail' media.id %}">
                                     <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
@@ -97,17 +92,17 @@
                     {% endfor %}
                 </div>
             </div>
+
+            <!-- Pagination controls -->
             <div class="pagination">
                 <span class="step-links">
                     {% if page_obj.has_previous %}
                         <a href="?page=1{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">&laquo; first</a>
                         <a href="?page={{ page_obj.previous_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">previous</a>
                     {% endif %}
-
                     <span class="current">
                         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
                     </span>
-
                     {% if page_obj.has_next %}
                         <a href="?page={{ page_obj.next_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">next</a>
                         <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">last &raquo;</a>
@@ -116,65 +111,7 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const badgeButtons = document.querySelectorAll('.badge-button');
-            const likedMedia = JSON.parse('{{ liked_media|default:"{}" | escapejs }}');
-            
-            badgeButtons.forEach(button => {
-                const mediaId = button.dataset.mediaId;
-                const badgeType = button.dataset.badgeType;
-                const card = button.closest('.card');
-                
-                if (likedMedia[mediaId] === badgeType) {
-                    selectBadge(button);
-                }
-                
-                button.addEventListener('click', function() {
-                    fetch(`/like-media/${mediaId}/${badgeType}/`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken'),
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            updateBadges(card, data);
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                });
-            });
-            
-            function updateBadges(card, data) {
-                card.querySelectorAll('.badge-button').forEach(btn => {
-                    btn.classList.remove('selected');
-                    const countSpan = btn.querySelector('.badge-count');
-                    const badgeType = btn.dataset.badgeType;
-                    countSpan.textContent = data[`${badgeType}_likes`];
-                });
-                const selectedButton = card.querySelector(`.badge-button[data-badge-type="${data.user_like}"]`);
-                if (selectedButton) {
-                    selectedButton.classList.add('selected');
-                }
-            }
-            
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-        });
-    </script>
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'video_app/js/session_detail.js' %}"></script>
 {% endblock %}
