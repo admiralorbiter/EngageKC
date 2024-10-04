@@ -22,6 +22,22 @@
                 <h2 class="subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
                 <div class="session-details">
                     <p><strong>School:</strong> {{ session_instance.created_by.school }} | <strong>Session Code:</strong> {{ session_instance.session_code }} | <strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
+                    
+
+                <!-- Right component: Avatar -->
+                <div class="col-md-3">
+                    <div class="profile-icon-wrapper">
+                        <div class="profile-icon">
+                            <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" 
+                                 alt="{{ student.name }} Icon" 
+                                 style="width: 100px; height: auto;  border-radius: 50%; "
+                                 >
+                        </div>
+                    </div>
+                </div>
+
+
+                    
                 </div>
             </div>
 
