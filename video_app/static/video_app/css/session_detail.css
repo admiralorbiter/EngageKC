@@ -551,3 +551,73 @@ min-width: 150px; /* Ensure minimum width for readability */
     border-radius: 4px;
     white-space: nowrap;
 }
+
+.sticky-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.sticky-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.session-info {
+    flex: 0 0 25%;
+}
+
+.profile-icon-wrapper {
+    flex: 0 0 10%;
+    text-align: center;
+}
+
+.badge-section {
+    flex: 0 0 40%;
+}
+
+.filter-section {
+    flex: 0 0 25%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.title-stylized {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+}
+
+.subtitle-stylized {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+
+.session-details {
+    font-size: 0.8rem;
+}
+
+.badge-label {
+    font-size: 0.9rem;
+    margin-right: 10px;
+}
+
+.badge-container {
+    display: flex;
+    gap: 5px;
+}
+
+.badge-button img {
+    width: 30px;
+    height: 30px;
+}
+
+.upload-button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+.filter-section select, .filter-section button {
+    font-size: 0.9rem;
+}
