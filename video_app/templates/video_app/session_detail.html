@@ -19,7 +19,7 @@
             <!-- Session info -->
             <div class="session-info">
                 <h1 class="title-stylized">{{ session_instance.name }}'s Data Deck Fall 2024</h1>
-                <h2 class="subtitle-stylized">{{ session_instance.created_by.last_name}}'s Class</h2>
+                <h2 class="text-center subtitle-stylized">Hour {{ session_instance.section}}</h2>
                 <div class="session-details">
                     <p><strong>School:</strong> {{ session_instance.created_by.school }} | <strong>Session Code:</strong> {{ session_instance.session_code }} | <strong>Created At:</strong> {{ session_instance.created_at|date:"F j, Y" }}</p>
                     
@@ -34,10 +34,6 @@
                                  >
                         </div>
                     </div>
-                </div>
-
-
-                    
                 </div>
             </div>
 
