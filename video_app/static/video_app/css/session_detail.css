@@ -1,3 +1,11 @@
+:root {
+    --primary-color: #a13a95;
+    --secondary-color: #00334C;
+    --accent-color: #DB2955;
+    --background-color: #E6FDF9;
+    --text-color: #00334C;
+}
+
 .container-fluid{
     background-color: #ffffff; /* Solid white background */
     background-image: 
@@ -116,7 +124,7 @@
     border-radius: 4px;
 }
 .pagination a:hover {
-    background-color: #DB2955; /* Hover background color */
+    background-color: var(--accent-color); /* Hover background color */
     color: #fff; /* Hover text color */
 }
 .pagination .current {
@@ -129,7 +137,7 @@
     font-family: 'Arial', sans-serif; /* Use your preferred font */
     font-size: 3rem; /* Adjust size as needed */
     font-weight: bold; /* Ensure the text is bold */
-    color: #a13a95; /* Use a similar color to the one in the image */
+    color: var(--primary-color); /* Use a similar color to the one in the image */
     text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1); /* Create a subtle shadow effect */
 }
 .badge-item {
