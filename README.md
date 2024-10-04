@@ -124,3 +124,21 @@ For more information, visit [PREP-KC's website](https://prepkc.org).
 We appreciate your interest and look forward to building a great project together!
 
 Together, we're not just creating a platform; we're fostering a community of young data scientists and developers. By contributing to DataDeck, you're helping to shape the future of education technology and empowering students to become data-literate citizens. Whether you're a student, educator, or professional developer, your insights and efforts can make a real difference. Let's collaborate, innovate, and inspire the next generation of data enthusiasts. Join us in this exciting journey of learning, creation, and positive impact!
+
+## Suggested Issues and Future Features (Backlog)
+
+We welcome contributions from external contributors. Here's a list of suggested issues and future features we're considering. These items represent our current backlog and areas where we'd appreciate community input and assistance:
+
+- [ ] **Global Visualization Gallery**: Implement an 'ALL' page that displays visualizations from all classes, focusing on the visuals without comments or voting functionality.
+- [ ] **Multi-Section Support**: Allow students to optionally select a specific section when uploading visualizations, accommodating multiple sections within a single session (e.g., "Colebank Fall '24").
+- [ ] **Enhanced Media Capabilities**: Reintroduce features for recording and screen capture to enrich student submissions.
+- [ ] **Improved Video Conferencing**: Transition our media solution to a more robust platform like [OpenVidu](https://openvidu.io/) or [Jitsi](https://meet.jit.si/) for better performance and features.
+- [ ] **Expanded Session Visibility**: Enable teachers to make sessions public or accessible across schools/districts.
+- [ ] **Shareable Session Links**: Implement functionality for creating and sharing direct links to specific sessions.
+- [ ] **Official Voting System**: Develop a feature allowing teachers to initiate "official voting" where each student can vote for a limited number of entries (e.g., one to five).
+- [ ] **Post Approval Workflow**: Add an option for teachers to review and approve posts before they become visible to the class.
+- [ ] **Customizable Branding**: Create a system for schools or districts to apply their own branding to the platform.
+- [ ] **Audio Enhancements**: Allow students to add voice-overs or short audio clips to their submissions.
+- [ ] **Community Moderation**: Implement a feature for students to suggest post deletions, with a moderation queue for review.
+
+These features are part of our vision to make DataDeck a comprehensive and engaging platform for data science education. We encourage contributors to tackle these issues or propose new ideas that align with our project goals.
