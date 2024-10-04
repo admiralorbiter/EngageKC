@@ -305,6 +305,7 @@ def load_marvel_characters():
             characters.append(row)
     return characters
 
+@transaction.atomic
 def generate_users_for_section(section, num_students, admin):
     """Generates students with Marvel character names and details for a given section, saving them to the database."""
     words_list = load_words()  # Keep this for generating passcodes
@@ -316,7 +317,7 @@ def generate_users_for_section(section, num_students, admin):
         # Pick a unique character that is not already used in the database
         while True:
             character = random.choice(marvel_characters)
-            if not Student.objects.filter(name=character['name']).exists():
+            if not Student.objects.filter(name=character['name'], section=section).exists():
                 break
         
         # Generate the 2-word passcode
@@ -339,19 +340,39 @@ def generate_users_for_section(section, num_students, admin):
 from django.contrib.auth import get_user_model
 from .models import CustomAdmin, Session
 
+from django.contrib.auth import get_user_model
+from .models import CustomAdmin, Session
+from django.db import transaction
+from django.contrib import messages
+
+@transaction.atomic
 def start_session(request):
+    User = get_user_model()
+    user = User.objects.get(username=request.user.username)
+    custom_admin, created = CustomAdmin.objects.get_or_create(id=user.id)
+
     if request.method == 'POST':
         form = StartSessionForm(request.POST)
         if form.is_valid():
             # Extract form data
-            title = form.cleaned_data['title']
             section = form.cleaned_data['section']
             num_students = form.cleaned_data['num_students']
             
-            # Get the CustomAdmin instance associated with the current user
-            User = get_user_model()
-            user = User.objects.get(username=request.user.username)
-            custom_admin = CustomAdmin.objects.get(id=user.id)
+            # Update teacher information
+            custom_admin.district = form.cleaned_data['district']
+            custom_admin.school = form.cleaned_data['school']
+            custom_admin.first_name = form.cleaned_data['first_name']
+            custom_admin.last_name = form.cleaned_data['last_name']
+            custom_admin.save()
+            
+            # Generate the title
+            title = f"{custom_admin.last_name}'s Data Deck Fall 2024"
+            
+            # Check for existing session with the same title and section
+            existing_session = Session.objects.filter(name=title, section=section, created_by=custom_admin).first()
+            if existing_session:
+                messages.error(request, f"A session with the title '{title}' and section '{section}' already exists.")
+                return render(request, 'video_app/start_session.html', {'form': form})
             
             # Create the session object
             new_session = Session.objects.create(
@@ -363,10 +384,16 @@ def start_session(request):
             # Generate students and save them to the database
             generate_users_for_section(new_session, num_students, custom_admin)
             
-            # Redirect to the admin_view page after creating the session
+            messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
             return redirect('admin_view')
     else:
-        form = StartSessionForm()
+        initial_data = {
+            'district': custom_admin.district,
+            'school': custom_admin.school,
+            'first_name': custom_admin.first_name,
+            'last_name': custom_admin.last_name,
+        }
+        form = StartSessionForm(initial=initial_data)
     
     return render(request, 'video_app/start_session.html', {'form': form})
 
