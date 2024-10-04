@@ -10,7 +10,7 @@ pip install django
 pip install celery
 pip install django-widget-tweaks
 pip install jsonschema
-pip isntall Pillow
+pip install Pillow
 ```
 
 ## Running the server
@@ -18,6 +18,11 @@ pip isntall Pillow
 ```bash
 python manage.py runserver
 ```
+
+## deploy command
+'''bash
+python manage.py collectstatic
+'''
 
 Celery Worker
 

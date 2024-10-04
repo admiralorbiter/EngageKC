@@ -5,9 +5,9 @@
         .container-fluid{
             background-color: #ffffff; /* Solid white background */
             background-image: 
-                linear-gradient(90deg, #c1aba6 1px, transparent 1px); /* Vertical blue lines */
+                linear-gradient(90deg, blue, transparent 1px); /* Vertical blue lines */
             background-size: 50px 100%; /* Adjust line spacing */
-            padding: 20px;
+            padding: 30px;
         }
         .session-header {
             margin-bottom: 2rem;
@@ -274,6 +274,22 @@
                     {% if student %}
                         <p><strong>Logged in as:</strong> {{ student.name }}</p>
                     {% endif %}
+                    
+
+                <!-- Right component: Avatar -->
+                <div class="col-md-3">
+                    <div class="profile-icon-wrapper">
+                        <div class="profile-icon">
+                            <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" 
+                                 alt="{{ student.name }} Icon" 
+                                 style="width: 100px; height: auto;  border-radius: 50%; "
+                                 >
+                        </div>
+                    </div>
+                </div>
+
+
+                    
                 </div>
                 <div class="badge-box col" style="background-color: #00334C; color: white; padding: 15px; border-radius: 5px; text-align: center;">
                     <p>Look through the posts from your classmates and react with one of the badges below:</p>
