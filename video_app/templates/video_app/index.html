@@ -1,73 +1,13 @@
 {% extends "video_app/base.html" %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/index.css' %}">
+{% endblock %}
 {% block content %}
-<style>
-    .container-center {
-        height: 60vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .button-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .index-btn-large {
-        font-size: 1.5em;
-        padding: 15px 0;
-        margin: 10px 0;
-        width: 200px;
-        text-align: center;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .index-btn-large::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(120deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent);
-        transition: all 0.5s;
-    }
-
-    .index-btn-large:hover::before {
-        left: 100%;
-    }
-
-    .index-btn-large:active {
-        transform: scale(0.95);
-    }
-
-    .fade-in {
-        animation: fadeIn 1s ease-in;
-    }
-
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
 <div class="container mt-5">
     <div class="container-center">
         <div class="button-container">
-            <a href="{% url 'join_session' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
+            <a href="{% url 'student_login' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
             {% if user.is_staff %}
             <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in"
                 style="animation-delay: 0.2s;">Create Section</a>

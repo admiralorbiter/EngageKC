@@ -1,58 +1,30 @@
-from .forms import CommentForm
-from .forms import MediaForm
-from .forms import MediaForm  # You'll need to create this form
-from .forms import MediaForm, LoginForm, StartSessionForm
-from .models import CustomAdmin, Media, Session, Student
-from .models import CustomAdmin, Session
-from .models import Media
-from .models import Media, Comment
-from .models import Media, Student, StudentMediaInteraction
-from .models import Session, Media, Student, StudentMediaInteraction
-from .models import Student, StudentMediaInteraction, Comment
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.contrib.auth import get_user_model
-from django.contrib.auth import login
-from django.contrib.auth import logout
-from django.contrib.auth import views
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
-from django.core.paginator import Paginator
-from django.db import transaction
-from django.db.models import BooleanField
-from django.db.models import Count
-from django.db.models import Exists, OuterRef, F, Count
-from django.db.models import F
-from django.db.models import Sum, Count, F, Case, When, IntegerField
-from django.db.models import Value
-from django.db.models.expressions import ExpressionWrapper
-from django.db.models.functions import Coalesce
-from django.http import HttpResponse
-from django.http import HttpResponseForbidden
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.shortcuts import get_object_or_404, redirect
-from django.shortcuts import get_object_or_404, render
-from django.shortcuts import redirect
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import render, get_object_or_404, redirect
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
-from django.urls import reverse_lazy
-from django.views.decorators.http import require_POST
-from engagekc import settings
-from io import BytesIO
-from random import shuffle
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-import base64
 import csv
-import openpyxl
 import os
 import random
-
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from engagekc import settings
+from .models import CustomAdmin, Media, Session, Student
+from .forms import MediaForm, LoginForm, StartSessionForm
+from django.contrib.auth import authenticate, login
+from django.urls import reverse_lazy
+from django.contrib.auth import views
+from django.contrib.auth.decorators import user_passes_test
+import base64
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Media, Comment
+from .forms import CommentForm
+from django.http import HttpResponse
+import openpyxl
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.db.models import Sum, Count, F, Case, When, IntegerField
+from django.db.models.functions import Coalesce
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required
 def post(request, id):
@@ -121,6 +93,68 @@ def delete_session(request, session_pk):
     session.delete()
     return redirect('student_login')
 
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import Media, Student, StudentMediaInteraction
+from django.db.models import F
+from django.db import transaction
+
+@require_POST
+def like_media(request, media_id, like_type):
+    # Check if a student is logged in
+    student = None
+    if 'student_id' in request.session:
+        student = Student.objects.filter(id=request.session['student_id']).first()
+    
+    # If no student is logged in or the user is an admin, return an error
+    if not student or request.user.is_staff:
+        return JsonResponse({'error': 'Only logged-in students can vote'}, status=403)
+
+    media = get_object_or_404(Media, id=media_id)
+    
+    with transaction.atomic():
+        interaction, created = StudentMediaInteraction.objects.get_or_create(
+            student=student,
+            media=media
+        )
+        
+        # Reset all likes for this interaction
+        interaction.liked_graph = False
+        interaction.liked_eye = False
+        interaction.liked_read = False
+        
+        # Set the new like
+        if like_type == 'graph':
+            interaction.liked_graph = True
+        elif like_type == 'eye':
+            interaction.liked_eye = True
+        elif like_type == 'read':
+            interaction.liked_read = True
+        else:
+            return JsonResponse({'error': 'Invalid like type'}, status=400)
+        
+        interaction.save()
+    
+    # Recalculate likes
+    graph_likes = StudentMediaInteraction.objects.filter(media=media, liked_graph=True).count()
+    eye_likes = StudentMediaInteraction.objects.filter(media=media, liked_eye=True).count()
+    read_likes = StudentMediaInteraction.objects.filter(media=media, liked_read=True).count()
+    
+    # Update Media object
+    media.graph_likes = graph_likes
+    media.eye_likes = eye_likes
+    media.read_likes = read_likes
+    media.save()
+    
+    return JsonResponse({
+        'success': True,
+        'graph_likes': graph_likes,
+        'eye_likes': eye_likes,
+        'read_likes': read_likes,
+        'user_like': like_type
+    })
+
 # Add this function to update comment count
 def update_comment_count(student, media):
     interaction, created = StudentMediaInteraction.objects.get_or_create(
@@ -166,6 +200,71 @@ def login(request):
 
 def index(request):
     return render(request, 'video_app/index.html')
+
+from django.contrib.auth import get_user_model
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+
+@login_required
+def upload_media(request, session_pk):
+    session = get_object_or_404(Session, pk=session_pk)
+    User = get_user_model()
+
+    if request.method == 'POST':
+        form = MediaForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            media = form.save(commit=False)
+            media.session = session
+
+            # Check if a student is logged in
+            student = None
+            if 'student_id' in request.session:
+                student = Student.objects.filter(id=request.session['student_id'], section=session).first()
+
+            if student:
+                student_name = student.name
+                media.submitted_password = student.password  # Use student's password
+            elif request.user.is_staff or request.user.is_superuser:
+                # Admin is logged in
+                student_name = f"Admin: {request.user.username}"
+                media.submitted_password = request.user.media_password  # Assuming admins have a media_password field
+            else:
+                messages.error(request, 'You do not have permission to upload media to this session.')
+                return redirect('session', session_pk=session.pk)
+
+            # Generate the title
+            graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
+            variable_tag = dict(Media.VARIABLE_TAG_CHOICES)[form.cleaned_data['variable_tag']]
+            media.title = f"{student_name}'s {graph_tag} {variable_tag}"
+
+            media.save()
+            messages.success(request, 'Media uploaded successfully.')
+            return redirect('session', session_pk=session.pk)
+        else:
+            messages.error(request, 'There was an error with your form. Please check and try again.')
+    else:
+        form = MediaForm()
+
+    return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
+   
+
+@login_required
+def delete_media(request, pk):
+    # Get the media object or return a 404 if not found
+    media = get_object_or_404(Media, pk=pk)
+
+    # Ensure the logged-in user has permission to delete this media
+    if request.user.is_staff or media.session.created_by == request.user:
+        media.delete()
+        messages.success(request, 'Media deleted successfully.')
+    else:
+        messages.error(request, 'You do not have permission to delete this media.')
+
+    # Redirect back to the session view after deletion
+    return redirect('session', session_pk=media.session.pk)
 
 # Paths to your files
 NAMES_FILE_PATH = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'names.txt')
@@ -227,6 +326,14 @@ def generate_users_for_section(section, num_students, admin):
     
     return generated_students
 
+from django.contrib.auth import get_user_model
+from .models import CustomAdmin, Session
+
+from django.contrib.auth import get_user_model
+from .models import CustomAdmin, Session
+from django.db import transaction
+from django.contrib import messages
+
 @transaction.atomic
 def start_session(request):
     User = get_user_model()
@@ -278,6 +385,19 @@ def start_session(request):
         form = StartSessionForm(initial=initial_data)
     
     return render(request, 'video_app/start_session.html', {'form': form})
+
+from django.db.models import Count
+from random import shuffle
+
+from django.db.models import Exists, OuterRef, F, Count
+from django.shortcuts import get_object_or_404, render
+from django.core.paginator import Paginator
+from random import shuffle
+from .models import Session, Media, Student, StudentMediaInteraction
+
+from django.db.models import Value
+from django.db.models.expressions import ExpressionWrapper
+from django.db.models import BooleanField
 
 def session(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
@@ -355,6 +475,9 @@ def session(request, session_pk):
     }
     return render(request, 'video_app/session.html', context)
 
+from django.contrib.auth import login
+from django.contrib.auth import get_user_model
+
 def student_login(request):
     User = get_user_model()
     if request.user.is_staff:
@@ -406,6 +529,8 @@ def student_login(request):
         'sessions': sessions,
     }
     return render(request, 'video_app/student_login.html', context)
+
+
 
 @login_required
 def teacher_view(request):
@@ -465,6 +590,18 @@ def delete_student(request, student_id):
 
     # Redirect back to the admin view after deletion
     return redirect('teacher_view')
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.units import inch
+from io import BytesIO
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.units import inch
+from io import BytesIO
 
 @login_required
 def download_students(request):
@@ -548,6 +685,8 @@ def generate_students(request):
     
     return redirect('teacher_view')
 
+from django.shortcuts import redirect
+from django.urls import reverse
 
 def filter_media(request, session_pk):
     tags = request.GET.getlist('tags')
@@ -571,6 +710,39 @@ def set_media_password(request):
             messages.error(request, 'Please provide a valid media password.')
     return redirect('teacher_view')
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Media
+from .forms import MediaForm  # You'll need to create this form
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from .models import Media
+from .forms import MediaForm
+
+def edit_media(request, pk):
+    media = get_object_or_404(Media, pk=pk)
+    
+    # Check if the user is authorized to edit this media
+    if not request.user.is_staff and request.session.get('device_id') != media.device_id:
+        return HttpResponseForbidden("You don't have permission to edit this media.")
+
+    if request.method == 'POST':
+        form = MediaForm(request.POST, request.FILES, instance=media)
+        if form.is_valid():
+            media = form.save(commit=False)
+            media.graph_tag = form.cleaned_data['graph_tag']
+            media.variable_tag = form.cleaned_data['variable_tag']
+            media.save()
+            return redirect('post', id=media.id)
+    else:
+        form = MediaForm(instance=media)
+
+    return render(request, 'video_app/edit_media.html', {'form': form, 'media': media})
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
 def student_logout(request):
     logout(request)
     return redirect('home')  # or any other appropriate page after logout
@@ -585,6 +757,9 @@ def delete_comment(request, comment_id):
     else:
         messages.error(request, 'Invalid request method.')
     return redirect('post', id=media_id)
+
+from django.shortcuts import render, get_object_or_404
+from .models import Student, StudentMediaInteraction, Comment
 
 def student_detail(request, student_id):
     student = get_object_or_404(Student, id=student_id)
