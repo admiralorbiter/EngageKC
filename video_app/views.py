@@ -1,54 +1,12 @@
-from .forms import CommentForm
-from .forms import LoginForm, StartSessionForm
-from .models import CustomAdmin, Media, Session, Student
-from .models import CustomAdmin, Session
-from .models import Media
-from .models import Media, Comment
-from .models import Media, Student, StudentMediaInteraction
-from .models import Session, Media, Student, StudentMediaInteraction
-from .models import Student, StudentMediaInteraction, Comment
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.contrib.auth import get_user_model
-from django.contrib.auth import login
-from django.contrib.auth import logout
-from django.contrib.auth import views
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Student, StudentMediaInteraction, Comment, Media, Session
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
-from django.core.paginator import Paginator
-from django.db import transaction
-from django.db.models import BooleanField
-from django.db.models import Count
-from django.db.models import Exists, OuterRef, F, Count
-from django.db.models import F
-from django.db.models import Sum, Count, F, Case, When, IntegerField
-from django.db.models import Value
-from django.db.models.expressions import ExpressionWrapper
-from django.db.models.functions import Coalesce
-from django.http import HttpResponse
-from django.http import HttpResponseForbidden
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.shortcuts import get_object_or_404, redirect
-from django.shortcuts import get_object_or_404, render
-from django.shortcuts import redirect
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import render, get_object_or_404, redirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .forms import CommentForm
+from django.db.models import Count, Sum, F, Case, When, IntegerField
 from django.urls import reverse
-from django.urls import reverse_lazy
-from engagekc import settings
-from io import BytesIO
-from random import shuffle
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-import base64
-import csv
-import openpyxl
-import os
-import random
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models.functions import Coalesce
 
 
 @login_required

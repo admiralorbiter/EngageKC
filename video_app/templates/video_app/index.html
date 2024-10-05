@@ -7,10 +7,14 @@
 <div class="container mt-5">
     <div class="container-center">
         <div class="button-container">
-            <a href="{% url 'student_login' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
             {% if user.is_staff %}
-            <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in"
-                style="animation-delay: 0.2s;">Create Section</a>
+                <a href="{% url 'teacher_view' %}" class="btn btn-primary index-btn-large fade-in">Teacher View</a>
+            {% else %}
+                <a href="{% url 'student_login' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
+            {% endif %}
+            {% if user.is_staff %}
+                <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in"
+                    style="animation-delay: 0.2s;">Create Section</a>
             {% endif %}
         </div>
     </div>

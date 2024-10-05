@@ -1,34 +1,10 @@
 from django.contrib.auth import views
-from django.contrib.auth import login, logout, authenticate, get_user_model
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from .forms import LoginForm
 from .models import Session, Student
-
-def login(request):
-    print("Login view called")
-    print(request.user.is_staff)
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            print(f"Username: {username}, Password: {password}")  # Debugging output
-            user = authenticate(request, username=username, password=password)
-            print(user)
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-            else:
-                print("Test 2")
-                return render(request, 'video_app/login.html', {'form': form, 'error': 'Invalid username or password'})
-        else:
-            return render(request, 'video_app/login.html', {'form': form, 'error': 'Invalid form submission'})
-    else:
-        form = LoginForm()
-    return render(request, 'video_app/login.html', {'form': form})
 
 def student_login(request):
     User = get_user_model()
