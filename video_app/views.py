@@ -269,13 +269,19 @@ def upload_media(request, session_pk):
    
 
 @login_required
-def delete_media(request, session_pk):
-    media = get_object_or_404(Media, pk=session_pk)
-    if request.method == 'POST':
-        session_pk = media.session.pk  # Save the session primary key before deleting the media
+def delete_media(request, pk):
+    # Get the media object or return a 404 if not found
+    media = get_object_or_404(Media, pk=pk)
+
+    # Ensure the logged-in user has permission to delete this media
+    if request.user.is_staff or media.session.created_by == request.user:
         media.delete()
-        return redirect('session', session_pk=session_pk)
-    return render(request, 'video_app/delete_media.html', {'media': media})
+        messages.success(request, 'Media deleted successfully.')
+    else:
+        messages.error(request, 'You do not have permission to delete this media.')
+
+    # Redirect back to the session view after deletion
+    return redirect('session', session_pk=media.session.pk)
 
 # Paths to your files
 NAMES_FILE_PATH = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'names.txt')

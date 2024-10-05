@@ -3,12 +3,13 @@ from . import views
 from django.contrib import admin
 
 urlpatterns = [
+    path('delete_media/<int:pk>/', views.delete_media, name='delete_media'),
     path('download-students/', views.download_students, name='download_students'),
     path('edit-media/<int:pk>/', views.edit_media, name='edit_media'),
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('upload/<int:session_pk>/', views.upload_media, name='upload_media'),  # Ensure session_id is included
-    path('delete/<int:session_pk>/', views.delete_media, name='delete_media'),
+    path('delete-media/<int:pk>/', views.delete_media, name='delete_media'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', views.signup, name='signup'),
     path('start-session/', views.start_session, name='start_session'),

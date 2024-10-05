@@ -97,10 +97,15 @@
                                                 <span class="badge-count">{{ media.read_likes }}</span>
                                             </button>
                                         </div>
-                                        {% if user.is_staff %}
+                                        {% if user.is_staff or media.session.created_by == user %}
                                             <div class="admin-actions">
                                                 <a href="{% url 'edit_media' media.pk %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-edit"></i></a>
-                                                <a href="{% url 'delete_media' media.pk %}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
+                                                <form method="post" action="{% url 'delete_media' media.pk %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this media?');">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         {% endif %}
                                     </div>
