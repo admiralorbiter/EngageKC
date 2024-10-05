@@ -9,6 +9,13 @@
     <p><strong>{{ comment.name|default:"Anonymous" }}</strong></p>
     <p class="mx-3">{{ comment.text }}</p>
     <div class="row">
+        <div class="col-md-3">
+            <div class="profile-icon-wrapper">
+                <div class="profile-icon">
+                    <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon">
+                </div>
+            </div>
+        </div>
         <div class="col">
             <a href="#" class="reply" data-id="{{ comment.id }}">Reply</a>
             {% if user.is_staff %}
