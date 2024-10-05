@@ -110,3 +110,7 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+# Celery
+celerybeat-schedule*
+celerybeat.pid
