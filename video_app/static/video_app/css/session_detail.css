@@ -6,7 +6,11 @@
     --text-color: #00334C;
 }
 
-.container-fluid {
+.container-fluid{
+    background-color: #ffffff; /* Solid white background */
+    background-image: 
+        linear-gradient(90deg, #97cef0 2px, transparent 1px); /* Vertical blue lines */
+    background-size: 30px 100%; /* Adjust line spacing */
     padding: 20px;
 }
 
@@ -217,8 +221,8 @@
 }
 
 .badge-item img {
-    width: 35px;  /* Fixed width instead of vw */
-    height: 35px;  /* Fixed height instead of vw */
+    width: 60px;  /* Fixed width instead of vw */
+    height: 60px;  /* Fixed height instead of vw */
 }
 
 /* Badge tooltip */

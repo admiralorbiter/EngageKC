@@ -4,15 +4,6 @@
     <link rel="stylesheet" href="{% static 'video_app/css/session_detail.css' %}">
 {% endblock %}
 {% block content %}
-    <style>
-        .container-fluid{
-            background-color: #ffffff; /* Solid white background */
-            background-image: 
-                linear-gradient(90deg, #97cef0 2px, transparent 1px); /* Vertical blue lines */
-            background-size: 30px 100%; /* Adjust line spacing */
-            padding: 20px;
-        }
-    </style>
     <!-- Sticky header with session information and badge section -->
     <div class="sticky-header">
         <div class="sticky-header-content mx-auto d-flex flex-wrap justify-content-between align-items-center" style="width: 95%;">
@@ -42,13 +33,13 @@
                     </div>
                     <div class="col-4">
                         <div class="badge-container d-flex justify-content-center">
-                            <div class="badge-item mx-1" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                            <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
                                 <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
                             </div>
-                            <div class="badge-item mx-1" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                            <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
                                 <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
                             </div>
-                            <div class="badge-item mx-1" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                            <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
                                 <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
                             </div>
                         </div>
