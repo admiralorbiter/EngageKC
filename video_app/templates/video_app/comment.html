@@ -1,5 +1,6 @@
 <!-- comment.html -->
 {% if not is_new_comment %}
+{% load static %}
 <!-- Existing comment display -->
 <div class="comment m-1 p-1 bg-opacity-10 rounded-end" style="background-color: #FA7E61;">
     <p><strong>{{ comment.name|default:"Anonymous" }}</strong></p>
