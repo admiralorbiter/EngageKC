@@ -510,7 +510,7 @@ def join_session(request):
                 request.session['current_session_name'] = session_instance.name
                 return redirect('session_detail', session_pk=session_instance.pk)
             except Session.DoesNotExist:
-                return render(request, 'video_app/join_session.html', {'error': 'Invalid session code', 'sessions': sessions})
+                return render(request, 'video_app/student_login.html', {'error': 'Invalid session code', 'sessions': sessions})
         
         elif student_password:
             try:
@@ -534,12 +534,12 @@ def join_session(request):
                 request.session['student_id'] = student.id
                 return redirect('session_detail', session_pk=session_instance.pk)
             except Student.DoesNotExist:
-                return render(request, 'video_app/join_session.html', {'error': 'Invalid student password', 'sessions': sessions})
+                return render(request, 'video_app/student_login.html', {'error': 'Invalid student password', 'sessions': sessions})
     
     context = {
         'sessions': sessions,
     }
-    return render(request, 'video_app/join_session.html', context)
+    return render(request, 'video_app/student_login.html', context)
 
 
 
