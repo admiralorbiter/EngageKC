@@ -2,7 +2,7 @@
 {% block content %}
     <title>{{ media.title }}</title>
     <div class="container mt-5">
-        <a href="{% url 'session_detail' media.session.id %}" class="btn btn-secondary mb-3">Back to Session</a>
+        <a href="{% url 'session' media.session.id %}" class="btn btn-secondary mb-3">Back to Session</a>
         <h1>{{ media.title }}</h1>
         <div class="row">
             <div class="col-8 media-content">

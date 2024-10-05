@@ -250,7 +250,7 @@ def upload_media(request, session_pk):
                 media.submitted_password = request.user.media_password  # Assuming admins have a media_password field
             else:
                 messages.error(request, 'You do not have permission to upload media to this session.')
-                return redirect('session_detail', session_pk=session.pk)
+                return redirect('session', session_pk=session.pk)
 
             # Generate the title
             graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
@@ -259,7 +259,7 @@ def upload_media(request, session_pk):
 
             media.save()
             messages.success(request, 'Media uploaded successfully.')
-            return redirect('session_detail', session_pk=session.pk)
+            return redirect('session', session_pk=session.pk)
         else:
             messages.error(request, 'There was an error with your form. Please check and try again.')
     else:
@@ -274,7 +274,7 @@ def delete_media(request, session_pk):
     if request.method == 'POST':
         session_pk = media.session.pk  # Save the session primary key before deleting the media
         media.delete()
-        return redirect('session_detail', session_pk=session_pk)
+        return redirect('session', session_pk=session_pk)
     return render(request, 'video_app/delete_media.html', {'media': media})
 
 # Paths to your files
@@ -410,7 +410,7 @@ from django.db.models import Value
 from django.db.models.expressions import ExpressionWrapper
 from django.db.models import BooleanField
 
-def session_detail(request, session_pk):
+def session(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
     medias = Media.objects.filter(session=session_instance)
     
@@ -484,7 +484,7 @@ def session_detail(request, session_pk):
         'selected_variable_tag': variable_tag,
         'student': student_instance,
     }
-    return render(request, 'video_app/session_detail.html', context)
+    return render(request, 'video_app/session.html', context)
 
 from django.contrib.auth import login
 from django.contrib.auth import get_user_model
@@ -508,7 +508,7 @@ def student_login(request):
                 session_instance = Session.objects.get(session_code=session_code)
                 request.session['current_session_id'] = session_instance.id
                 request.session['current_session_name'] = session_instance.name
-                return redirect('session_detail', session_pk=session_instance.pk)
+                return redirect('session', session_pk=session_instance.pk)
             except Session.DoesNotExist:
                 return render(request, 'video_app/student_login.html', {'error': 'Invalid session code', 'sessions': sessions})
         
@@ -532,7 +532,7 @@ def student_login(request):
                 request.session['current_session_id'] = session_instance.id
                 request.session['current_session_name'] = session_instance.name
                 request.session['student_id'] = student.id
-                return redirect('session_detail', session_pk=session_instance.pk)
+                return redirect('session', session_pk=session_instance.pk)
             except Student.DoesNotExist:
                 return render(request, 'video_app/student_login.html', {'error': 'Invalid student password', 'sessions': sessions})
     
@@ -703,7 +703,7 @@ def filter_media(request, session_pk):
     tags = request.GET.getlist('tags')
     
     # Construct the URL with the selected tags
-    url = reverse('session_detail', kwargs={'session_pk': session_pk})
+    url = reverse('session', kwargs={'session_pk': session_pk})
     if tags:
         url += '?' + '&'.join([f'tags={tag}' for tag in tags])
     

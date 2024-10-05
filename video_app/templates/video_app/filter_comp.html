@@ -1,5 +1,5 @@
 <div class="filter-component">
-    <form id="filter-form" hx-get="{% url 'session_detail' session_instance.pk %}" hx-target="#media-list" hx-trigger="submit">
+    <form id="filter-form" hx-get="{% url 'session' session_instance.pk %}" hx-target="#media-list" hx-trigger="submit">
         <div class="select-wrapper">
             <select id="graph-filter" name="graph_tag" class="form-select">
                 <option value="">Filter by graph</option>
