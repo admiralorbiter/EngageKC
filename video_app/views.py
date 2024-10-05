@@ -385,7 +385,7 @@ def start_session(request):
             generate_users_for_section(new_session, num_students, custom_admin)
             
             messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
-            return redirect('admin_view')
+            return redirect('teacher_view')
     else:
         initial_data = {
             'district': custom_admin.district,
@@ -544,7 +544,7 @@ def student_login(request):
 
 
 @login_required
-def admin_view(request):
+def teacher_view(request):
     # Get all sessions related to the logged-in admin
     sessions = Session.objects.filter(created_by=request.user)
     
@@ -577,7 +577,7 @@ def admin_view(request):
         'teacher': teacher,
         'media_leaderboard': media_leaderboard,
     }
-    return render(request, 'video_app/admin_view.html', context)
+    return render(request, 'video_app/teacher_view.html', context)
 
 @login_required
 def update_teacher_info(request):
@@ -589,7 +589,7 @@ def update_teacher_info(request):
         teacher.last_name = request.POST.get('last_name')
         teacher.save()
         messages.success(request, 'Teacher information updated successfully.')
-    return redirect('admin_view')
+    return redirect('teacher_view')
 
 def delete_student(request, student_id):
     # Get the student object or return a 404 if not found
@@ -600,7 +600,7 @@ def delete_student(request, student_id):
         student.delete()
 
     # Redirect back to the admin view after deletion
-    return redirect('admin_view')
+    return redirect('teacher_view')
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -694,7 +694,7 @@ def generate_students(request):
         else:
             messages.error(request, "Invalid input. Please try again.")
     
-    return redirect('admin_view')
+    return redirect('teacher_view')
 
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -719,7 +719,7 @@ def set_media_password(request):
             messages.success(request, 'Media password set successfully.')
         else:
             messages.error(request, 'Please provide a valid media password.')
-    return redirect('admin_view')
+    return redirect('teacher_view')
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Media
