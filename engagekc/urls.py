@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from video_app import views
+from video_app.media_views import upload_media
 from video_app.views import AdminLoginView
 from django.contrib.auth import views as auth_views
 
@@ -26,7 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('', include('video_app.urls')),
-    path('upload/', views.upload_media, name='upload_media'),
+    path('upload/', upload_media, name='upload_media'),  # Updated view reference
 ]
 
 from django.conf import settings
