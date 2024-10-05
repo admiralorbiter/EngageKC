@@ -80,8 +80,8 @@
 
 /* Feedback and badge buttons */
 .feedback-button, .badge-button {
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
     padding: 0;
     background-color: transparent;
     border: none;
@@ -333,4 +333,25 @@
         align-self: center;
     }
 }
+
+/* Media actions styles */
+.media-actions {
+    width: 100%;
+}
+
+.feedback-section, .badge-buttons, .admin-actions {
+    display: flex;
+    align-items: center;
+}
+
+.badge-buttons {
+    gap: 5px;
+}
+
+.admin-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Adjust other styles as needed for spacing and sizing */
 
