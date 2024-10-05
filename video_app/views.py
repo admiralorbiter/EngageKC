@@ -92,13 +92,13 @@ def pause_session(request, session_pk):
     session = get_object_or_404(Session, id=session_pk)
     session.is_paused = not(session.is_paused)
     session.save()
-    return redirect('join_session')
+    return redirect('student_login')
 
 @login_required
 def delete_session(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
     session.delete()
-    return redirect('join_session')
+    return redirect('student_login')
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -489,7 +489,7 @@ def session_detail(request, session_pk):
 from django.contrib.auth import login
 from django.contrib.auth import get_user_model
 
-def join_session(request):
+def student_login(request):
     User = get_user_model()
     if request.user.is_staff:
         if request.user.is_superuser:

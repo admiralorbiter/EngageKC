@@ -12,9 +12,9 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', views.signup, name='signup'),
     path('start-session/', views.start_session, name='start_session'),
-    path('join-session/', views.join_session, name='join_session'),
+    path('student-login/', views.student_login, name='student_login'),
     path('session/<int:session_pk>/', views.session_detail, name='session_detail'),
-    path('join-session/<str:session_code>/', views.join_session, name='join_session'),  # Update to accept session code
+    path('join-session/<str:session_code>/', views.student_login, name='student_login'),  # Update to accept session code
     path('login/', views.login, name='login'),
     path('like/<int:media_id>/', views.like_media, name='like_media'),
     path('session/<int:session_pk>/delete/', views.delete_session, name='delete_session'),  # Add this line

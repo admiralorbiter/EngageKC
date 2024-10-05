@@ -7,7 +7,7 @@
 <div class="container mt-5">
     <div class="container-center">
         <div class="button-container">
-            <a href="{% url 'join_session' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
+            <a href="{% url 'student_login' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
             {% if user.is_staff %}
             <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in"
                 style="animation-delay: 0.2s;">Create Section</a>
