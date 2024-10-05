@@ -46,7 +46,7 @@
                         {% if post.image_file %}
                             <img src="{{ post.image_file.url }}" alt="Post Image">
                         {% endif %}
-                        <a href="{% url 'post_detail' post.id %}" class="post-title">{{ post.title }}</a>
+                        <a href="{% url 'post' post.id %}" class="post-title">{{ post.title }}</a>
                     </div>
                     {% empty %}
                     <p>No posts yet.</p>
@@ -75,7 +75,7 @@
                     <div class="feedback-list">
                         {% for comment in comments %}
                         <div class="feedback-item">
-                            <a href="{% url 'post_detail' comment.media.id %}" class="feedback-post-title">{{ comment.media.title }}</a>
+                            <a href="{% url 'post' comment.media.id %}" class="feedback-post-title">{{ comment.media.title }}</a>
                             <p class="feedback-comment">{{ comment.text }}</p>
                         </div>
                         {% empty %}

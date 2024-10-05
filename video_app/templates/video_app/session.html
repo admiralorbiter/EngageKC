@@ -69,13 +69,13 @@
                         <!-- Individual media item card -->
                         <div class="col-md-3 media-item">
                             <div class="card">
-                                <a href="{% url 'post_detail' media.id %}">
+                                <a href="{% url 'post' media.id %}">
                                     <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
                                 </a>
                                 <div class="card-body">
                                     <div class="media-actions d-flex justify-content-between align-items-center">
                                         <div class="feedback-section">
-                                            <a href="{% url 'post_detail' media.id %}" class="btn btn-light feedback-button">
+                                            <a href="{% url 'post' media.id %}" class="btn btn-light feedback-button">
                                                 {% if media.has_user_comment %}
                                                     <img src="{% static 'video_app/images/feedback-icon-filled.png' %}" alt="Feedback" class="feedback-icon">
                                                 {% else %}

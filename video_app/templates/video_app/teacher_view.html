@@ -175,7 +175,7 @@
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
                                     <td>
-                                        <a href="{% url 'post_detail' id=media.id %}">{{ media.title }}</a>
+                                        <a href="{% url 'post' id=media.id %}">{{ media.title }}</a>
                                     </td>
                                     <td>{{ media.total_votes }}</td>
                                     <td>{{ media.total_comments }}</td>

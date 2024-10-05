@@ -34,7 +34,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 @login_required
-def post_detail(request, id):
+def post(request, id):
     media = get_object_or_404(Media, id=id)
     comments = media.comments.filter(parent__isnull=True)
     new_comment = None
@@ -58,7 +58,7 @@ def post_detail(request, id):
                 new_comment.is_admin = True
             else:
                 messages.error(request, 'You do not have permission to comment on this media.')
-                return redirect('post_detail', id=media.id)
+                return redirect('post', id=media.id)
 
             parent_id = request.POST.get('parent_id')
             if parent_id:
@@ -73,7 +73,7 @@ def post_detail(request, id):
                 interaction.save()
 
             messages.success(request, 'Your comment has been added successfully.')
-            return redirect('post_detail', id=media.id)
+            return redirect('post', id=media.id)
         else:
             messages.error(request, 'There was an error with your comment. Please try again.')
     else:
@@ -86,7 +86,7 @@ def post_detail(request, id):
         'comment_form': comment_form
     }
 
-    return render(request, 'video_app/post_detail.html', context)
+    return render(request, 'video_app/post.html', context)
 
 def pause_session(request, session_pk):
     session = get_object_or_404(Session, id=session_pk)
@@ -171,7 +171,7 @@ def update_comment_count(student, media):
     interaction.comment_count += 1
     interaction.save()
 
-# In your post_detail view or wherever comments are added, call this function:
+# In your post view or wherever comments are added, call this function:
 # update_comment_count(student, media)
 
 
@@ -745,7 +745,7 @@ def edit_media(request, pk):
             media.graph_tag = form.cleaned_data['graph_tag']
             media.variable_tag = form.cleaned_data['variable_tag']
             media.save()
-            return redirect('post_detail', id=media.id)
+            return redirect('post', id=media.id)
     else:
         form = MediaForm(instance=media)
 
@@ -767,7 +767,7 @@ def delete_comment(request, comment_id):
         messages.success(request, 'Comment deleted successfully.')
     else:
         messages.error(request, 'Invalid request method.')
-    return redirect('post_detail', id=media_id)
+    return redirect('post', id=media_id)
 
 from django.shortcuts import render, get_object_or_404
 from .models import Student, StudentMediaInteraction, Comment

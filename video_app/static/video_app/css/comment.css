@@ -1,0 +1,9 @@
+.delete-icon {
+    background: none;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+.delete-icon:hover {
+    color: #007bff !important; /* Bootstrap primary color */
+}
