@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from video_app import views
 from video_app.media_views import upload_media
-from video_app.views import AdminLoginView
+from video_app.auth_views import AdminLoginView  # Updated import
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
