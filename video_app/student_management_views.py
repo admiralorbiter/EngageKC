@@ -85,8 +85,11 @@ def download_students(request):
                     row_data.append("")
             page_data.append(row_data)
         data.extend(page_data)
-    
-    table = Table(data, colWidths=[card_width] * cols, rowHeights=[card_height] * rows)
+
+    # Calculate row heights dynamically based on the number of rows in data
+    row_heights = [card_height] * len(data)
+
+    table = Table(data, colWidths=[card_width] * cols, rowHeights=row_heights)
     
     style = TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
