@@ -9,6 +9,24 @@ class MediaTestCase(TestCase):
         # Load the fixture data
         call_command('loaddata', 'initial_data.json', verbosity=0)
 
+    def test_session_code_generation_and_uniqueness(self):
+        # Create a session without providing a session_code
+        session1 = Session.objects.create(name="Test Session 1", section=1)
+        
+        # Ensure a session_code was generated
+        self.assertIsNotNone(session1.session_code)
+        self.assertEqual(len(session1.session_code), 8)
+
+        # Create another session
+        session2 = Session.objects.create(name="Test Session 2", section=2)
+
+        # Ensure the second session has a different session_code
+        self.assertNotEqual(session1.session_code, session2.session_code)
+
+        # Try to create a session with an existing session_code
+        with self.assertRaises(Exception):  # This could be a specific exception like IntegrityError
+            Session.objects.create(name="Test Session 3", section=3, session_code=session1.session_code)
+
     def test_session_creation(self):
         # Check if the session was created
         session = Session.objects.first()
