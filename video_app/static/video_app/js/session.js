@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const badgeButtons = document.querySelectorAll('.badge-button');
-    // Parse the liked media JSON, defaulting to an empty object if not provided
-    const likedMedia = JSON.parse('{{ liked_media|default:"{}" | escapejs }}');
+    // Retrieve the JSON data from the script tag
+    const likedMedia = JSON.parse(document.getElementById('liked-media-data').textContent);
     
     badgeButtons.forEach(button => {
         const mediaId = button.dataset.mediaId;
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = button.closest('.card');
         
         // Pre-select the badge if it's in the likedMedia object
-        if (likedMedia[mediaId] === badgeType) {
+        if (likedMedia[mediaId] && likedMedia[mediaId][badgeType]) {
             selectBadge(button);
         }
         
@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Add this function definition
 function selectBadge(button) {
     button.classList.add('selected');
 }

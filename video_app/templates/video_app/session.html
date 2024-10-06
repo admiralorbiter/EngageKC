@@ -134,6 +134,7 @@
             </div>
         </div>
     </div>
+    {{ liked_media_json|json_script:"liked-media-data" }}
 {% endblock %}
 {% block extra_js %}
     <script src="{% static 'video_app/js/session.js' %}"></script>

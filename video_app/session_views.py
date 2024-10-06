@@ -10,8 +10,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Count, Exists, OuterRef, Value, BooleanField, ExpressionWrapper
 from engagekc import settings
 from .forms import StartSessionForm
-from .models import CustomAdmin, Session, Media, Student, Comment
+from .models import CustomAdmin, Session, Media, Student, Comment, StudentMediaInteraction
 from django.core.paginator import Paginator
+import json
+from django.db.models import Prefetch
 
 @transaction.atomic
 def start_session(request):
@@ -128,8 +130,26 @@ def session(request, session_pk):
     variable_choices = Media.VARIABLE_TAG_CHOICES
 
     student_instance = None
+    liked_media = {}
     if 'student_id' in request.session:
         student_instance = Student.objects.filter(id=request.session['student_id']).first()
+        if student_instance:
+            # Prefetch the interactions for efficiency
+            medias = Media.objects.filter(session=session_instance).prefetch_related(
+                Prefetch('student_interactions',
+                         queryset=StudentMediaInteraction.objects.filter(student=student_instance),
+                         to_attr='current_student_interaction')
+            )
+            
+            # Build the liked_media dictionary
+            for media in medias:
+                interaction = next(iter(media.current_student_interaction), None)
+                if interaction:
+                    liked_media[str(media.id)] = {
+                        'graph': interaction.liked_graph,
+                        'eye': interaction.liked_eye,
+                        'read': interaction.liked_read
+                    }
 
     context = {
         'session_instance': session_instance,
@@ -139,6 +159,7 @@ def session(request, session_pk):
         'selected_graph_tag': graph_tag,
         'selected_variable_tag': variable_tag,
         'student': student_instance,
+        'liked_media_json': json.dumps(liked_media),  # Add this line
     }
     return render(request, 'video_app/session.html', context)
 
