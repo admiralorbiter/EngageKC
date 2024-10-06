@@ -36,13 +36,7 @@ This project is a Django-based project built on Python 3.
 Make sure Python 3 is installed and run the following commands to install Django and other required packages:
 
 ```bash
-pip install django
-pip install celery
-pip install django-widget-tweaks
-pip install jsonschema
-pip install Pillow
-pip install openpyxl
-pip install reportlab
+pip install -r requirements.txt
 ```
 
 ### First Time Run
