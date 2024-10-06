@@ -73,8 +73,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'video_app.apps.VideoAppConfig',  # Update this line
+    'video_app.apps.VideoAppConfig',
     'widget_tweaks',
+    'pytest_django',
 ]
 
 MIDDLEWARE = [
