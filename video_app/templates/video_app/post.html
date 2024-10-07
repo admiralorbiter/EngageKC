@@ -1,0 +1,36 @@
+{% extends "video_app/base.html" %}
+{% load static %}
+{% block content %}
+    <title>{{ media.title }}</title>
+    <div class="container mt-5">
+        <a href="{% url 'session' media.session.id %}" class="btn btn-secondary mb-3">Back to Session</a>
+        <h1>{{ media.title }}</h1>
+        <div class="row">
+            <div class="col-8 media-content">
+                <!-- Thumbnail -->
+                <div class="image-container">
+                    <img src="{{ media.image_file.url }}" alt="{{ media.title }}" class="img-thumbnail" id="mainImage">
+                </div>
+            </div>
+            <div class="col">
+                <h1>Comments</h1>
+                <div class="comments">
+                    {% for comment in comments %}
+                        {% include 'video_app/comment.html' with comment=comment comment_form=comment_form %}
+                    {% endfor %}
+                </div>
+
+                {% include 'video_app/comment.html' with comment_form=comment_form is_new_comment=True %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox overlay -->
+    <div id="lightbox" class="lightbox">
+        <span class="close">&times;</span>
+        <img class="lightbox-content" id="lightboxImage">
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'video_app/js/post.js' %}"></script>
+{% endblock %}

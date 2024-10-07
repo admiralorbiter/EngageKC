@@ -1,0 +1,361 @@
+:root {
+    --primary-color: #a13a95;
+    --secondary-color: #00334C;
+    --accent-color: #DB2955;
+    --background-color: #E6FDF9;
+    --text-color: #00334C;
+}
+
+.container-fluid{
+    background-color: #ffffff; /* Solid white background */
+    background-image: 
+        linear-gradient(90deg, #97cef0 2px, transparent 1px); /* Vertical blue lines */
+    background-size: 30px 100%; /* Adjust line spacing */
+    padding: 20px;
+}
+
+/* Typography */
+.title-stylized {
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0;
+}
+
+.subtitle-stylized {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Layout components */
+.session-header, .media-list {
+    margin-bottom: 2rem;
+}
+
+.media-item {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.media-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Card styles */
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 400px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px 5px rgba(134, 26, 134, 0.6);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: fill;
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+}
+
+/* Button styles */
+.upload-button, .filter-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Feedback and badge buttons */
+.feedback-button, .badge-button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.feedback-button img, .badge-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Hover effects for feedback and badge buttons */
+.feedback-button:hover .feedback-icon,
+.badge-button:hover img {
+    display: none;
+}
+
+.feedback-button:hover .feedback-icon-filled,
+.badge-button:hover img {
+    display: block;
+}
+
+.badge-button img {
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.badge-button:hover img,
+.badge-button.selected img {
+    filter: grayscale(0%);
+}
+
+/* Specific badge button hover effects */
+.badge-button.graph:hover img, .badge-button.graph.selected img {
+    filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(350deg);
+}
+
+.badge-button.eye:hover img, .badge-button.eye.selected img {
+    filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(180deg);
+}
+
+.badge-button.read:hover img, .badge-button.read.selected img {
+    filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg);
+}
+
+/* Count indicators */
+.like-count, .badge-count {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Sticky header */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    z-index: 1000;
+    padding: 10px 0;
+    border-bottom: 1px solid #b3e0d8;
+}
+
+.sticky-header-content {
+    display: flex;
+    align-items: stretch;  /* Changed from center to stretch */
+    justify-content: space-between;
+    padding: 15px;  /* Increased padding */
+    max-width: 1600px;  /* Increased max-width */
+    margin: 0 auto;
+    width: 98%;  /* Increased width */
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Sections within sticky header */
+.session-info, .badge-section, .filter-section {
+    flex: 1;
+    margin: 0 10px;  /* Added margin for spacing */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.session-info {
+    max-width: 25%;  /* Reduced max-width to give more space to other sections */
+}
+
+.badge-section {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;  /* Changed to column layout */
+    align-items: flex-start;
+    justify-content: space-between;
+    min-height: 150px;  /* Set a minimum height */
+}
+
+.filter-section {
+    background-color: #ffa500;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Badge styles */
+.badge-label {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 0.9rem;  /* Slightly reduced font size */
+}
+
+.badge-container {
+    display: flex;
+    justify-content: flex-start;  /* Align to the start */
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.badge-item {
+    position: relative;
+    display: inline-block;
+}
+
+.badge-item img {
+    width: 60px;  /* Fixed width instead of vw */
+    height: 60px;  /* Fixed height instead of vw */
+}
+
+/* Badge tooltip */
+.badge-item:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: normal;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 250px;
+    max-width: 300px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.badge-item:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 140%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 12px solid transparent;
+    border-top-color: var(--secondary-color);
+    z-index: 1001;
+}
+
+/* Filter component */
+.filter-component {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-component form {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.filter-component .select-wrapper {
+    flex: 1;
+}
+
+.filter-component select {
+    width: 100%;
+    min-width: 200px;
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .step-links {
+    display: flex;
+    gap: 10px;
+}
+
+.pagination a, .pagination span {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+.pagination .current {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border: 1px solid var(--secondary-color);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+    .sticky-header-content {
+        flex-wrap: wrap;
+    }
+
+    .session-info, .badge-section, .filter-section {
+        flex-basis: 100%;
+        max-width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .badge-section {
+        align-items: center;
+    }
+
+    .badge-container {
+        justify-content: center;
+    }
+
+    .upload-button {
+        align-self: center;
+    }
+}
+
+/* Media actions styles */
+.media-actions {
+    width: 100%;
+}
+
+.feedback-section, .badge-buttons, .admin-actions {
+    display: flex;
+    align-items: center;
+}
+
+.badge-buttons {
+    gap: 5px;
+}
+
+.admin-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Adjust other styles as needed for spacing and sizing */
+

@@ -6,7 +6,7 @@ import os
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth import get_user_model
-from jsonschema import ValidationError
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
 from engagekc import settings
@@ -15,6 +15,17 @@ class Session(models.Model):
     name = models.CharField(max_length=100)
     session_code = models.CharField(max_length=8, unique=True, editable=False)
     section = models.IntegerField()
+
+    def clean(self):
+        if self.section < 0:
+            raise ValidationError("Section number cannot be negative.")
+
+    def save(self, *args, **kwargs):
+        if not self.session_code:
+            self.session_code = uuid.uuid4().hex[:8].upper()
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     created_at = models.DateTimeField(auto_now_add=True)
     is_paused = models.BooleanField(default=False)
     created_by = models.ForeignKey('CustomAdmin', on_delete=models.SET_NULL, blank=True, null=True)
@@ -22,11 +33,6 @@ class Session(models.Model):
     def is_expired(self):
         return not self.is_paused and (timezone.now() > self.created_at + timedelta(days=7))
     
-    def save(self, *args, **kwargs):
-        if not self.session_code:
-            self.session_code = str(uuid.uuid4())[:8]  # Generate an 8-character unique code
-        super().save(*args, **kwargs)
-
     def days_until_deletion(self):
         if self.is_paused:
             return 'Paused'

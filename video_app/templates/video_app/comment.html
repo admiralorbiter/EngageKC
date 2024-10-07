@@ -1,10 +1,21 @@
 <!-- comment.html -->
 {% if not is_new_comment %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/comment.css' %}">
+{% endblock %}
 <!-- Existing comment display -->
 <div class="comment m-1 p-1 bg-opacity-10 rounded-end" style="background-color: #FA7E61;">
     <p><strong>{{ comment.name|default:"Anonymous" }}</strong></p>
     <p class="mx-3">{{ comment.text }}</p>
     <div class="row">
+        <div class="col-md-3">
+            <div class="profile-icon-wrapper">
+                <div class="profile-icon">
+                    <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon">
+                </div>
+            </div>
+        </div>
         <div class="col">
             <a href="#" class="reply" data-id="{{ comment.id }}">Reply</a>
             {% if user.is_staff %}
@@ -15,6 +26,14 @@
                     </button>
                 </form>
             {% endif %}
+            <!-- Right component: Avatar -->
+            <div class="col-md-3">
+                <div class="profile-icon-wrapper">
+                    <div class="profile-icon">
+                        <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon">
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col text-end">
             <p><small>{{ comment.created_at }}</small></p>
@@ -56,53 +75,7 @@
 </form>
 
 {% if not is_new_comment %}
-<script>
-    document.querySelectorAll('.reply').forEach(function(replyLink) {
-        replyLink.addEventListener('click', function(event) {
-            event.preventDefault();
-            var commentId = this.dataset.id;
-            var replyForm = this.closest('.comment').querySelector('.reply-form');
-            replyForm.style.display = 'block';
-        });
-    });
-
-    document.querySelectorAll('.delete-comment').forEach(function(deleteLink) {
-        deleteLink.addEventListener('click', function(event) {
-            event.preventDefault();
-            var commentId = this.dataset.id;
-            if (confirm('Are you sure you want to delete this comment?')) {
-                fetch(`/delete-comment/${commentId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        this.closest('.comment').remove();
-                    } else {
-                        alert('Failed to delete comment');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting the comment');
-                });
-            }
-        });
-    });
-</script>
+{% block extra_js %}
+    <script src="{% static 'video_app/js/comment.js' %}"></script>
+{% endblock %}
 {% endif %}
-
-<style>
-    .delete-icon {
-        background: none;
-        padding: 0;
-        border: none;
-        cursor: pointer;
-    }
-    .delete-icon:hover {
-        color: #007bff !important; /* Bootstrap primary color */
-    }
-</style>
