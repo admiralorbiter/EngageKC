@@ -48,12 +48,6 @@ class Media(models.Model):
         ('image', 'Image'),
         ('comment', 'Comment'),
     )
-    TAG_CHOICES = [
-        ('education', 'Education'),
-        ('announcement', 'Announcement'),
-        ('discussion', 'Discussion'),
-        ('other', 'Other'),
-    ]
     session = models.ForeignKey(Session, related_name='media', on_delete=models.CASCADE)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(max_length=500, null=True, blank=True)
@@ -61,7 +55,6 @@ class Media(models.Model):
     video_file = models.FileField(upload_to='videos', blank=True, null=True)
     image_file = models.ImageField(upload_to='images', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    tag = models.CharField(max_length=50, choices=TAG_CHOICES, default='education')
     
     # New fields for likes
     graph_likes = models.PositiveIntegerField(default=0)
