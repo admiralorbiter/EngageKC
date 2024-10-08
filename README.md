@@ -71,6 +71,14 @@ To collect static files for deployment, run:
 python manage.py collectstatic
 ```
 
+### Testing Commands
+
+Creates a session with tons of example vizzes
+
+```bash
+python manage.py loaddata initial_data.json
+```
+
 ### Old Commands (Not Currently Needed)
 
 Celery Worker - No need to run currently:

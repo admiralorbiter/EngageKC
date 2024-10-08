@@ -26,6 +26,8 @@ body{
     padding: 10px;
     background-color: transparent; /* No background color */
     margin-inline: 10%;
+    position: relative;
+    z-index: 2000; /* Increase this value to be higher than the sticky header */
 }
 
 /* Flexbox for the nav items */
@@ -49,7 +51,7 @@ body{
 /* Nav link styles */
 .nav-link {
     font-size: 1.5em;
-    color: #00334C; /* Default text color */
+    color: #00334C;
     margin-right: 20px;
     text-decoration: none;
 }
@@ -74,13 +76,25 @@ body{
     position: relative;
 }
 
+.nav-item.dropdown .nav-link {
+    cursor: pointer;
+    color: #00334C;
+    font-size: 1.5em;
+}
+
+.nav-item.dropdown .nav-link:hover,
+.nav-item.dropdown .nav-link:focus {
+    color: #DB2955;
+    border-bottom: 2px solid #DB2955;
+}
+
 .nav-item.dropdown .dropdown-menu {
     display: none;
     position: absolute;
     background-color: #E6FDF9;
     min-width: 200px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 1;
+    z-index: 2001; /* Ensure this is higher than the navbar z-index */
     border-radius: 0;
     padding: 0;
     right: 0;
@@ -95,9 +109,9 @@ body{
     background-color: transparent;
     border: none;
     padding: 10px 20px;
-    color: #007bff;  /* Bootstrap primary blue color */
-    font-size: 1.2em;
-    border-bottom: 1px solid rgba(0,123,255,0.1);  /* Light blue separator */
+    color: #00334C;
+    font-size: 1.5em;
+    border-bottom: 1px solid rgba(0,51,76,0.1);
 }
 
 .nav-item.dropdown .dropdown-menu .list-group-item:last-child {
@@ -111,14 +125,12 @@ body{
 }
 
 .nav-item.dropdown .dropdown-menu .list-group-item:hover {
-    background-color: rgba(0,123,255,0.1);  /* Light blue background on hover */
+    background-color: rgba(219,41,85,0.1);
+    color: #DB2955;
 }
 
-/* Style for the dropdown toggle */
-.nav-item.dropdown .nav-link {
-    cursor: pointer;
-    color: #007bff;
-    font-size: 1.5em;
+.nav-item.dropdown .nav-link::after {
+    content: none;
 }
 
 .nav-item.dropdown .nav-link::after {
