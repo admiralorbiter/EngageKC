@@ -1,15 +1,16 @@
 {% extends "video_app/base.html" %}
 {% load widget_tweaks %}
+{% load static %}
 {% block content %}
     <div class="container my-5">
-        <h1 class="mb-4">Start a New Session</h1>
+        <h1 class="mb-4 text-center">Start a New Data Deck</h1>
         <form method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-6">
-                    <h2 class="h4 mb-3">Session Information</h2>
+                    <h2 class="h4 mb-3">Section Information</h2>
                     <div class="mb-3">
-                        <label for="id_section" class="form-label">Section Number</label>
+                        <label for="id_section" class="form-label">Hour</label>
                         {{ form.section|add_class:"form-control" }}
                         <div class="invalid-feedback">
                             Please provide a section number.
@@ -61,21 +62,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-    <script>
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                var forms = document.getElementsByClassName('needs-validation');
-                Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-    </script>
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'video_app/js/start_session.js' %}"></script>
 {% endblock %}

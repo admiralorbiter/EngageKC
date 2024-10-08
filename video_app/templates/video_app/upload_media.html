@@ -1,10 +1,10 @@
 {% extends "video_app/base.html" %}
 {% load widget_tweaks %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/upload_media.css' %}">
+{% endblock %}
 {% block content %}
-    <style>
-        .form-section { margin-top: 2rem; }
-        .form-label { font-weight: bold; }
-    </style>
     <div class="container mt-5 col-3">
         <h1 class="mb-4">Upload Screenshot</h1>
         <form id="media-form" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -25,7 +25,7 @@
                 <div class="invalid-feedback">Please select a variable tag.</div>
             </div>
             <div class="d-flex justify-content-between">
-                <a href="{% url 'session_detail' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
+                <a href="{% url 'session' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
         </form>

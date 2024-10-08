@@ -16,17 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from video_app import views
-from video_app.views import AdminLoginView
+from video_app.auth_views import AdminLoginView
 from django.contrib.auth import views as auth_views
+from video_app.media_views import upload_media
 
 urlpatterns = [
     path('admin/login/', AdminLoginView.as_view(), name='admin_login'),
     path('admin/logout/', auth_views.LogoutView.as_view(next_page='home'), name='admin_logout'),
     path('admin/', admin.site.urls),
-    path('', views.index, name='home'),
     path('', include('video_app.urls')),
-    path('upload/', views.upload_media, name='upload_media'),
+    path('upload/', upload_media, name='upload_media'),
 ]
 
 from django.conf import settings

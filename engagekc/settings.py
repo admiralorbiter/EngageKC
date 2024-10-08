@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import sys
 from celery.schedules import crontab
 import os
 
@@ -73,8 +74,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'video_app.apps.VideoAppConfig',  # Update this line
+    'video_app.apps.VideoAppConfig',
     'widget_tweaks',
+    'pytest_django',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +119,15 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Use a separate test database when running tests
+if 'test' in sys.argv or 'pytest' in sys.argv[0]:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
 
 AUTH_USER_MODEL = 'video_app.CustomAdmin'
 
@@ -173,3 +184,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Test-specific settings
+if 'test' in sys.argv or 'pytest' in sys.argv[0]:
+    DEBUG = False
+    PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    ]
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'test_media')
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'

@@ -1,0 +1,141 @@
+{% extends "video_app/base.html" %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/session.css' %}">
+{% endblock %}
+{% block content %}
+    <!-- Sticky header with session information and badge section -->
+    <div class="sticky-header">
+        <div class="sticky-header-content mx-auto d-flex flex-wrap justify-content-between align-items-center" style="width: 95%;">
+            <!-- Session info -->
+            <div class="session-info">
+                <h1 class="title-stylized">CS 101's Data Deck Fall 2024</h1>
+                <h2 class="subtitle-stylized">Hour 2</h2>
+                <div class="session-details">
+                    <p><strong>School:</strong> PREP-KC | <strong>Session Code:</strong> a67f2a69 | <strong>Created At:</strong> September 30, 2024</p>
+                </div>
+            </div>
+
+            <!-- Avatar (only shown for students) -->
+            {% if not user.is_staff %}
+            <div class="profile-icon-wrapper">
+                <div class="profile-icon">
+                    <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="Student Icon" style="width: 80px; height: 80px; border-radius: 50%;">
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Badge section -->
+            <div class="badge-section d-flex align-items-center mx-3 mt-2">
+                <div class="row align-items-center">
+                    <div class="col-5">
+                        <p class="badge-label mb-0">Look through the posts from your classmates and react with one of the badges below:</p>
+                    </div>
+                    <div class="col-4">
+                        <div class="badge-container d-flex justify-content-center">
+                            <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                                <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
+                            </div>
+                            <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                                <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
+                            </div>
+                            <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                                <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button">Upload</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter component -->
+            <div class="filter-section mx-2">
+                {% include "video_app/filter_comp.html" %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="content-wrapper">
+        <div class="container-fluid px-5">
+            <!-- Media list grid -->
+            <div class="media-list">
+                <div class="row">
+                    {% for media in page_obj %}
+                        <!-- Individual media item card -->
+                        <div class="col-md-3 media-item">
+                            <div class="card">
+                                <a href="{% url 'post' media.id %}">
+                                    <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
+                                </a>
+                                <div class="card-body">
+                                    <div class="media-actions d-flex justify-content-between align-items-center">
+                                        <div class="feedback-section">
+                                            <a href="{% url 'post' media.id %}" class="btn btn-light feedback-button">
+                                                {% if media.has_user_comment %}
+                                                    <img src="{% static 'video_app/images/feedback-icon-filled.png' %}" alt="Feedback" class="feedback-icon">
+                                                {% else %}
+                                                    <img src="{% static 'video_app/images/feedback-icon.png' %}" alt="Feedback" class="feedback-icon">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="badge-buttons">
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="graph">
+                                                <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph">
+                                                <span class="badge-count">{{ media.graph_likes }}</span>
+                                            </button>
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="eye">
+                                                <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye">
+                                                <span class="badge-count">{{ media.eye_likes }}</span>
+                                            </button>
+                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="read">
+                                                <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read">
+                                                <span class="badge-count">{{ media.read_likes }}</span>
+                                            </button>
+                                        </div>
+                                        {% if user.is_staff or media.session.created_by == user %}
+                                            <div class="admin-actions">
+                                                <a href="{% url 'edit_media' media.pk %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-edit"></i></a>
+                                                <form method="post" action="{% url 'delete_media' media.pk %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this media?');">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Pagination controls -->
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">previous</a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_tags %}&tags={{ selected_tags|join:"&tags=" }}{% endif %}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+    {{ liked_media_json|json_script:"liked-media-data" }}
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'video_app/js/session.js' %}"></script>
+{% endblock %}

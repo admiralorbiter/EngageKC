@@ -1,4 +1,4 @@
-# Project Title
+# Data Deck / Engage KC
 
 This project is a core component of our 8th grade data science curriculum, designed to provide students with an interactive platform to enhance their understanding of data analysis and visualization. It allows students to create and share their data visualizations, post screenshots, and provide constructive feedback to their peers—all within a virtual learning environment. By fostering a culture of collaboration and peer review, the project helps students develop essential skills in data literacy, critical thinking, and effective communication.
 
@@ -36,13 +36,7 @@ This project is a Django-based project built on Python 3.
 Make sure Python 3 is installed and run the following commands to install Django and other required packages:
 
 ```bash
-pip install django
-pip install celery
-pip install django-widget-tweaks
-pip install jsonschema
-pip install Pillow
-pip install openpyxl
-pip install reportlab
+pip install -r requirements.txt
 ```
 
 ### First Time Run

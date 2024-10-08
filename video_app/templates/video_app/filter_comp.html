@@ -1,6 +1,6 @@
-<div class="filter-component" style="background-color: #FFA500; padding: 10px; border-radius: 10px; width: 100%;">
-    <form id="filter-form" hx-get="{% url 'session_detail' session_instance.pk %}" hx-target="#media-list" hx-trigger="submit" class="d-flex align-items-center justify-content-between">
-        <div class="flex-grow-1 me-2" style="width: 40%;">
+<div class="filter-component">
+    <form id="filter-form" hx-get="{% url 'session' session_instance.pk %}" hx-target="#media-list" hx-trigger="submit">
+        <div class="select-wrapper">
             <select id="graph-filter" name="graph_tag" class="form-select">
                 <option value="">Filter by graph</option>
                 {% for value, label in graph_choices %}
@@ -8,7 +8,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="flex-grow-1 me-2" style="width: 40%;">
+        <div class="select-wrapper">
             <select id="variable-filter" name="variable_tag" class="form-select">
                 <option value="">Filter by variable</option>
                 {% for value, label in variable_choices %}
@@ -16,6 +16,6 @@
                 {% endfor %}
             </select>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 15%;">Filter</button>
+        <button type="submit" class="btn btn-primary">Filter</button>
     </form>
 </div>

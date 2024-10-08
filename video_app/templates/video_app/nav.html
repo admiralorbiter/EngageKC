@@ -9,16 +9,59 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
-            
-            <!-- Teacher Login and Student Login always displayed -->
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'join_session' %}">Student Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'admin:login' %}">Teacher Login</a>
-            </li>
-
-            
+            {% if user.is_staff %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sessionsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sections
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="sessionsDropdown">
+                        <ul class="list-group list-group-flush">
+                            {% for session in nav_sessions %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'session_detail' session.id %}">
+                                        {{ session.name }}
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item">No sessions available</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link">Logout</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
+                </li>
+            {% elif 'student_id' in request.session %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'student_detail' request.session.student_id %}">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <form method="post" action="{% url 'student_logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link">Student Logout</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'join_session' %}">Student Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:login' %}">Teacher Login</a>
+                </li>
+            {% endif %}
+            {% if request.session.current_session_id %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'session_detail' session_pk=request.session.current_session_id %}">
+                        {{ request.session.current_session_name }}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
