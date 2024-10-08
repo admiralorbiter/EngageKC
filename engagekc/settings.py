@@ -187,7 +187,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Test-specific settings
 if 'test' in sys.argv or 'pytest' in sys.argv[0]:
-    DEBUG = False
+    DEBUG = T
     PASSWORD_HASHERS = [
         'django.contrib.auth.hashers.MD5PasswordHasher',
     ]
