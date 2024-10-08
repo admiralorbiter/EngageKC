@@ -26,6 +26,8 @@ body{
     padding: 10px;
     background-color: transparent; /* No background color */
     margin-inline: 10%;
+    position: relative;
+    z-index: 2000; /* Increase this value to be higher than the sticky header */
 }
 
 /* Flexbox for the nav items */
@@ -92,7 +94,7 @@ body{
     background-color: #E6FDF9;
     min-width: 200px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 1;
+    z-index: 2001; /* Ensure this is higher than the navbar z-index */
     border-radius: 0;
     padding: 0;
     right: 0;
