@@ -10,7 +10,15 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    {% include 'video_app/nav.html' %}
+    {% if user.is_authenticated %}
+        {% if user.is_staff %}
+            {% include 'video_app/teacher_nav.html' %}
+        {% else %}
+            {% include 'video_app/student_nav.html' %}
+        {% endif %}
+    {% else %}
+        {% include 'video_app/nav.html' %}
+    {% endif %}
     {% block content %}{% endblock %}
     {% block extra_js %}{% endblock %}
 </body>
