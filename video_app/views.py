@@ -14,16 +14,16 @@ def post(request, id):
     media = get_object_or_404(Media, id=id)
     comments = media.comments.filter(parent__isnull=True)
     new_comment = None
+    student = None
+
+    if 'student_id' in request.session:
+        student = Student.objects.filter(id=request.session['student_id']).first()
 
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
             new_comment.media = media
-
-            student = None
-            if 'student_id' in request.session:
-                student = Student.objects.filter(id=request.session['student_id']).first()
 
             if student:
                 new_comment.name = student.name
@@ -59,7 +59,8 @@ def post(request, id):
         'media': media,
         'comments': comments,
         'new_comment': new_comment,
-        'comment_form': comment_form
+        'comment_form': comment_form,
+        'student': student  # Add the student to the context
     }
 
     return render(request, 'video_app/post.html', context)

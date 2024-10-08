@@ -12,7 +12,11 @@
         <div class="col-md-3">
             <div class="profile-icon-wrapper">
                 <div class="profile-icon">
-                    <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon">
+                    {% if student and student.avatar_image_path %}
+                        <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon">
+                    {% else %}
+                        <img src="{% static 'video_app/images/default_avatar.png' %}" alt="Default Icon">
+                    {% endif %}
                 </div>
             </div>
         </div>
