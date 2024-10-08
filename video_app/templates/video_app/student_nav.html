@@ -15,6 +15,7 @@
                 {% endif %}
                 <li class="nav-item">
                     <form method="post" action="{% url 'student_logout' %}" style="display:inline;">
+                        {% csrf_token %}
                         <button type="submit" class="nav-link">Student Logout</button>
                     </form>
                 </li>
