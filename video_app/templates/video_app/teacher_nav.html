@@ -17,7 +17,7 @@
                         <ul class="list-group list-group-flush">
                             {% for session in nav_sessions %}
                                 <li class="list-group-item">
-                                    <a href="{% url 'session_detail' session.id %}">
+                                    <a href="{% url 'session' session.id %}">
                                         {{ session.name }}
                                     </a>
                                 </li>
@@ -29,29 +29,13 @@
                 </li>
                
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin_view' %}">Teacher View</a>
-                </li>
-            {% elif 'student_id' in request.session %}
-
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'join_session' %}">Teacher Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin:login' %}">Section Name</a>
+                    <a class="nav-link" href="{% url 'teacher_view' %}">Teacher Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <form method="post" action="{% url 'admin_logout' %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="nav-link">Logout</button>
                     </form>
-                </li>
-            {% endif %}
-            {% if request.session.current_session_id %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'session_detail' session_pk=request.session.current_session_id %}">
-                        {{ request.session.current_session_name }}
-                    </a>
                 </li>
             {% endif %}
         </ul>

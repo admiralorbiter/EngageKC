@@ -8,26 +8,24 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
-                {%if 'student_id' in request.session %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'student_detail' request.session.student_id %}">My Profile</a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <form method="post" action="{% url 'student_logout' %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link">Student Logout</button>
-                    </form>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'student_login' %}">Student Login</a>
-                </li>
-                {%if 'student_id' in request.session %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'session' session_pk=request.session.current_session_id %}">
-                    </a>
-                </li>
-                {%endif%}
+            {%if 'student_id' in request.session %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'student_detail' request.session.student_id %}">Character Profile</a>
+            </li>
+            {% endif %}
+            
+            {% if 'current_session_id' in request.session %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'session' session_pk=request.session.current_session_id %}">Data Deck</a>
+            </li>
+            {% endif %}
+            
+            <li class="nav-item">
+                <form method="post" action="{% url 'student_logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link">Student Logout</button>
+                </form>
+            </li>
         </ul>
     </div>
 </nav>

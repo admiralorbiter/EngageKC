@@ -12,7 +12,7 @@
 <body>
     {% if user.is_authenticated %}
         <!-- Debug information for user authentication -->
-        <div class="container mt-3">
+        <!-- <div class="container mt-3">
             <div class="alert alert-info">
                 <h4>Debug: User Authentication Info</h4>
                 <p><strong>Is authenticated:</strong> {{ user.is_authenticated }}</p>
@@ -22,7 +22,7 @@
                 <p><strong>Last login:</strong> {{ user.last_login }}</p>
                 <p><strong>Date joined:</strong> {{ user.date_joined }}</p>
             </div>
-        </div>
+        </div> -->
         {% if user.is_staff %}
             {% include 'video_app/teacher_nav.html' %}
         {% else %}
