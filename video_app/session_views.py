@@ -14,6 +14,14 @@ from .models import CustomAdmin, Session, Media, Student, Comment, StudentMediaI
 from django.core.paginator import Paginator
 import json
 from django.db.models import Prefetch
+from django.http import JsonResponse
+
+def check_section_availability(request):
+    section = request.GET.get('section')
+    user = request.user
+    custom_admin = CustomAdmin.objects.get(id=user.id)
+    is_available = not Session.objects.filter(section=section, created_by=custom_admin).exists()
+    return JsonResponse({'is_available': is_available})
 
 @transaction.atomic
 def start_session(request):

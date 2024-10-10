@@ -1,7 +1,7 @@
 from django.urls import path, include
 from . import views
 from .media_views import upload_media, delete_media, edit_media, like_media
-from .session_views import start_session, session, pause_session, delete_session, generate_users_for_section
+from .session_views import start_session, session, pause_session, delete_session, generate_users_for_section, check_section_availability
 from .auth_views import student_login, student_logout, update_teacher_info
 from django.contrib.auth import login as auth_login 
 from django.contrib import admin
@@ -45,4 +45,5 @@ urlpatterns = [
     path('teacher_view/', views.teacher_view, name='teacher_view'),
     path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
     path('update_teacher_info/', update_teacher_info, name='update_teacher_info'),
+    path('check-section-availability/', check_section_availability, name='check_section_availability'),
 ]
