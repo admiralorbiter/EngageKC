@@ -27,30 +27,29 @@
 
             <!-- Badge section -->
             <div class="badge-section d-flex align-items-center mx-3 mt-2">
-                <div class="row align-items-center">
+                <div class="row align-items-start w-100">
                     <div class="col-5">
                         <p class="badge-label mb-0">Look through the posts from your classmates and react with one of the badges below:</p>
                     </div>
-                    <div class="col-4">
-                        <div class="badge-container d-flex justify-content-center">
-                            <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
-                                <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
+                    <div class="col-7">
+                        <div class="d-flex flex-column align-items-center">
+                            <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button mb-3">Upload</a>
+                            <div class="badge-container d-flex justify-content-center">
+                                <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                                    <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
+                                </div>
+                                <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                                    <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
+                                </div>
+                                <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                                    <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
+                                </div>
                             </div>
-                            <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
-                                <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon">
-                            </div>
-                            <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
-                                <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="d-flex justify-content-center">
-                            <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button">Upload</a>
                         </div>
                     </div>
                 </div>
             </div>
+   .
 
             <!-- Filter component -->
             <div class="filter-section mx-2">
