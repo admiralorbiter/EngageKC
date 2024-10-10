@@ -229,7 +229,7 @@
 .badge-item:hover::after {
     content: attr(title);
     position: absolute;
-    bottom: 150%;
+    bottom: -300%;
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--secondary-color);
