@@ -9,11 +9,8 @@
         <div class="sticky-header-content mx-auto d-flex flex-wrap justify-content-between align-items-center" style="width: 95%;">
             <!-- Session info -->
             <div class="session-info">
-                <h1 class="title-stylized">CS 101's Data Deck Fall 2024</h1>
-                <h2 class="subtitle-stylized">Hour 2</h2>
-                <div class="session-details">
-                    <p><strong>School:</strong> PREP-KC | <strong>Session Code:</strong> a67f2a69 | <strong>Created At:</strong> September 30, 2024</p>
-                </div>
+                <h1 class="title-stylized">{{ session_instance.created_by.last_name }}'s Data Deck Fall 2024</h1>
+                <h2 class="subtitle-stylized">Hour {{ session_instance.section }}</h2>
             </div>
 
             <!-- Avatar (only shown for students) -->
