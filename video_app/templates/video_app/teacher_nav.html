@@ -18,7 +18,7 @@
                             {% for session in nav_sessions %}
                                 <li class="list-group-item">
                                     <a href="{% url 'session' session.id %}">
-                                        {{ session.name }}
+                                        Hour {{ session.section }}
                                     </a>
                                 </li>
                             {% empty %}
