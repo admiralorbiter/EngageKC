@@ -175,7 +175,7 @@ def session(request, session_pk):
 def delete_session(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
     session.delete()
-    return redirect('student_login')
+    return redirect('teacher_view')
 
 def pause_session(request, session_pk):
     session = get_object_or_404(Session, id=session_pk)

@@ -1,4 +1,10 @@
 {% extends "video_app/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/teacher_view.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Teacher View</h1>
@@ -12,10 +18,16 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         {% for session in sessions %}
-                            <li class="list-group-item">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <a href="{% url 'session' session.id %}" class="text-decoration-none">
-                                    {{ session.name }} - Hour {{ session.section }}
+                                    Hour {{ session.section }}
                                 </a>
+                                <form method="post" action="{% url 'delete_session' session.id %}" onsubmit="return confirm('Are you sure you want to delete this hour?');" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </li>
                         {% endfor %}
                     </ul>
