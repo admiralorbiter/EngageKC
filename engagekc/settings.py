@@ -14,6 +14,10 @@ from pathlib import Path
 import sys
 from celery.schedules import crontab
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4iaw(8^ug^+h5jqiu$bir-0zr(u0gv6(1rgfw#p4cny=96uy1s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -113,12 +117,33 @@ WSGI_APPLICATION = 'engagekc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Use environment variable to determine which database to use
+USE_MYSQL = os.environ.get('USE_MYSQL', 'False').lower() == 'true'
+USE_MYSQL = True
+if USE_MYSQL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT', '3306'),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                'charset': 'utf8mb4',
+            },
+        }
     }
-}
+    print("Using MySQL database")
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    print("Using SQLite database")
 
 # Use a separate test database when running tests
 if 'test' in sys.argv or 'pytest' in sys.argv[0]:
@@ -187,7 +212,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Test-specific settings
 if 'test' in sys.argv or 'pytest' in sys.argv[0]:
-    DEBUG = T
+    DEBUG = True
     PASSWORD_HASHERS = [
         'django.contrib.auth.hashers.MD5PasswordHasher',
     ]

@@ -62,6 +62,10 @@ To start the development server, run:
 ```bash
 python manage.py runserver
 ```
+To use MySQL (connecting to your PythonAnywhere database):
+```
+USE_MYSQL=true python manage.py runserver
+```
 
 ### Deploy Command
 

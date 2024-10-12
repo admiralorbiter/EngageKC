@@ -2,6 +2,9 @@
 # To use your own Django app use code like this:
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # assuming your Django settings file is at '/home/myusername/mysite/mysite/settings.py'
 path = '/home/myusername/mysite'
