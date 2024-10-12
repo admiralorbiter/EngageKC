@@ -4,14 +4,15 @@ import os
 import sys
 from dotenv import load_dotenv
 
-load_dotenv()
-
-# assuming your Django settings file is at '/home/myusername/mysite/mysite/settings.py'
-path = '/home/myusername/mysite'
+# Add your project directory to the sys.path
+path = '/home/jlane/EngageKC'
 if path not in sys.path:
-    sys.path.insert(0, path)
+    sys.path.append(path)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+# Load environment variables
+load_dotenv(os.path.join(path, '.env'))
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'engagekc.settings'
 
 ## Uncomment the lines below depending on your Django version
 ###### then, for Django >=1.5:
