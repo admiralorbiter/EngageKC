@@ -4,54 +4,39 @@
     <link rel="stylesheet" href="{% static 'video_app/css/session.css' %}">
 {% endblock %}
 {% block content %}
-    <!-- Sticky header with session information and badge section -->
+    <!-- Sticky header with session information, filter/upload, and badge section -->
     <div class="sticky-header">
-        <div class="sticky-header-content mx-auto d-flex flex-wrap justify-content-between align-items-stretch">
-            <div class="col-12 col-xl-5 mb-3 mb-xl-0">
-                <div class="row">
-                    <!-- Session info -->
-                    <div class="col-12 col-sm-8 session-info">
-                        <h1 class="title-stylized">{{ session_instance.created_by.last_name }}'s Data Deck Fall 2024</h1>
-                        <h2 class="subtitle-stylized">Hour {{ session_instance.section }}</h2>
-                    </div>
-                    <!-- Avatar (only shown for students) -->
-                    {% if not user.is_staff %}
-                    <div class="col-12 col-sm-4 profile-icon-wrapper d-flex justify-content-end align-items-center">
-                        <div class="profile-icon">
-                            <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="Student Icon" class="img-fluid rounded-circle" style="width: 80px; height: 80px;">
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="row mt-2">
-                    <!-- Filter component -->
-                    <div class="col-8 filter-section">
-                        {% include "video_app/filter_comp.html" %}
-                    </div>
-                    <div class="col-4">
-                        <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button w-100">Upload Your Data Viz</a>
-                    </div>
+        <div class="sticky-header-content mx-auto d-flex justify-content-between align-items-stretch">
+            <!-- Session info column -->
+            <div class="col-12 col-md-3 mb-3 mb-md-0">
+                <div class="session-info">
+                    <h1 class="title-stylized">{{ session_instance.created_by.last_name }}'s Data Deck</h1>
+                    <h2 class="subtitle-stylized">Hour {{ session_instance.section }} - Fall 2024</h2>
                 </div>
             </div>
 
-            <!-- Badge section -->
-            <div class="col-12 col-xl-6 badge-section d-flex align-items-center mt-3 mt-xl-0">
-                <div class="row align-items-center w-100 m-3">
-                    <div class="col-12 col-sm-5 mb-2 mb-sm-0">
-                        <p class="badge-label text-center mb-0">Look through the posts from your classmates and react with one of the badges.</p>
+            <!-- Filter and upload column -->
+            <div class="col-12 col-md-3 mb-3 mb-md-0">
+                <div class="filter-section mb-2">
+                    {% include "video_app/filter_comp.html" %}
+                </div>
+                <div>
+                    <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button w-100">Upload Your Data Viz</a>
+                </div>
+            </div>
+
+            <!-- Badge section column -->
+            <div class="col-12 col-md-5 badge-section">
+                <p class="badge-label text-center mb-2">Look through the posts from your classmates and react with one of the badges.</p>
+                <div class="badge-container d-flex justify-content-center">
+                    <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
+                        <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon" class="img-fluid">
                     </div>
-                    <div class="col-12 col-sm-7">
-                        <div class="badge-container d-flex justify-content-center justify-content-sm-start">
-                            <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
-                                <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon" class="img-fluid">
-                            </div>
-                            <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
-                                <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon" class="img-fluid">
-                            </div>
-                            <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
-                                <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon" class="img-fluid">
-                            </div>
-                        </div>
+                    <div class="badge-item" title="Expert Engager - The design of the post is eye-catching, intuitive, and relevant to the topic of the data.">
+                        <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye Icon" class="img-fluid">
+                    </div>
+                    <div class="badge-item" title="Supreme Storyteller - The analysis provided clearly connects the graph created to the story being told with that data.">
+                        <img src="{% static 'video_app/images/read-icon.png' %}" alt="Feedback Icon" class="img-fluid">
                     </div>
                 </div>
             </div>
