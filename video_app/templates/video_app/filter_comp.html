@@ -2,7 +2,7 @@
     <form id="filter-form" hx-get="{% url 'session' session_instance.pk %}" hx-target="#media-list" hx-trigger="submit">
         <div class="select-wrapper">
             <select id="graph-filter" name="graph_tag" class="form-select">
-                <option value="">Filter by graph</option>
+                <option value="">Graph</option>
                 {% for value, label in graph_choices %}
                     <option value="{{ value }}" {% if value == selected_graph_tag %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
@@ -10,7 +10,7 @@
         </div>
         <div class="select-wrapper">
             <select id="variable-filter" name="variable_tag" class="form-select">
-                <option value="">Filter by variable</option>
+                <option value="">Variable</option>
                 {% for value, label in variable_choices %}
                     <option value="{{ value }}" {% if value == selected_variable_tag %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}

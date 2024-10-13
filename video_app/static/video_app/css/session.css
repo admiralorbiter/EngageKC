@@ -359,3 +359,45 @@
 
 /* Adjust other styles as needed for spacing and sizing */
 
+/* Feedback button styles */
+.feedback-button.btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background-color: transparent !important;
+    border: 2px solid transparent !important;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.feedback-button.btn:hover {
+    transform: scale(1.1);
+    border-color: #4CAF50 !important; /* A green color to match the icon */
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.feedback-button img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+.feedback-button:hover img {
+    transform: rotate(15deg);
+}
+
+/* Styles for filled feedback icon */
+.feedback-button .feedback-icon-filled {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+}
+
+/* Ensure the correct icon is always displayed */
+.feedback-button:hover .feedback-icon,
+.feedback-button:hover .feedback-icon-filled {
+    display: inline-flex !important;
+}

@@ -36,7 +36,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4iaw(8^ug^+h5jqiu$bir-0zr(u0gv6(1rgfw#p4cny=96uy1s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -124,25 +124,19 @@ WSGI_APPLICATION = 'engagekc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# Use environment variable to determine which database to use
-USE_MYSQL = os.environ.get('USE_MYSQL', 'False').lower() == 'true'
-USE_MYSQL = True
+USE_MYSQL = os.environ.get('USE_MYSQL', 'TRUE').upper() == 'TRUE'
+
 if USE_MYSQL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': os.environ.get('DB_HOST'),
+            'NAME': os.environ.get('DB_NAME', 'jlane$datadeck'),
+            'USER': os.environ.get('DB_USER', 'jlane'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'Thisisapassword#1'),
+            'HOST': os.environ.get('DB_HOST', 'jlane.mysql.pythonanywhere-services.com'),
             'PORT': os.environ.get('DB_PORT', '3306'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                'charset': 'utf8mb4',
-            },
         }
     }
-    print("Using MySQL database")
 else:
     DATABASES = {
         'default': {
@@ -150,7 +144,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    print("Using SQLite database")
 
 # Use a separate test database when running tests
 if 'test' in sys.argv or 'pytest' in sys.argv[0]:
