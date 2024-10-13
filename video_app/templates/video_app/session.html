@@ -7,30 +7,39 @@
     <!-- Sticky header with session information and badge section -->
     <div class="sticky-header">
         <div class="sticky-header-content mx-auto d-flex flex-wrap justify-content-between align-items-center" style="width: 95%;">
-            <!-- Session info -->
-            <div class="session-info">
-                <h1 class="title-stylized">{{ session_instance.created_by.last_name }}'s Data Deck Fall 2024</h1>
-                <h2 class="subtitle-stylized">Hour {{ session_instance.section }}</h2>
-            </div>
-
-            <!-- Avatar (only shown for students) -->
-            {% if not user.is_staff %}
-            <div class="profile-icon-wrapper">
-                <div class="profile-icon">
-                    <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="Student Icon" style="width: 80px; height: 80px; border-radius: 50%;">
+            <div class="col-4 mx-2">
+                <div class="row">
+                <!-- Session info -->
+                    <div class="session-info">
+                        <h1 class="title-stylized">{{ session_instance.created_by.last_name }}'s Data Deck Fall 2024</h1>
+                        <h2 class="subtitle-stylized">Hour {{ session_instance.section }}</h2>
+                    </div>
+                    <!-- Avatar (only shown for students) -->
+                    {% if not user.is_staff %}
+                    <div class="profile-icon-wrapper">
+                        <div class="profile-icon">
+                            <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="Student Icon" style="width: 80px; height: 80px; border-radius: 50%;">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <!-- Filter component -->
+                    <div class="filter-section col-8">
+                        {% include "video_app/filter_comp.html" %}
+                    </div>
+                    <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button mb-3 mx-2 col">Upload Your Data Viz</a>
                 </div>
             </div>
-            {% endif %}
 
             <!-- Badge section -->
-            <div class="badge-section d-flex align-items-center mx-3 mt-2">
+            <div class="badge-section d-flex align-items-center mx-3">
                 <div class="row align-items-start w-100">
                     <div class="col-5">
-                        <p class="badge-label mb-0">Look through the posts from your classmates and react with one of the badges below:</p>
+                        <p class="badge-label text-center">Look through the posts from your classmates and react with one of the badges.</p>
                     </div>
                     <div class="col-7">
-                        <div class="d-flex flex-column align-items-center">
-                            <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button mb-3">Upload</a>
+                        <div class="align-items-center">
                             <div class="badge-container d-flex justify-content-center">
                                 <div class="badge-item" title="Graph Guru - Use this badge for graphs that are easy to understand and make trends in the data clear to the audience.">
                                     <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph Icon">
@@ -45,12 +54,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-   .
-
-            <!-- Filter component -->
-            <div class="filter-section mx-2">
-                {% include "video_app/filter_comp.html" %}
             </div>
         </div>
     </div>
