@@ -192,7 +192,7 @@ def pause_session(request, session_pk):
 def generate_users_for_section(section, num_students, admin, character_set='marvel'):
     """Generates students with character names and details for a given section, saving them to the database."""
     words_list = load_words()
-    characters = load_character_set(character_set)
+    character_set_name, characters = load_character_set(character_set)
     
     generated_students = []
     
@@ -203,6 +203,9 @@ def generate_users_for_section(section, num_students, admin, character_set='marv
         # Generate the 2-word passcode
         passcode = generate_passcode(words_list)
         
+        # Construct the correct avatar image path
+        avatar_image_path = f'video_app/images/characters/{character_set_name}/{character["filename"]}'
+        
         # Save the student to the database
         student = Student.objects.create(
             name=character['name'],
@@ -210,7 +213,7 @@ def generate_users_for_section(section, num_students, admin, character_set='marv
             section=section,
             admin=admin,
             character_description=character['description'],
-            avatar_image_path=os.path.join('characters', character_set, character['filename'])
+            avatar_image_path=avatar_image_path
         )
         
         generated_students.append(student)
@@ -254,9 +257,10 @@ def load_character_set(character_set):
         reader = csv.DictReader(f)
         for row in reader:
             characters.append(row)
-    return characters
+    return character_set, characters
 
 def get_available_character_sets():
     """Get a list of available character set names."""
     character_dir = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'characters')
     return [os.path.splitext(f)[0] for f in os.listdir(character_dir) if f.endswith('.csv')]
+
