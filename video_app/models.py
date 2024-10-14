@@ -29,6 +29,7 @@ class Session(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_paused = models.BooleanField(default=False)
     created_by = models.ForeignKey('CustomAdmin', on_delete=models.SET_NULL, blank=True, null=True)
+    character_set = models.CharField(max_length=50, default='marvel')
 
     def is_expired(self):
         return not self.is_paused and (timezone.now() > self.created_at + timedelta(days=7))

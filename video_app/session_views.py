@@ -15,6 +15,7 @@ from django.core.paginator import Paginator
 import json
 from django.db.models import Prefetch
 from django.http import JsonResponse
+from .utils import get_available_character_sets
 
 def check_section_availability(request):
     section = request.GET.get('section')
@@ -35,6 +36,7 @@ def start_session(request):
             # Extract form data
             section = form.cleaned_data['section']
             num_students = form.cleaned_data['num_students']
+            character_set = form.cleaned_data['character_set']
             
             # Update teacher information
             custom_admin.district = form.cleaned_data['district']
@@ -56,13 +58,14 @@ def start_session(request):
             new_session = Session.objects.create(
                 name=title,
                 section=section,
-                created_by=custom_admin
+                created_by=custom_admin,
+                character_set=character_set
             )
             
             # Generate students and save them to the database
-            generate_users_for_section(new_session, num_students, custom_admin)
+            generate_users_for_section(new_session, num_students, custom_admin, character_set)
             
-            messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
+            messages.success(request, f"Session '{title}' created successfully with {num_students} students using the {character_set} character set.")
             return redirect('teacher_view')
     else:
         initial_data = {
@@ -73,7 +76,8 @@ def start_session(request):
         }
         form = StartSessionForm(initial=initial_data)
     
-    return render(request, 'video_app/start_session.html', {'form': form})
+    character_sets = get_available_character_sets()
+    return render(request, 'video_app/start_session.html', {'form': form, 'character_sets': character_sets})
 
 
 def session(request, session_pk):
@@ -185,22 +189,16 @@ def pause_session(request, session_pk):
 
 
 @transaction.atomic
-def generate_users_for_section(section, num_students, admin):
-    """Generates students with Marvel character names and details for a given section, saving them to the database."""
-    words_list = load_words()  # Keep this for generating passcodes
-    marvel_characters = load_marvel_characters()
+def generate_users_for_section(section, num_students, admin, character_set='marvel'):
+    """Generates students with character names and details for a given section, saving them to the database."""
+    words_list = load_words()
+    characters = load_character_set(character_set)
     
     generated_students = []
     
     for _ in range(num_students):
         # Pick a character without checking for uniqueness
-        character = random.choice(marvel_characters)
-        
-        # Commented out uniqueness check
-        # while True:
-        #     character = random.choice(marvel_characters)
-        #     if not Student.objects.filter(name=character['name'], section=section).exists():
-        #         break
+        character = random.choice(characters)
         
         # Generate the 2-word passcode
         passcode = generate_passcode(words_list)
@@ -212,7 +210,7 @@ def generate_users_for_section(section, num_students, admin):
             section=section,
             admin=admin,
             character_description=character['description'],
-            avatar_image_path=character['filename']
+            avatar_image_path=os.path.join('characters', character_set, character['filename'])
         )
         
         generated_students.append(student)
@@ -247,3 +245,18 @@ def load_marvel_characters():
         for row in reader:
             characters.append(row)
     return characters
+
+def load_character_set(character_set):
+    """Load characters from the specified CSV file."""
+    characters = []
+    csv_path = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'characters', f'{character_set}.csv')
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            characters.append(row)
+    return characters
+
+def get_available_character_sets():
+    """Get a list of available character set names."""
+    character_dir = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'characters')
+    return [os.path.splitext(f)[0] for f in os.listdir(character_dir) if f.endswith('.csv')]

@@ -2,6 +2,7 @@ from django import forms
 from .models import Session, Media, Comment
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
+from .utils import get_available_character_sets
 
 class CommentForm(forms.ModelForm):
     text = forms.CharField(widget=forms.Textarea(attrs={'rows': 2}))
@@ -11,14 +12,13 @@ class CommentForm(forms.ModelForm):
         fields = ['text']
 
 class StartSessionForm(forms.Form):
-    section = forms.CharField(max_length=50, label="Section Number")
-    num_students = forms.IntegerField(min_value=1, label="Number of Students")
-    
-    # Teacher Information fields
-    district = forms.CharField(max_length=100, label="District")
-    school = forms.CharField(max_length=100, label="School")
-    first_name = forms.CharField(max_length=50, label="First Name")
-    last_name = forms.CharField(max_length=50, label="Last Name")
+    section = forms.CharField(max_length=50)
+    num_students = forms.IntegerField(min_value=1, max_value=100)
+    district = forms.CharField(max_length=100)
+    school = forms.CharField(max_length=100)
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+    character_set = forms.ChoiceField(choices=[(cs, cs) for cs in get_available_character_sets()])
 
 def validate_file_size(file):
     max_size_mb = 10  # Define your size limit in MB
