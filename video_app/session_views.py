@@ -193,11 +193,14 @@ def generate_users_for_section(section, num_students, admin):
     generated_students = []
     
     for _ in range(num_students):
-        # Pick a unique character that is not already used in the database
-        while True:
-            character = random.choice(marvel_characters)
-            if not Student.objects.filter(name=character['name'], section=section).exists():
-                break
+        # Pick a character without checking for uniqueness
+        character = random.choice(marvel_characters)
+        
+        # Commented out uniqueness check
+        # while True:
+        #     character = random.choice(marvel_characters)
+        #     if not Student.objects.filter(name=character['name'], section=section).exists():
+        #         break
         
         # Generate the 2-word passcode
         passcode = generate_passcode(words_list)
