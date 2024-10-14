@@ -1,7 +1,7 @@
 from django.urls import path, include
 from . import views
 from .media_views import upload_media, delete_media, edit_media, like_media
-from .session_views import start_session, session, pause_session, delete_session, generate_users_for_section, check_section_availability
+from .session_views import start_session, session, pause_session, delete_session, generate_users_for_section, generate_new_students, check_section_availability
 from .auth_views import student_login, student_logout, update_teacher_info
 from django.contrib.auth import login as auth_login 
 from django.contrib import admin
@@ -38,6 +38,7 @@ urlpatterns = [
     path('delete-student/<int:student_id>/', delete_student, name='delete_student'),
     path('generate-students/', generate_users_for_section, name='generate_students'),
     path('student/<int:student_id>/', student_detail, name='student_detail'),
+    path('generate-new-students', generate_new_students, name='generate_new_students'),
 
     # Miscellaneous
     path('', views.index, name='home'),

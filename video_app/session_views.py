@@ -264,3 +264,73 @@ def get_available_character_sets():
     character_dir = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'characters')
     return [os.path.splitext(f)[0] for f in os.listdir(character_dir) if f.endswith('.csv')]
 
+@login_required
+@transaction.atomic
+def generate_new_students(request):
+    if request.method == 'POST':
+        num_students = int(request.POST.get('num_students', 0))
+        section_id = request.POST.get('section')
+        
+        if num_students > 0 and section_id:
+            try:
+                session = Session.objects.get(id=section_id)
+                admin = CustomAdmin.objects.get(id=request.user.id)
+                character_set = session.character_set
+                
+                # Get existing student names for this session
+                existing_names = set(Student.objects.filter(section=session).values_list('name', flat=True))
+                
+                generated_students = []
+                attempts = 0
+                max_attempts = num_students * 3  # Limit attempts to avoid infinite loop
+                
+                while len(generated_students) < num_students and attempts < max_attempts:
+                    new_student = generate_user_for_section(session, admin, character_set)
+                    if new_student is None:
+                        print(f"Failed to generate student on attempt {attempts + 1}")
+                    elif new_student.name not in existing_names:
+                        generated_students.append(new_student)
+                        existing_names.add(new_student.name)
+                    attempts += 1
+                
+                if len(generated_students) < num_students:
+                    messages.warning(request, f"Only {len(generated_students)} new unique students could be generated. Consider using a different character set.")
+                else:
+                    messages.success(request, f"{len(generated_students)} new students generated for Hour {session.section}")
+            
+            except Session.DoesNotExist:
+                messages.error(request, "Invalid session selected. Please try again.")
+            except CustomAdmin.DoesNotExist:
+                messages.error(request, "User is not a CustomAdmin. Please log in with the correct account.")
+        else:
+            messages.error(request, "Invalid input. Please try again.")
+    
+    return redirect('teacher_view')
+
+def generate_user_for_section(session, admin, character_set):
+    """Generates a single student with a character name and details for a given section."""
+    try:
+        words_list = load_words()
+        character_set_name, characters = load_character_set(character_set)
+        
+        if not characters:
+            print(f"No characters found for character set: {character_set}")
+            return None
+        
+        character = random.choice(characters)
+        passcode = generate_passcode(words_list)
+        avatar_image_path = f'video_app/images/characters/{character_set_name}/{character["filename"]}'
+
+        student = Student.objects.create(
+            name=character['name'],
+            password=passcode,
+            section=session,
+            admin=admin,
+            character_description=character['description'],
+            avatar_image_path=avatar_image_path
+        )
+        
+        return student
+    except Exception as e:
+        print(f"Error generating user: {str(e)}")
+        return None
