@@ -9,7 +9,7 @@
     <div class="d-flex align-items-start">
         <div class="profile-icon me-3">
             {% if student and student.avatar_image_path %}
-                <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon" class="rounded-circle" width="40" height="40">
+                <img src="{% static student.avatar_image_path %}" alt="{{ student.name }} Icon" class="rounded-circle" width="40" height="40">
             {% else %}
                 <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
                     <span>{{ comment.name|default:"A"|first|upper }}</span>
@@ -61,7 +61,7 @@
     <div class="comment-input-wrapper d-flex align-items-start">
         <div class="profile-icon me-3">
             {% if student and student.avatar_image_path %}
-                <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="{{ student.name }} Icon" class="rounded-circle" width="40" height="40">
+                <img src="{% static student.avatar_image_path %}" alt="{{ student.name }} Icon" class="rounded-circle" width="40" height="40">
             {% else %}
                 <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
                     <span>{{ comment.name|default:"A"|first|upper }}</span>
