@@ -241,7 +241,7 @@ def generate_passcode(words):
 def load_marvel_characters():
     """Load Marvel characters from the CSV file."""
     characters = []
-    csv_path = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'characters - marvel.csv')
+    csv_path = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'characters/marvel.csv')
     with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
