@@ -1,14 +1,6 @@
 {% load static %}
 <nav class="navbar">
     <div class="nav-items">
-        <!-- Avatar (only shown for students) -->
-        {% if user.is_authenticated and 'student_id' in request.session %}
-        <div class="col-12 col-sm-4 profile-icon-wrapper d-flex justify-content-end align-items-center">
-            <div class="profile-icon">
-                <img src="{% static 'video_app/images/characters/marvel/' %}{{ student.avatar_image_path }}" alt="Student Icon" class="img-fluid rounded-circle" style="width: 80px; height: 80px;">
-            </div>
-        </div>
-        {% endif %}
         <a class="navbar-brand" href="{% url 'home' %}" id="logo">
             <img src="{% static 'video_app/images/logo.png' %}" alt="Logo">
         </a>
