@@ -77,7 +77,15 @@ def update_comment_count(student, media):
 
 
 def index(request):
-    return render(request, 'video_app/index.html')
+    student = None
+    if 'student_id' in request.session:
+        student = Student.objects.filter(id=request.session['student_id']).first()
+    
+    context = {
+        'student': student,
+        # ... other context variables ...
+    }
+    return render(request, 'video_app/index.html', context)
 
 @login_required
 def teacher_view(request):

@@ -26,6 +26,11 @@
                     <button type="submit" class="nav-link">Student Logout</button>
                 </form>
             </li>
+            {% if student and student.avatar_image_path %}
+            <li class="nav-item">
+                <img src="{% static student.avatar_image_path %}" alt="{{ student.name }} Icon" class="rounded-circle" width="60" height="60">
+            </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
