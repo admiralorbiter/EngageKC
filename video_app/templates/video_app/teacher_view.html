@@ -102,7 +102,7 @@
                         <select class="form-select" id="sectionFilter">
                             <option value="">All Hours</option>
                             {% for session in sessions %}
-                                <option value="{{ session.id }}">Hour {{ session.section }}</option>
+                                <option value="{{ session.section }}">Hour {{ session.section }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -119,7 +119,7 @@
                         </thead>
                         <tbody>
                             {% for student in students %}
-                                <tr data-section-id="{{ student.session.id }}">
+                                <tr data-section-id="{{ student.session.section }}">
                                     <td>
                                         <a href="{% url 'student_detail' student.id %}">{{ student.name }}</a>
                                     </td>
@@ -173,16 +173,27 @@
 </div>
 
 <script>
-document.getElementById('sectionFilter').addEventListener('change', function() {
-    var selectedSectionId = this.value;
-    var rows = document.querySelectorAll('#studentsTable tbody tr');
-    rows.forEach(function(row) {
-        if (selectedSectionId === "" || row.getAttribute('data-section-id') === selectedSectionId) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    var sectionFilter = document.getElementById('sectionFilter');
+    if (sectionFilter) {
+        sectionFilter.addEventListener('change', function() {
+            var selectedSection = this.value;
+            var rows = document.querySelectorAll('#studentsTable tbody tr');
+            rows.forEach(function(row) {
+                var hourCell = row.querySelector('td:nth-child(3)');
+                if (hourCell) {
+                    var rowSection = hourCell.textContent.trim();
+                    if (selectedSection === "" || rowSection === selectedSection) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            });
+        });
+    } else {
+        console.error('Section filter element not found');
+    }
 });
 </script>
 {% endblock %}
