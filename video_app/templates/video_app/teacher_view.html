@@ -112,6 +112,8 @@
                                 <th>Name</th>
                                 <th>Passcode</th>
                                 <th>Hour</th>
+                                <th>Total Votes</th>
+                                <th>Total Comments</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -123,6 +125,8 @@
                                     </td>
                                     <td>{{ student.password }}</td>
                                     <td>{{ student.section.section }}</td>
+                                    <td>{{ student.total_votes }}</td>
+                                    <td>{{ student.total_comments }}</td>
                                     <td>
                                         <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-danger delete-student" onclick="return confirm('Are you sure you want to delete this student?');">
                                             <i class="fas fa-trash"></i>
@@ -134,38 +138,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- New section for student interaction data -->
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
-                    <h2 class="h4 mb-0">Student Interaction Data</h2>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped" id="studentInteractionTable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Hour</th>
-                                <th>Total Votes</th>
-                                <th>Total Comments</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student in students %}
-                                <tr data-section-id="{{ student.section.id }}">
-                                    <td>
-                                        <a href="{% url 'student_detail' student.id %}">{{ student.name }}</a>
-                                    </td>
-                                    <td>Hour {{ student.section.section }}</td>
-                                    <td>{{ student.total_votes }}</td>
-                                    <td>{{ student.total_comments }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- New section for media leaderboard -->
             <div class="card mb-4">
                 <div class="card-header bg-warning text-dark">
