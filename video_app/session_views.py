@@ -16,6 +16,10 @@ import json
 from django.db.models import Prefetch
 from django.http import JsonResponse
 from .utils import get_available_character_sets
+import logging
+from django.http import HttpResponse
+
+logger = logging.getLogger(__name__)
 
 def check_section_availability(request):
     section = request.GET.get('section')
@@ -31,43 +35,54 @@ def start_session(request):
     custom_admin, created = CustomAdmin.objects.get_or_create(id=user.id)
 
     if request.method == 'POST':
+        logger.info("POST request received in start_session view")
         form = StartSessionForm(request.POST)
         if form.is_valid():
-            # Extract form data
-            section = form.cleaned_data['section']
-            num_students = form.cleaned_data['num_students']
-            character_set = form.cleaned_data['character_set']
-            
-            # Update teacher information
-            custom_admin.district = form.cleaned_data['district']
-            custom_admin.school = form.cleaned_data['school']
-            custom_admin.first_name = form.cleaned_data['first_name']
-            custom_admin.last_name = form.cleaned_data['last_name']
-            custom_admin.save()
-            
-            # Generate the title
-            title = f"{custom_admin.last_name}'s Data Deck Fall 2024"
-            
-            # Check for existing session with the same title and section
-            existing_session = Session.objects.filter(name=title, section=section, created_by=custom_admin).first()
-            if existing_session:
-                messages.error(request, f"A session with the title '{title}' and section '{section}' already exists.")
+            logger.info("Form is valid")
+            try:
+                # Extract form data
+                section = form.cleaned_data['section']
+                num_students = form.cleaned_data['num_students']
+                
+                # Update teacher information
+                custom_admin.district = form.cleaned_data['district']
+                custom_admin.school = form.cleaned_data['school']
+                custom_admin.first_name = form.cleaned_data['first_name']
+                custom_admin.last_name = form.cleaned_data['last_name']
+                custom_admin.save()
+                
+                # Generate the title
+                title = f"{custom_admin.last_name}'s Data Deck Fall 2024"
+                
+                # Check for existing session with the same title and section
+                existing_session = Session.objects.filter(name=title, section=section, created_by=custom_admin).first()
+                if existing_session:
+                    logger.warning(f"Session with title '{title}' and section '{section}' already exists")
+                    messages.error(request, f"A session with the title '{title}' and section '{section}' already exists.")
+                    return render(request, 'video_app/start_session.html', {'form': form})
+                
+                # Create the session object
+                new_session = Session.objects.create(
+                    name=title,
+                    section=section,
+                    created_by=custom_admin
+                )
+                
+                # Generate students and save them to the database
+                generate_users_for_section(new_session, num_students, custom_admin)
+                
+                logger.info(f"Session '{title}' created successfully with {num_students} students")
+                messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
+                return redirect('teacher_view')
+            except Exception as e:
+                logger.error(f"Error creating session: {str(e)}")
+                messages.error(request, f"An error occurred while creating the session: {str(e)}")
                 return render(request, 'video_app/start_session.html', {'form': form})
-            
-            # Create the session object
-            new_session = Session.objects.create(
-                name=title,
-                section=section,
-                created_by=custom_admin,
-                character_set=character_set
-            )
-            
-            # Generate students and save them to the database
-            generate_users_for_section(new_session, num_students, custom_admin, character_set)
-            
-            messages.success(request, f"Session '{title}' created successfully with {num_students} students using the {character_set} character set.")
-            return redirect('teacher_view')
+        else:
+            logger.warning("Form is invalid")
+            logger.warning(f"Form errors: {form.errors}")
     else:
+        logger.info("GET request received in start_session view")
         initial_data = {
             'district': custom_admin.district,
             'school': custom_admin.school,
@@ -76,9 +91,7 @@ def start_session(request):
         }
         form = StartSessionForm(initial=initial_data)
     
-    character_sets = get_available_character_sets()
-    return render(request, 'video_app/start_session.html', {'form': form, 'character_sets': character_sets})
-
+    return render(request, 'video_app/start_session.html', {'form': form})
 
 def session(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
@@ -189,22 +202,40 @@ def pause_session(request, session_pk):
 
 
 @transaction.atomic
-def generate_users_for_section(section, num_students, admin, character_set='marvel'):
-    """Generates students with character names and details for a given section, saving them to the database."""
+def generate_users_for_section(section, num_students, admin):
+    """Generates students with unique character names and details for a given section, saving them to the database."""
     words_list = load_words()
-    character_set_name, characters = load_character_set(character_set)
+    all_character_sets = get_available_character_sets()
+    all_characters = []
+    
+    for character_set in all_character_sets:
+        _, characters = load_character_set(character_set)
+        all_characters.extend(characters)
+    
+    # Get existing character names for this section
+    existing_names = set(Student.objects.filter(section=section).values_list('name', flat=True))
     
     generated_students = []
     
     for _ in range(num_students):
-        # Pick a character without checking for uniqueness
-        character = random.choice(characters)
+        # Try to find a unique character
+        attempts = 0
+        max_attempts = len(all_characters)
+        
+        while attempts < max_attempts:
+            character = random.choice(all_characters)
+            if character['name'] not in existing_names:
+                break
+            attempts += 1
+        
+        if attempts == max_attempts:
+            raise ValueError("Not enough unique characters available for this section.")
         
         # Generate the 2-word passcode
         passcode = generate_passcode(words_list)
         
         # Construct the correct avatar image path
-        avatar_image_path = f'video_app/images/characters/{character_set_name}/{character["filename"]}'
+        avatar_image_path = f'video_app/images/characters/{character["character_set"]}/{character["filename"]}'
         
         # Save the student to the database
         student = Student.objects.create(
@@ -217,6 +248,7 @@ def generate_users_for_section(section, num_students, admin, character_set='marv
         )
         
         generated_students.append(student)
+        existing_names.add(character['name'])
     
     return generated_students
 
@@ -256,6 +288,7 @@ def load_character_set(character_set):
     with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            row['character_set'] = character_set  # Add the character_set to each character
             characters.append(row)
     return character_set, characters
 
@@ -275,7 +308,6 @@ def generate_new_students(request):
             try:
                 session = Session.objects.get(id=section_id)
                 admin = CustomAdmin.objects.get(id=request.user.id)
-                character_set = session.character_set
                 
                 # Get existing student names for this session
                 existing_names = set(Student.objects.filter(section=session).values_list('name', flat=True))
@@ -285,7 +317,7 @@ def generate_new_students(request):
                 max_attempts = num_students * 3  # Limit attempts to avoid infinite loop
                 
                 while len(generated_students) < num_students and attempts < max_attempts:
-                    new_student = generate_user_for_section(session, admin, character_set)
+                    new_student = generate_user_for_section(session, admin)
                     if new_student is None:
                         print(f"Failed to generate student on attempt {attempts + 1}")
                     elif new_student.name not in existing_names:
@@ -307,14 +339,14 @@ def generate_new_students(request):
     
     return redirect('teacher_view')
 
-def generate_user_for_section(session, admin, character_set):
+def generate_user_for_section(session, admin):
     """Generates a single student with a character name and details for a given section."""
     try:
         words_list = load_words()
-        character_set_name, characters = load_character_set(character_set)
+        character_set_name, characters = load_character_set('marvel')
         
         if not characters:
-            print(f"No characters found for character set: {character_set}")
+            print(f"No characters found for character set: {character_set_name}")
             return None
         
         character = random.choice(characters)

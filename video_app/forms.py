@@ -11,14 +11,25 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['text']
 
-class StartSessionForm(forms.Form):
-    section = forms.CharField(max_length=50)
+class StartSessionForm(forms.ModelForm):
     num_students = forms.IntegerField(min_value=1, max_value=100)
     district = forms.CharField(max_length=100)
     school = forms.CharField(max_length=100)
-    first_name = forms.CharField(max_length=50)
-    last_name = forms.CharField(max_length=50)
-    character_set = forms.ChoiceField(choices=[(cs, cs) for cs in get_available_character_sets()])
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+
+    class Meta:
+        model = Session
+        fields = ['section', 'num_students']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['section'].widget.attrs.update({'class': 'form-control'})
+        self.fields['num_students'].widget.attrs.update({'class': 'form-control'})
+        self.fields['district'].widget.attrs.update({'class': 'form-control'})
+        self.fields['school'].widget.attrs.update({'class': 'form-control'})
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
 
 def validate_file_size(file):
     max_size_mb = 10  # Define your size limit in MB
