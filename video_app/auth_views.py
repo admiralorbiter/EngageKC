@@ -77,6 +77,18 @@ def update_teacher_info(request):
         teacher.school = request.POST.get('school')
         teacher.first_name = request.POST.get('first_name')
         teacher.last_name = request.POST.get('last_name')
+        
+        # Handle password update
+        new_password = request.POST.get('new_password')
+        if new_password:
+            teacher.set_password(new_password)
+        
         teacher.save()
         messages.success(request, 'Teacher information updated successfully.')
+        
+        # If password was changed, update the session to prevent logout
+        if new_password:
+            from django.contrib.auth import update_session_auth_hash
+            update_session_auth_hash(request, teacher)
+    
     return redirect('teacher_view')
