@@ -50,6 +50,24 @@ class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
         fields = ['image_file', 'graph_tag', 'variable_tag']
+        widgets = {
+            'image_file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'graph_tag': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'variable_tag': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['image_file'].label = 'Image File'
+        self.fields['graph_tag'].label = 'Graph Type'
+        self.fields['variable_tag'].label = 'Variable Tag'
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'class': 'form-control'}))

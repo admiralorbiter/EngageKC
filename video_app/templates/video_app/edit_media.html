@@ -3,12 +3,56 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Edit Media</h2>
-    <form method="post" enctype="multipart/form-data">
+    <h2 class="mb-4"><i class="fas fa-edit"></i> Edit Media</h2>
+    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{% url 'post' media.id %}" class="btn btn-secondary">Cancel</a>
+        <div class="mb-3">
+            <label for="{{ form.image_file.id_for_label }}" class="form-label">
+                <i class="fas fa-image"></i> Image File
+            </label>
+            <div class="input-group">
+                <span class="input-group-text">Currently: {{ form.image_file.value.name }}</span>
+                {{ form.image_file }}
+            </div>
+            {% if form.image_file.errors %}
+                <div class="invalid-feedback">{{ form.image_file.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.graph_tag.id_for_label }}" class="form-label">
+                <i class="fas fa-chart-bar"></i> Graph Type
+            </label>
+            {{ form.graph_tag }}
+            {% if form.graph_tag.errors %}
+                <div class="invalid-feedback">{{ form.graph_tag.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.variable_tag.id_for_label }}" class="form-label">
+                <i class="fas fa-tag"></i> Variable Tag
+            </label>
+            {{ form.variable_tag }}
+            {% if form.variable_tag.errors %}
+                <div class="invalid-feedback">{{ form.variable_tag.errors }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Changes
+        </button>
+        <a href="{% url 'post' media.id %}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Cancel
+        </a>
     </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add custom file input behavior
+    document.querySelector('#{{ form.image_file.id_for_label }}').addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        var label = document.querySelector('label[for="{{ form.image_file.id_for_label }}"]');
+        label.innerHTML = '<i class="fas fa-image"></i> ' + fileName;
+    });
+</script>
 {% endblock %}
