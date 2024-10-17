@@ -73,7 +73,7 @@ def download_students(request):
                     student = page_students[index]
                     card_data = [
                         [f"Name: {student.name}", "Your Name:"],
-                        [f"Section: {student.section.name}", ""],
+                        [f"Hour: {student.section.section}", ""],
                         [f"Password: {student.password}", ""],
                         ["", ""],  # Empty row for spacing
                         ["--------------------", "--------------------"],
