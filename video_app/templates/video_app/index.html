@@ -8,7 +8,7 @@
     <div class="container-center">
         <div class="button-container">
             {% if user.is_staff %}
-                <a href="{% url 'teacher_view' %}" class="btn btn-primary index-btn-large fade-in">Teacher View</a>
+                <a href="{% url 'teacher_view' %}" class="btn btn-primary index-btn-large fade-in">Dashboard</a>
             {% else %}
                 <a href="{% url 'student_login' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
             {% endif %}
