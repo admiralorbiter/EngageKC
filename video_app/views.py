@@ -159,7 +159,7 @@ def delete_comment(request, comment_id):
 def nav_sessions(request):
     if request.user.is_authenticated and request.user.is_staff:
         if request.user.is_superuser:
-            sessions = Session.objects.all()
+            sessions = Session.objects.all().select_related('created_by')
         else:
             sessions = Session.objects.filter(created_by=request.user)
         return {'nav_sessions': sessions}

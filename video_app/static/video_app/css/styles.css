@@ -136,3 +136,24 @@ body{
 .nav-item.dropdown .nav-link::after {
     content: none;  /* Remove the default dropdown arrow */
 }
+
+.session-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.session-link:hover {
+    text-decoration: none;
+    background-color: #f8f9fa;
+}
+
+.session-link small {
+    font-size: 0.75em;
+    line-height: 1;
+}
+
+.session-hour {
+    font-size: 1.1em;
+    font-weight: bold;
+}

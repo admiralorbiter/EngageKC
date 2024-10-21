@@ -17,8 +17,11 @@
                         <ul class="list-group list-group-flush">
                             {% for session in nav_sessions %}
                                 <li class="list-group-item">
-                                    <a href="{% url 'session' session.id %}">
-                                        Hour {{ session.section }}
+                                    <a href="{% url 'session' session.id %}" class="session-link">
+                                        {% if user.is_superuser %}
+                                            <small class="d-block text-muted">{{ session.created_by.last_name }}</small>
+                                        {% endif %}
+                                        <span class="session-hour">Hour {{ session.section }}</span>
                                     </a>
                                 </li>
                             {% empty %}
