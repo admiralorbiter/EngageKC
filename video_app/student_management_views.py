@@ -126,7 +126,7 @@ def character_gallery(request):
             images = []
             for root, dirs, files in os.walk(set_path):
                 for file in files:
-                    if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                    if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
                         relative_path = os.path.relpath(os.path.join(root, file), characters_dir)
                         images.append(relative_path)
             if images:
