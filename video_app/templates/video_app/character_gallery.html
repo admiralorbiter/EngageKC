@@ -1,0 +1,52 @@
+{% extends "video_app/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Character Gallery</h1>
+    {% if character_sets %}
+        {% for character_set in character_sets %}
+            <h2>{{ character_set.name|title }}</h2>
+            <div class="row">
+                {% for image in character_set.images %}
+                    <div class="col-md-2 mb-4">
+                        <div class="profile-icon-wrapper">
+                            <div class="profile-icon">
+                                <img src="{% static 'video_app/images/characters/'|add:image %}" alt="{{ image }}">
+                            </div>
+                        </div>
+                        <p class="text-center mt-2">{{ image }}</p>
+                    </div>
+                {% empty %}
+                    <p>No images found in this character set.</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No character sets found.</p>
+    {% endif %}
+</div>
+
+<style>
+    .profile-icon-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .profile-icon {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 5px solid #ffff00;
+        box-shadow: 0 0 0 5px #002244;
+    }
+
+    .profile-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}

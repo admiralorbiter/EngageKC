@@ -5,7 +5,7 @@ from .session_views import start_session, session, pause_session, delete_session
 from .auth_views import student_login, student_logout, update_teacher_info
 from django.contrib.auth import login as auth_login 
 from django.contrib import admin
-from .student_management_views import download_students, delete_student, student_detail
+from .student_management_views import download_students, delete_student, student_detail, character_gallery
 
 urlpatterns = [
     # Admin
@@ -47,4 +47,5 @@ urlpatterns = [
     path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
     path('update_teacher_info/', update_teacher_info, name='update_teacher_info'),
     path('check-section-availability/', check_section_availability, name='check_section_availability'),
+    path('character-gallery/', character_gallery, name='character_gallery'),
 ]

@@ -7,7 +7,9 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-
+import os
+from django.conf import settings
+import csv
 
 def student_detail(request, student_id):
     student = get_object_or_404(Student, id=student_id)
@@ -114,3 +116,23 @@ def download_students(request):
     
     return response
 
+def character_gallery(request):
+    character_sets = []
+    characters_dir = os.path.join(settings.BASE_DIR, 'video_app', 'static', 'video_app', 'images', 'characters')
+    
+    for character_set in os.listdir(characters_dir):
+        set_path = os.path.join(characters_dir, character_set)
+        if os.path.isdir(set_path):
+            images = []
+            for root, dirs, files in os.walk(set_path):
+                for file in files:
+                    if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        relative_path = os.path.relpath(os.path.join(root, file), characters_dir)
+                        images.append(relative_path)
+            if images:
+                character_sets.append({
+                    'name': character_set,
+                    'images': images
+                })
+    
+    return render(request, 'video_app/character_gallery.html', {'character_sets': character_sets})
