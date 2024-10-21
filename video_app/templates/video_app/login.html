@@ -1,14 +1,27 @@
 {% extends "video_app/base.html" %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/login.css' %}">
+{% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <h1>Teacher Login</h1>
-    {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
+    <div class="login-box">
+        <h1>Teacher Login</h1>
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username:</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password:</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="custom-button">Login</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

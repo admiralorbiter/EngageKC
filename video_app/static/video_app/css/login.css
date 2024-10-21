@@ -1,0 +1,108 @@
+body {
+    background-color: #F0F8FF; /* Light blue background */
+}
+
+.login-box {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.login-box h1 {
+    color: #00334C;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #00334C;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.custom-button {
+    background-color: #00334C; /* Dark blue background, matching student login */
+    border: none;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+    background-color: #E91E63; /* Red color on hover for both teacher and student */
+}
+
+.alert-danger {
+    background-color: #FFE4E1;
+    border: 1px solid #FF6347;
+    color: #FF0000;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Styles from student_login.css */
+.session-box {
+    background-color: #861A86; /* Purple background */
+    border: none;
+    color: #FFFFFF; /* White text for main content */
+    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.session-box h3 {
+    color: #F5F5F5; /* Off-white for headers */
+    margin-bottom: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.session-box p {
+    color: #FFFFFF;
+    margin-bottom: 10px;
+}
+
+.session-link {
+    color: #32A2C4 !important; /* Light blue for links */
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+.session-link i {
+    margin-right: 5px;
+}
+
+.session-box .text-muted {
+    color: #FA7227 !important; /* Orange for muted text */
+    font-size: 0.9em;
+}
+
+.btn-group {
+    margin-top: 10px;
+}
