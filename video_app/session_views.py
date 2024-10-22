@@ -204,7 +204,6 @@ def pause_session(request, session_pk):
 @transaction.atomic
 def generate_users_for_section(section, num_students, admin):
     """Generates students with unique character names and details for a given section, saving them to the database."""
-    words_list = load_words()
     all_character_sets = get_available_character_sets()
     all_characters = []
     
@@ -212,8 +211,9 @@ def generate_users_for_section(section, num_students, admin):
         _, characters = load_character_set(character_set)
         all_characters.extend(characters)
     
-    # Get existing character names for this section
+    # Get existing character names and passcodes for this section
     existing_names = set(Student.objects.filter(section=section).values_list('name', flat=True))
+    existing_passcodes = set(Student.objects.filter(section=section).values_list('password', flat=True))
     
     generated_students = []
     
@@ -231,8 +231,11 @@ def generate_users_for_section(section, num_students, admin):
         if attempts == max_attempts:
             raise ValueError("Not enough unique characters available for this section.")
         
-        # Generate the 2-word passcode
-        passcode = generate_passcode(words_list)
+        # Generate a unique 5-digit passcode
+        while True:
+            passcode = generate_passcode()
+            if passcode not in existing_passcodes:
+                break
         
         # Construct the correct avatar image path
         avatar_image_path = f'video_app/images/characters/{character["character_set"]}/{character["filename"]}'
@@ -249,6 +252,7 @@ def generate_users_for_section(section, num_students, admin):
         
         generated_students.append(student)
         existing_names.add(character['name'])
+        existing_passcodes.add(passcode)
     
     return generated_students
 
@@ -267,9 +271,9 @@ def load_words():
     with open(WORDS_FILE_PATH, 'r', encoding='utf-8') as f:
         return [line.strip() for line in f]
 
-def generate_passcode(words):
-    """Generates a 2-word passcode from the loaded word list."""
-    return '.'.join(random.sample(words, 2))
+def generate_passcode():
+    """Generates a unique 5-digit passcode."""
+    return f"{random.randint(10000, 99999):05d}"
 
 def load_marvel_characters():
     """Load Marvel characters from the CSV file."""
@@ -340,7 +344,6 @@ def generate_new_students(request):
 def generate_user_for_section(session, admin, existing_names):
     """Generates a single student with a unique character name and details for a given section."""
     try:
-        words_list = load_words()
         all_character_sets = get_available_character_sets()
         all_characters = []
         
@@ -356,7 +359,14 @@ def generate_user_for_section(session, admin, existing_names):
             return None
         
         character = random.choice(available_characters)
-        passcode = generate_passcode(words_list)
+        
+        # Generate a unique 5-digit passcode
+        existing_passcodes = set(Student.objects.filter(section=session).values_list('password', flat=True))
+        while True:
+            passcode = generate_passcode()
+            if passcode not in existing_passcodes:
+                break
+        
         avatar_image_path = f'video_app/images/characters/{character["character_set"]}/{character["filename"]}'
 
         student = Student.objects.create(
@@ -372,3 +382,4 @@ def generate_user_for_section(session, admin, existing_names):
     except Exception as e:
         print(f"Error generating user: {str(e)}")
         return None
+
