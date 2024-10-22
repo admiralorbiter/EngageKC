@@ -74,15 +74,13 @@ def download_students(request):
                 if index < len(page_students):
                     student = page_students[index]
                     card_data = [
-                        [f"Name: {student.name}", "Your Name:"],
-                        [f"Hour: {student.section.section}", ""],
-                        [f"Password: {student.password}", ""],
-                        ["", ""],  # Empty row for spacing
-                        ["--------------------", "--------------------"],
-                        [f"Password: {student.password}", ""],
-                        ["", ""]  # Empty row to prevent cutting off
+                        [f"Name: {student.name}"],
+                        ["Your Name:"],
+                        [f"Hour: {student.section.section}"],
+                        [f"Password: {student.password}"],
+                        [""]  # Empty row for spacing
                     ]
-                    row_data.append(Table(card_data, colWidths=[1.75*inch, 1.75*inch], rowHeights=[0.3*inch, 0.25*inch, 0.25*inch, 0.5*inch, 0.2*inch, 0.3*inch, 0.2*inch]))
+                    row_data.append(Table(card_data, colWidths=[3.5*inch], rowHeights=[0.35*inch, 0.35*inch, 0.35*inch, 0.35*inch, 0.6*inch]))
                 else:
                     row_data.append("")
             page_data.append(row_data)
@@ -97,13 +95,12 @@ def download_students(request):
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ('BOX', (0, 0), (-1, -1), 2, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('ALIGN', (0, 4), (-1, 5), 'CENTER'),  # Center the divider line and bottom password
         ('TOPPADDING', (0, 0), (-1, -1), 5),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
         ('LEFTPADDING', (0, 0), (-1, -1), 5),
         ('RIGHTPADDING', (0, 0), (-1, -1), 5),
         ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 8),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
     ])
     table.setStyle(style)
     
