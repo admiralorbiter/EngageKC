@@ -317,10 +317,8 @@ def generate_new_students(request):
                 max_attempts = num_students * 3  # Limit attempts to avoid infinite loop
                 
                 while len(generated_students) < num_students and attempts < max_attempts:
-                    new_student = generate_user_for_section(session, admin)
-                    if new_student is None:
-                        print(f"Failed to generate student on attempt {attempts + 1}")
-                    elif new_student.name not in existing_names:
+                    new_student = generate_user_for_section(session, admin, existing_names)
+                    if new_student:
                         generated_students.append(new_student)
                         existing_names.add(new_student.name)
                     attempts += 1
@@ -339,19 +337,27 @@ def generate_new_students(request):
     
     return redirect('teacher_view')
 
-def generate_user_for_section(session, admin):
-    """Generates a single student with a character name and details for a given section."""
+def generate_user_for_section(session, admin, existing_names):
+    """Generates a single student with a unique character name and details for a given section."""
     try:
         words_list = load_words()
-        character_set_name, characters = load_character_set('marvel')
+        all_character_sets = get_available_character_sets()
+        all_characters = []
         
-        if not characters:
-            print(f"No characters found for character set: {character_set_name}")
+        for character_set in all_character_sets:
+            _, characters = load_character_set(character_set)
+            all_characters.extend(characters)
+        
+        # Filter out characters that already exist in the session
+        available_characters = [char for char in all_characters if char['name'] not in existing_names]
+        
+        if not available_characters:
+            print("No unique characters available.")
             return None
         
-        character = random.choice(characters)
+        character = random.choice(available_characters)
         passcode = generate_passcode(words_list)
-        avatar_image_path = f'video_app/images/characters/{character_set_name}/{character["filename"]}'
+        avatar_image_path = f'video_app/images/characters/{character["character_set"]}/{character["filename"]}'
 
         student = Student.objects.create(
             name=character['name'],
