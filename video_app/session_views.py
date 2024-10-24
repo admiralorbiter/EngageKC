@@ -96,95 +96,28 @@ def start_session(request):
 def session(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
     medias = Media.objects.filter(session=session_instance)
-    
-    # Get filter parameters
-    graph_tag = request.GET.get('graph_tag')
-    variable_tag = request.GET.get('variable_tag')
 
-    # Apply filters
-    if graph_tag:
-        if graph_tag == 'true':
-            medias = medias.filter(is_graph=True)
-        elif graph_tag in dict(Media.GRAPH_TAG_CHOICES).keys():
-            medias = medias.filter(graph_tag=graph_tag)
-    if variable_tag:
-        medias = medias.filter(variable_tag=variable_tag)
-
-    # Order by comment count
-    medias = medias.annotate(comment_count=Count('comments')).order_by('comment_count')
-    
-    student = request.session.get('student')
-    
+    # Get the current student from the session
     student = None
     if 'student_id' in request.session:
         student = Student.objects.filter(id=request.session['student_id']).first()
 
-    if student:
-        medias = medias.annotate(
-            has_user_comment=Exists(
-                Comment.objects.filter(
-                    media=OuterRef('pk'),
-                    name=student.name
-                )
-            )
-        )
-    else:
-        medias = medias.annotate(
-            has_user_comment=ExpressionWrapper(Value(False), output_field=BooleanField())
-        )
-    
-    # Randomize order for media with the same comment count
-    medias = list(medias)
-    current_count = None
-    start_index = 0
-    for i, media in enumerate(medias):
-        if media.comment_count != current_count:
-            if i > start_index:
-                shuffle(medias[start_index:i])
-            current_count = media.comment_count
-            start_index = i
-    if len(medias) > start_index:
-        shuffle(medias[start_index:])
+    # Annotate each media item with user interactions
+    for media in medias:
+        interaction = media.student_interactions.filter(student=student).first()
+        media.user_liked_graph = interaction.liked_graph if interaction else False
+        media.user_liked_eye = interaction.liked_eye if interaction else False
+        media.user_liked_read = interaction.liked_read if interaction else False
 
     # Pagination
     paginator = Paginator(medias, 12)  # Show 12 media items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    graph_choices = Media.GRAPH_TAG_CHOICES
-    variable_choices = Media.VARIABLE_TAG_CHOICES
-
-    student_instance = None
-    liked_media = {}
-    if 'student_id' in request.session:
-        student_instance = Student.objects.filter(id=request.session['student_id']).first()
-        if student_instance:
-            # Prefetch the interactions for efficiency
-            medias = Media.objects.filter(session=session_instance).prefetch_related(
-                Prefetch('student_interactions',
-                         queryset=StudentMediaInteraction.objects.filter(student=student_instance),
-                         to_attr='current_student_interaction')
-            )
-            
-            # Build the liked_media dictionary
-            for media in medias:
-                interaction = next(iter(media.current_student_interaction), None)
-                if interaction:
-                    liked_media[str(media.id)] = {
-                        'graph': interaction.liked_graph,
-                        'eye': interaction.liked_eye,
-                        'read': interaction.liked_read
-                    }
-
     context = {
         'session_instance': session_instance,
         'page_obj': page_obj,
-        'graph_choices': graph_choices,
-        'variable_choices': variable_choices,
-        'selected_graph_tag': graph_tag,
-        'selected_variable_tag': variable_tag,
-        'student': student_instance,
-        'liked_media_json': json.dumps(liked_media),  # Add this line
+        'student': student,
     }
     return render(request, 'video_app/session.html', context)
 

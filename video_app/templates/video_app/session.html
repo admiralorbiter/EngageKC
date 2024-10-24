@@ -68,15 +68,15 @@
                                             </a>
                                         </div>
                                         <div class="badge-buttons">
-                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="graph">
+                                            <button class="badge-button {% if media.user_liked_graph %}selected{% endif %}" data-media-id="{{ media.id }}" data-badge-type="graph">
                                                 <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph">
                                                 <span class="badge-count">{{ media.graph_likes }}</span>
                                             </button>
-                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="eye">
+                                            <button class="badge-button {% if media.user_liked_eye %}selected{% endif %}" data-media-id="{{ media.id }}" data-badge-type="eye">
                                                 <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye">
                                                 <span class="badge-count">{{ media.eye_likes }}</span>
                                             </button>
-                                            <button class="badge-button" data-media-id="{{ media.id }}" data-badge-type="read">
+                                            <button class="badge-button {% if media.user_liked_read %}selected{% endif %}" data-media-id="{{ media.id }}" data-badge-type="read">
                                                 <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read">
                                                 <span class="badge-count">{{ media.read_likes }}</span>
                                             </button>
