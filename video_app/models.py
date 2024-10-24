@@ -63,9 +63,6 @@ class Media(models.Model):
     read_likes = models.PositiveIntegerField(default=0)
 
     GRAPH_TAG_CHOICES = [
-        ('bar', 'Bar Chart'),
-        ('line', 'Line Graph'),
-        ('pie', 'Pie Chart'),
         ('box', 'Box Plot'),
         ('histogram', 'Histogram'),
         ('comparison', 'Comparison'),
