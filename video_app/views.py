@@ -7,6 +7,8 @@ from django.db.models import Count, Sum, F, Case, When, IntegerField
 from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models.functions import Coalesce
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 @login_required
@@ -56,12 +58,18 @@ def post(request, id):
     else:
         comment_form = CommentForm()
 
+    if student:
+        interaction = StudentMediaInteraction.objects.filter(student=student, media=media).first()
+        media.user_liked_graph = interaction.liked_graph if interaction else False
+        media.user_liked_eye = interaction.liked_eye if interaction else False
+        media.user_liked_read = interaction.liked_read if interaction else False
+    
     context = {
         'media': media,
         'comments': comments,
         'new_comment': new_comment,
         'comment_form': comment_form,
-        'student': student  # Add the student to the context
+        'student': student
     }
 
     return render(request, 'video_app/post.html', context)
@@ -165,3 +173,41 @@ def nav_sessions(request):
             sessions = Session.objects.filter(created_by=request.user)
         return {'nav_sessions': sessions}
     return {'nav_sessions': []}
+
+@require_POST
+def like_media(request, media_id, like_type):
+    media = get_object_or_404(Media, id=media_id)
+    student = None
+    if 'student_id' in request.session:
+        student = Student.objects.filter(id=request.session['student_id']).first()
+    
+    if not student:
+        return JsonResponse({'success': False, 'error': 'User not authenticated'}, status=401)
+    
+    interaction, created = StudentMediaInteraction.objects.get_or_create(student=student, media=media)
+    
+    # Update the like status
+    if like_type == 'graph':
+        interaction.liked_graph = not interaction.liked_graph
+    elif like_type == 'eye':
+        interaction.liked_eye = not interaction.liked_eye
+    elif like_type == 'read':
+        interaction.liked_read = not interaction.liked_read
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid like type'}, status=400)
+    
+    interaction.save()
+    
+    # Update the media like counts
+    media.graph_likes = media.student_interactions.filter(liked_graph=True).count()
+    media.eye_likes = media.student_interactions.filter(liked_eye=True).count()
+    media.read_likes = media.student_interactions.filter(liked_read=True).count()
+    media.save()
+    
+    return JsonResponse({
+        'success': True,
+        'graph_likes': media.graph_likes,
+        'eye_likes': media.eye_likes,
+        'read_likes': media.read_likes,
+        'user_like': like_type if getattr(interaction, f'liked_{like_type}') else None
+    })
