@@ -102,12 +102,13 @@ def session(request, session_pk):
     if 'student_id' in request.session:
         student = Student.objects.filter(id=request.session['student_id']).first()
 
-    # Annotate each media item with user interactions
+    # Annotate each media item with user interactions and comments
     for media in medias:
         interaction = media.student_interactions.filter(student=student).first()
         media.user_liked_graph = interaction.liked_graph if interaction else False
         media.user_liked_eye = interaction.liked_eye if interaction else False
         media.user_liked_read = interaction.liked_read if interaction else False
+        media.has_user_comment = Comment.objects.filter(media=media, student=student).exists()
 
     # Pagination
     paginator = Paginator(medias, 12)  # Show 12 media items per page
