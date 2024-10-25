@@ -1,5 +1,8 @@
 {% extends "video_app/base.html" %}
 {% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/post.css' %}">
+{% endblock %}
 {% block content %}
     <title>{{ media.title }}</title>
     <div class="container mt-5">
@@ -10,6 +13,22 @@
                 <!-- Thumbnail -->
                 <div class="image-container">
                     <img src="{{ media.image_file.url }}" alt="{{ media.title }}" class="img-thumbnail" id="mainImage">
+                </div>
+                <div class="d-flex justify-content-center my-3">
+                    <div class="badge-buttons d-flex gap-3">
+                        <button class="badge-button {% if media.user_liked_graph %}selected{% endif %}" data-media-id="{{ media.id }}" data-badge-type="graph">
+                            <img src="{% static 'video_app/images/graph-icon.png' %}" alt="Graph">
+                            <span class="badge-count">{{ media.graph_likes }}</span>
+                        </button>
+                        <button class="badge-button {% if media.user_liked_eye %}selected{% endif %}" data-media-id="{{ media.id }}" data-badge-type="eye">
+                            <img src="{% static 'video_app/images/eye-icon.png' %}" alt="Eye">
+                            <span class="badge-count">{{ media.eye_likes }}</span>
+                        </button>
+                        <button class="badge-button {% if media.user_liked_read %}selected{% endif %}" data-media-id="{{ media.id }}" data-badge-type="read">
+                            <img src="{% static 'video_app/images/read-icon.png' %}" alt="Read">
+                            <span class="badge-count">{{ media.read_likes }}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="col">
