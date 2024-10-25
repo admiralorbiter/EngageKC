@@ -230,6 +230,15 @@ class Comment(models.Model):
     device_id = models.CharField(max_length=255, blank=True, null=True)
     is_admin = models.BooleanField(default=False)
     student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
+    admin_avatar = models.CharField(max_length=255, blank=True, null=True)  # New field for admin avatar
     
     def __str__(self):
         return f'Comment by {self.name} on {self.media.title}'
+
+    def get_avatar(self):
+        if self.is_admin:
+            return self.admin_avatar
+        elif self.student:
+            return self.student.avatar_image_path
+        else:
+            return None  # Or a default avatar path

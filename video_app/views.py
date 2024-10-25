@@ -28,10 +28,11 @@ def post(request, id):
             if student:
                 new_comment.name = student.name
                 new_comment.is_admin = False
-                new_comment.student = student  # Set the student field
+                new_comment.student = student
             elif request.user.is_staff or request.user.is_superuser:
                 new_comment.name = f"Admin: {request.user.username}"
                 new_comment.is_admin = True
+                new_comment.admin_avatar = request.user.profile_picture  # Assuming CustomAdmin has a profile_picture field
             else:
                 messages.error(request, 'You do not have permission to comment on this media.')
                 return redirect('post', id=media.id)

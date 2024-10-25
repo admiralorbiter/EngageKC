@@ -8,8 +8,8 @@
 <div class="comment m-2 p-3 bg-light rounded shadow-sm">
     <div class="d-flex align-items-start">
         <div class="profile-icon me-3">
-            {% if student and student.avatar_image_path %}
-                <img src="{% static student.avatar_image_path %}" alt="{{ student.name }} Icon" class="rounded-circle" width="40" height="40">
+            {% if comment.get_avatar %}
+                <img src="{% static comment.get_avatar %}" alt="{{ comment.name }} Icon" class="rounded-circle" width="40" height="40">
             {% else %}
                 <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
                     <span>{{ comment.name|default:"A"|first|upper }}</span>
