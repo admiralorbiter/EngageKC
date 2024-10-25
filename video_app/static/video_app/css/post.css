@@ -1,0 +1,184 @@
+:root {
+    --primary-color: #a13a95;
+    --secondary-color: #00334C;
+    --accent-color: #DB2955;
+    --background-color: #E6FDF9;
+    --text-color: #00334C;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+/* Typography */
+.title-stylized {
+    font-family: 'Arial', sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle-stylized {
+    font-size: 1.8rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+/* Image container */
+.image-container {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#mainImage {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+#mainImage:hover {
+    transform: scale(1.02);
+}
+
+/* Badge buttons */
+.badge-buttons {
+    gap: 20px;
+}
+
+.badge-button {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.badge-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.badge-button:hover,
+.badge-button.selected {
+    transform: scale(1.1);
+}
+
+.badge-button:hover img,
+.badge-button.selected img {
+    filter: grayscale(0%);
+}
+
+.badge-button.graph:hover img, .badge-button.graph.selected img {
+    filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(350deg);
+}
+
+.badge-button.eye:hover img, .badge-button.eye.selected img {
+    filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(180deg);
+}
+
+.badge-button.read:hover img, .badge-button.read.selected img {
+    filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg);
+}
+
+.badge-count {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Comments section */
+.comments-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.lightbox-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .title-stylized {
+        font-size: 2rem;
+    }
+    .subtitle-stylized {
+        font-size: 1.5rem;
+    }
+    .badge-button {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .container {
+        padding: 15px;
+    }
+    .badge-button {
+        width: 40px;
+        height: 40px;
+    }
+}
+
