@@ -97,6 +97,16 @@ def session(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
     medias = Media.objects.filter(session=session_instance)
 
+    # Get filter parameters
+    graph_tag = request.GET.get('graph_tag')
+    variable_tag = request.GET.get('variable_tag')
+
+    # Apply filters if they exist
+    if graph_tag:
+        medias = medias.filter(graph_tag=graph_tag)
+    if variable_tag:
+        medias = medias.filter(variable_tag=variable_tag)
+
     # Get the current student from the session
     student = None
     if 'student_id' in request.session:
@@ -115,10 +125,18 @@ def session(request, session_pk):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # Get choices from Media model
+    graph_choices = Media.GRAPH_TAG_CHOICES
+    variable_choices = Media.VARIABLE_TAG_CHOICES
+
     context = {
         'session_instance': session_instance,
         'page_obj': page_obj,
         'student': student,
+        'graph_choices': graph_choices,
+        'variable_choices': variable_choices,
+        'selected_graph_tag': graph_tag,
+        'selected_variable_tag': variable_tag,
     }
     return render(request, 'video_app/session.html', context)
 
