@@ -10,7 +10,10 @@
             {% if user.is_staff %}
                 <a href="{% url 'teacher_view' %}" class="btn btn-primary index-btn-large fade-in">Dashboard</a>
             {% else %}
-                <a href="{% url 'student_login' %}" class="btn btn-primary index-btn-large fade-in">Student Login</a>
+                <div class="fade-in d-flex flex-column align-items-center">
+                    <a href="{% url 'student_login' %}" class="btn btn-primary index-btn-large mb-4">Student Login</a>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/75Ny-nuU33g?si=cCluOL554UPTetb1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
             {% endif %}
             {% if user.is_staff %}
                 <a href="{% url 'start_session' %}" class="btn btn-success index-btn-large fade-in"
