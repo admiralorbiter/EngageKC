@@ -59,7 +59,8 @@ ALLOWED_HOSTS = [
     'jlane.pythonanywhere.com',
     'datadeck.dev',
     'www.datadeck.dev',
-    'webapp-2258943.pythonanywhere.com'
+    'webapp-2258943.pythonanywhere.com',
+    'data-deck-test-ca2d52df5544.herokuapp.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
