@@ -21,7 +21,13 @@
                                         {% if user.is_superuser %}
                                             <small class="d-block text-muted">{{ session.created_by.last_name }}</small>
                                         {% endif %}
-                                        <span class="session-hour">Hour {{ session.section }}</span>
+                                        <span class="session-hour">
+                                            {% if session.section == 0 %}
+                                                Data Deck
+                                            {% else %}
+                                                Hour {{ session.section }}
+                                            {% endif %}
+                                        </span>
                                     </a>
                                 </li>
                             {% empty %}

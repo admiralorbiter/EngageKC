@@ -10,10 +10,22 @@
                 <div class="col-md-6">
                     <h2 class="h4 mb-3">Section Information</h2>
                     <div class="mb-3">
-                        <label for="id_section" class="form-label">Hour</label>
-                        {{ form.section|add_class:"form-control" }}
+                        <label for="id_section" class="form-label">Hour (Select 'All' for everyone)</label>
+                        <select id="id_section" name="section" class="form-control">
+                            <option value="0">All</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
                         <div class="invalid-feedback">
-                            Please provide a valid section number.
+                            Please select an hour or 'All'.
+                        </div>
+                        <div class="valid-feedback">
+                            Creating session for all students.
                         </div>
                     </div>
                     <div class="mb-3">

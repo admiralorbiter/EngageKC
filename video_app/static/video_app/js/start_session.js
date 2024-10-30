@@ -17,6 +17,16 @@
 
         // Function to check section availability
         const checkSectionAvailability = debounce(function(sectionValue) {
+            // Skip validation if "All" (0) is selected
+            if (sectionValue === '0' || sectionValue === '') {
+                sectionInput.setCustomValidity('');
+                sectionFeedback.textContent = 'Creating session for all students.';
+                sectionFeedback.classList.remove('invalid-feedback');
+                sectionFeedback.classList.add('valid-feedback');
+                sectionInput.classList.add('was-validated');
+                return;
+            }
+
             fetch(`/check-section-availability/?section=${sectionValue}`)
                 .then(response => response.json())
                 .then(data => {
@@ -40,6 +50,10 @@
 
         // Add event listener for section input
         sectionInput.addEventListener('input', function() {
+            if (this.value === '0' || this.value === '') {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
             checkSectionAvailability(this.value);
         });
 
