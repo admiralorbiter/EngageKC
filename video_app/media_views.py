@@ -18,6 +18,10 @@ def upload_media(request, session_pk):
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
         
+        if not request.FILES.get('image_file'):
+            messages.error(request, 'Please select an image file to upload.')
+            return render(request, 'video_app/upload_media.html', {'form': form, 'session': session})
+            
         if form.is_valid():
             media = form.save(commit=False)
             media.session = session

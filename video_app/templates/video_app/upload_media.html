@@ -11,7 +11,7 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="id_image_file" class="form-label">Image File</label>
-                {{ form.image_file|add_class:"form-control" }}
+                {{ form.image_file|add_class:"form-control"|attr:"required" }}
                 <div class="invalid-feedback">Please upload an image file.</div>
             </div>
             <div class="mb-3">
@@ -33,4 +33,20 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+document.getElementById('media-form').addEventListener('submit', function(event) {
+    const imageFile = document.getElementById('id_image_file');
+    if (!imageFile.files || !imageFile.files[0]) {
+        event.preventDefault();
+        event.stopPropagation();
+        imageFile.classList.add('is-invalid');
+    }
+    
+    this.classList.add('was-validated');
+});
+</script>
 {% endblock %}
