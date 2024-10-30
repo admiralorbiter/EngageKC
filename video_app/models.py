@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
-from engagekc import settings
+from datadeck import settings
 
 class Session(models.Model):
     name = models.CharField(max_length=100)

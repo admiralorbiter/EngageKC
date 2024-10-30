@@ -5,14 +5,14 @@ import sys
 from dotenv import load_dotenv
 
 # Add your project directory to the sys.path
-path = '/home/jlane/EngageKC'
+path = '/home/jlane/datadeck'
 if path not in sys.path:
     sys.path.append(path)
 
 # Load environment variables
 load_dotenv(os.path.join(path, '.env'))
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'engagekc.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'datadeck.settings'
 
 ## Uncomment the lines below depending on your Django version
 ###### then, for Django >=1.5:

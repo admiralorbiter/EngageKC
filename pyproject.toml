@@ -35,5 +35,5 @@ line-length = 100
 target-version = ['py312']
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "engagekc.settings"
+DJANGO_SETTINGS_MODULE = "datadeck.settings"
 python_files = ["test_*.py", "*_test.py", "tests.py"]

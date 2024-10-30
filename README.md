@@ -44,7 +44,7 @@ pip install -r requirements.txt
 To set up the database for the first time, run:
 
 ```bash
-python manage.py migrate
+$env:USE_MYSQL="FALSE"; python manage.py migrate
 ```
 
 ### Setup Admin
@@ -52,7 +52,7 @@ python manage.py migrate
 To create a superuser for accessing the Django admin interface, run:
 
 ```bash
-python manage.py createsuperuser
+$env:USE_MYSQL="FALSE"; python manage.py createsuperuser
 ```
 
 ### Running the Server
@@ -60,7 +60,7 @@ python manage.py createsuperuser
 To start the development server, run:
 
 ```bash
-python manage.py runserver
+$env:USE_MYSQL="FALSE"; python manage.py runserver
 ```
 To use MySQL (connecting to your PythonAnywhere database):
 ```
@@ -88,8 +88,8 @@ python manage.py loaddata initial_data.json
 Celery Worker - No need to run currently:
 
 ```bash
-celery -A engagekc worker --loglevel=info
-celery -A engagekc beat --loglevel=info
+celery -A datadeck worker --loglevel=info
+celery -A datadeck beat --loglevel=info
 ```
 
 ## Contributing

@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Count, Exists, OuterRef, Value, BooleanField, ExpressionWrapper
-from engagekc import settings
+from datadeck import settings
 from .forms import StartSessionForm
 from .models import CustomAdmin, Session, Media, Student, Comment, StudentMediaInteraction
 from django.core.paginator import Paginator
