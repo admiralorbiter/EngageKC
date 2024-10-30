@@ -16,13 +16,13 @@
                     <div class="dropdown-menu" aria-labelledby="sessionsDropdown">
                         <ul class="list-group list-group-flush">
                             {% if user.is_superuser %}
-                                {% regroup nav_sessions by created_by as teacher_sessions %}
+                                {% regroup nav_sessions|dictsort:"created_by.last_name" by created_by.last_name as teacher_sessions %}
                                 {% for teacher in teacher_sessions %}
                                     <li class="list-group-item">
                                         <div class="teacher-sessions">
-                                            <small class="d-block text-muted mb-1">{{ teacher.grouper.last_name }}</small>
+                                            <small class="d-block text-muted mb-1">{{ teacher.grouper }}</small>
                                             <div class="d-flex flex-wrap gap-1">
-                                                {% for session in teacher.list %}
+                                                {% for session in teacher.list|dictsort:"section" %}
                                                     <a href="{% url 'session' session.id %}" class="badge badge-secondary">
                                                         {% if session.section == 0 %}
                                                             Data
