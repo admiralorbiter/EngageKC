@@ -217,7 +217,7 @@ body {
 .badge-item:hover::after {
     content: attr(title);
     position: absolute;
-    bottom: -300%;
+    top: -300%;
     left: 50%;
     transform: translateX(-50%);
     background-color: white;
@@ -238,11 +238,12 @@ body {
 .badge-item:hover::before {
     content: '';
     position: absolute;
-    bottom: 140%;
+    top: -40%;
     left: 50%;
     transform: translateX(-50%);
     border: 12px solid transparent;
-    border-top-color: white;
+    border-bottom-color: white;
+    border-top-color: transparent;
     z-index: 1001;
 }
 
