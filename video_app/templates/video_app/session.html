@@ -57,7 +57,23 @@
                                     <img src="{{ media.image_file.url }}" class="card-img-top" alt="{{ media.title }}">
                                 </a>
                                 <div class="card-body">
+                                    <!-- Add title and poster info -->
+                                    <h5 class="card-title mb-2">{{ media.title }}</h5>
                                     <div class="media-actions d-flex justify-content-between align-items-center">
+                                        <div class="poster-info">
+                                            {% if media.student %}
+                                                <img src="{% static media.student.avatar_image_path %}" alt="{{ media.student.name }}" class="rounded-circle me-2">
+                                                <span class="poster-name">{{ media.student.name }}</span>
+                                            {% elif media.posted_by_admin %}
+                                                {% if media.posted_by_admin.profile_picture %}
+                                                    <img src="{% static media.posted_by_admin.profile_picture %}" alt="Admin" class="rounded-circle me-2">
+                                                {% else %}
+                                                    <div class="rounded-circle bg-secondary me-2"></div>
+                                                {% endif %}
+                                            {% else %}
+                                                <div class="rounded-circle bg-secondary me-2"></div>
+                                            {% endif %}
+                                        </div>
                                         <div class="feedback-section">
                                             <a href="{% url 'post' media.id %}" class="btn btn-light feedback-button">
                                                 {% if media.has_user_comment %}

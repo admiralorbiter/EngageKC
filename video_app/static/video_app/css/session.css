@@ -376,3 +376,51 @@
     display: inline-flex !important;
 }
 
+/* Poster info styles */
+.card-body .poster-info {
+    padding: 2px 0;
+}
+
+.card-body .poster-info img, 
+.card-body .poster-info .bg-secondary {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+}
+
+.card-body .poster-info .poster-name {
+    font-size: 0.75rem;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+/* Ensure the rounded-circle class works with our small size */
+.card-body .poster-info .rounded-circle {
+    width: 20px;
+    height: 20px;
+}
+
+/* Keep the me-2 spacing consistent with our small size */
+.card-body .poster-info .me-2 {
+    margin-right: 0.3rem !important;
+}
+
+.card-title {
+    font-size: 1rem;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--text-color);
+    /* Ensure long titles don't break layout */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Adjust card body padding */
+.card-body {
+    padding: 0.75rem;
+}
+

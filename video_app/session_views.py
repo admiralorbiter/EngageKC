@@ -95,7 +95,7 @@ def start_session(request):
 
 def session(request, session_pk):
     session_instance = get_object_or_404(Session, pk=session_pk)
-    medias = Media.objects.filter(session=session_instance)
+    medias = Media.objects.filter(session=session_instance).select_related('student', 'posted_by_admin')
 
     # Get filter parameters
     graph_tag = request.GET.get('graph_tag')
@@ -112,8 +112,26 @@ def session(request, session_pk):
     if 'student_id' in request.session:
         student = Student.objects.filter(id=request.session['student_id']).first()
 
-    # Annotate each media item with user interactions and comments
+    # Annotate each media item with user interactions, comments, and poster info
     for media in medias:
+        # Add poster information
+        if media.student:
+            avatar_path = media.student.avatar_image_path
+            if avatar_path and not avatar_path.startswith('/static/'):
+                media.poster_avatar = f'/static/{avatar_path}'
+            else:
+                media.poster_avatar = avatar_path
+            media.poster_name = media.student.name
+        elif media.posted_by_admin:
+            media.poster_avatar = media.posted_by_admin.profile_picture
+            if media.poster_avatar and not media.poster_avatar.startswith('/static/'):
+                media.poster_avatar = f'/static/{media.poster_avatar}'
+            media.poster_name = f"Admin: {media.posted_by_admin.username}"
+        else:
+            media.poster_avatar = None
+            media.poster_name = "Unknown"
+
+        # Add interaction information
         interaction = media.student_interactions.filter(student=student).first()
         media.user_liked_graph = interaction.liked_graph if interaction else False
         media.user_liked_eye = interaction.liked_eye if interaction else False
