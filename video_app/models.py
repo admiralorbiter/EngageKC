@@ -43,6 +43,46 @@ class Session(models.Model):
     def __str__(self):
         return self.name
 
+class CustomAdmin(AbstractUser):
+    school = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    media_password = models.CharField(max_length=100, blank=True, null=True)
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_admin_set',
+        blank=True,
+        verbose_name='groups',
+        help_text='The groups this user belongs to.',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_admin_set',
+        blank=True,
+        verbose_name='user permissions',
+        help_text='Specific permissions for this user.',
+    )
+
+    def __str__(self):
+        return f"{self.username} - {self.school} ({self.district})"
+
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+    section = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='students')
+    admin = models.ForeignKey(CustomAdmin, on_delete=models.CASCADE)
+    device_id = models.CharField(max_length=255, blank=True, null=True)
+    character_description = models.TextField(blank=True, null=True)
+    avatar_image_path = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.section})"
+
+    def get_media_interaction(self, media):
+        return self.media_interactions.filter(media=media).first()
+
 class Media(models.Model):
     MEDIA_TYPE_CHOICES = (
         ('video', 'Video'),
@@ -115,6 +155,9 @@ class Media(models.Model):
 
     submitted_password = models.CharField(max_length=100, blank=True, null=True)
 
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True, related_name='posted_media')
+    posted_by_admin = models.ForeignKey(CustomAdmin, on_delete=models.SET_NULL, null=True, blank=True, related_name='posted_media')
+
     def clean(self):
         if self.media_type == 'video' and self.image_file:
             raise ValidationError('Cannot upload an image file for a video media type')
@@ -171,46 +214,6 @@ def delete_associated_media(sender, instance, **kwargs):
             else:
                 print(f"Image file does not exist: {media.image_file.path}")
         media.delete()
-
-class CustomAdmin(AbstractUser):
-    school = models.CharField(max_length=100)
-    district = models.CharField(max_length=100)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    media_password = models.CharField(max_length=100, blank=True, null=True)
-
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='custom_admin_set',
-        blank=True,
-        verbose_name='groups',
-        help_text='The groups this user belongs to.',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='custom_admin_set',
-        blank=True,
-        verbose_name='user permissions',
-        help_text='Specific permissions for this user.',
-    )
-
-    def __str__(self):
-        return f"{self.username} - {self.school} ({self.district})"
-
-class Student(models.Model):
-    name = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    section = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='students')
-    admin = models.ForeignKey(CustomAdmin, on_delete=models.CASCADE)
-    device_id = models.CharField(max_length=255, blank=True, null=True)
-    character_description = models.TextField(blank=True, null=True)
-    avatar_image_path = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.name} ({self.section})"
-
-    def get_media_interaction(self, media):
-        return self.media_interactions.filter(media=media).first()
 
 class StudentMediaInteraction(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='media_interactions')

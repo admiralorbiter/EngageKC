@@ -14,6 +14,24 @@ from django.views.decorators.http import require_POST
 @login_required
 def post(request, id):
     media = get_object_or_404(Media, id=id)
+    
+    # Add poster information
+    if media.student:
+        avatar_path = media.student.avatar_image_path
+        if avatar_path and not avatar_path.startswith('/static/'):
+            media.poster_avatar = f'/static/{avatar_path}'
+        else:
+            media.poster_avatar = avatar_path
+        media.poster_name = media.student.name
+    elif media.posted_by_admin:
+        media.poster_avatar = media.posted_by_admin.profile_picture
+        if media.poster_avatar and not media.poster_avatar.startswith('/static/'):
+            media.poster_avatar = f'/static/{media.poster_avatar}'
+        media.poster_name = f"Admin: {media.posted_by_admin.username}"
+    else:
+        media.poster_avatar = None
+        media.poster_name = "Unknown"
+
     comments = media.comments.filter(parent__isnull=True)
     new_comment = None
     student = None

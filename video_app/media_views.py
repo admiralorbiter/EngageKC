@@ -33,11 +33,15 @@ def upload_media(request, session_pk):
 
             if student:
                 student_name = student.name
-                media.submitted_password = student.password  # Use student's password
+                media.submitted_password = student.password
+                media.student = student  # Associate with student
+                media.posted_by_admin = None
             elif request.user.is_staff or request.user.is_superuser:
                 # Admin is logged in
                 student_name = f"{request.user.username}"
-                media.submitted_password = request.user.media_password  # Assuming admins have a media_password field
+                media.submitted_password = request.user.media_password
+                media.student = None
+                media.posted_by_admin = request.user  # Associate with admin
             else:
                 messages.error(request, 'You do not have permission to upload media to this session.')
                 return redirect('session', session_pk=session.pk)
