@@ -22,7 +22,12 @@ class Command(BaseCommand):
             ('Jefferson Academy', 'Jefferson District'),
         ]
         
-        self.IMAGE_FILES = ['images/test1.PNG', 'images/test2.png', 'images/test3.png', 'images/test4.png']
+        self.IMAGE_FILES = [
+            'test/images/test1.PNG',
+            'test/images/test2.png', 
+            'test/images/test3.png',
+            'test/images/test4.png'
+        ]
         self.GRAPH_TAGS = ['box', 'histogram', 'comparison']
         self.VARIABLE_TAGS = [
             'gender', 'languages', 'handedness', 'eye_color', 'hair_color',
@@ -91,7 +96,7 @@ class Command(BaseCommand):
                     section=session,
                     admin=session.created_by,
                     character_description=self.fake.text(max_nb_chars=100),
-                    avatar_image_path=f"avatars/avatar{random.randint(1, 10)}.png"
+                    avatar_image_path=f"test/avatars/avatar{random.randint(1, 10)}.png"
                 )
                 students.append(student)
         return students
