@@ -20,7 +20,11 @@
                         {% for session in sessions %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <a href="{% url 'session' session.id %}" class="text-decoration-none">
-                                    Hour {{ session.section }}
+                                    {% if session.section == 0 %}
+                                        Data Deck
+                                    {% else %}
+                                        Hour {{ session.section }}
+                                    {% endif %}
                                 </a>
                                 <form method="post" action="{% url 'delete_session' session.id %}" onsubmit="return confirm('Are you sure you want to delete this hour?');" class="d-inline">
                                     {% csrf_token %}
