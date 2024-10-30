@@ -22,7 +22,7 @@ class Command(BaseCommand):
             ('Jefferson Academy', 'Jefferson District'),
         ]
         
-        self.IMAGE_FILES = ['test1.PNG', 'test2.png', 'test3.png', 'test4.png']
+        self.IMAGE_FILES = ['images/test1.PNG', 'images/test2.png', 'images/test3.png', 'images/test4.png']
         self.GRAPH_TAGS = ['box', 'histogram', 'comparison']
         self.VARIABLE_TAGS = [
             'gender', 'languages', 'handedness', 'eye_color', 'hair_color',
@@ -114,7 +114,7 @@ class Command(BaseCommand):
                     title=f"Media {session.section}-{j+1}",
                     description=f"This is media upload {j+1} for section {session.section}.",
                     media_type='image',
-                    image_file=f"static/video_app/images/{image_name}",  # Updated path
+                    image_file=image_name,
                     uploaded_at=base_date + timedelta(minutes=j),
                     graph_tag=random.choice(self.GRAPH_TAGS) if is_graph else None,
                     is_graph=is_graph,
