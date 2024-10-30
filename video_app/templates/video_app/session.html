@@ -63,7 +63,6 @@
                                         <div class="poster-info">
                                             {% if media.student %}
                                                 <img src="{% static media.student.avatar_image_path %}" alt="{{ media.student.name }}" class="rounded-circle me-2">
-                                                <span class="poster-name">{{ media.student.name }}</span>
                                             {% elif media.posted_by_admin %}
                                                 {% if media.posted_by_admin.profile_picture and media.posted_by_admin.profile_picture != '' %}
                                                     <img src="{% static media.posted_by_admin.profile_picture %}" alt="Admin" class="rounded-circle me-2">

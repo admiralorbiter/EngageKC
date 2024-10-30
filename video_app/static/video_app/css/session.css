@@ -383,22 +383,15 @@
 
 .card-body .poster-info img, 
 .card-body .poster-info .bg-secondary {
-    width: 20px;
-    height: 20px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
-}
-
-.card-body .poster-info .poster-name {
-    font-size: 0.75rem;
-    color: var(--text-color);
-    font-weight: 500;
-    margin-left: 4px;
 }
 
 /* Ensure the rounded-circle class works with our small size */
 .card-body .poster-info .rounded-circle {
-    width: 20px;
-    height: 20px;
+    width: 50px;
+    height: 50px;
 }
 
 /* Keep the me-2 spacing consistent with our small size */
