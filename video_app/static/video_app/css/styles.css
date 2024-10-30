@@ -157,3 +157,11 @@ body{
     font-size: 1.1em;
     font-weight: bold;
 }
+
+.teacher-sessions .badge {
+    text-decoration: none;
+    cursor: pointer;
+}
+.gap-1 {
+    gap: 0.25rem !important;
+}

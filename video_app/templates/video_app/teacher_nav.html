@@ -15,24 +15,45 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="sessionsDropdown">
                         <ul class="list-group list-group-flush">
-                            {% for session in nav_sessions %}
-                                <li class="list-group-item">
-                                    <a href="{% url 'session' session.id %}" class="session-link">
-                                        {% if user.is_superuser %}
-                                            <small class="d-block text-muted">{{ session.created_by.last_name }}</small>
-                                        {% endif %}
-                                        <span class="session-hour">
-                                            {% if session.section == 0 %}
-                                                Data Deck
-                                            {% else %}
-                                                Hour {{ session.section }}
-                                            {% endif %}
-                                        </span>
-                                    </a>
-                                </li>
-                            {% empty %}
-                                <li class="list-group-item">No sessions available</li>
-                            {% endfor %}
+                            {% if user.is_superuser %}
+                                {% regroup nav_sessions by created_by as teacher_sessions %}
+                                {% for teacher in teacher_sessions %}
+                                    <li class="list-group-item">
+                                        <div class="teacher-sessions">
+                                            <small class="d-block text-muted mb-1">{{ teacher.grouper.last_name }}</small>
+                                            <div class="d-flex flex-wrap gap-1">
+                                                {% for session in teacher.list %}
+                                                    <a href="{% url 'session' session.id %}" class="badge badge-secondary">
+                                                        {% if session.section == 0 %}
+                                                            Data
+                                                        {% else %}
+                                                            Hr {{ session.section }}
+                                                        {% endif %}
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% empty %}
+                                    <li class="list-group-item">No sessions available</li>
+                                {% endfor %}
+                            {% else %}
+                                {% for session in nav_sessions %}
+                                    <li class="list-group-item">
+                                        <a href="{% url 'session' session.id %}" class="session-link">
+                                            <span class="session-hour">
+                                                {% if session.section == 0 %}
+                                                    Data Deck
+                                                {% else %}
+                                                    Hour {{ session.section }}
+                                                {% endif %}
+                                            </span>
+                                        </a>
+                                    </li>
+                                {% empty %}
+                                    <li class="list-group-item">No sessions available</li>
+                                {% endfor %}
+                            {% endif %}
                         </ul>
                     </div>
                 </li>
