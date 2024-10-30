@@ -108,12 +108,13 @@ class Command(BaseCommand):
             
             for j in range(100):  # 100 posts per session
                 is_graph = random.choice([True, False])
+                image_name = random.choice(self.IMAGE_FILES)
                 media = Media(
                     session=session,
                     title=f"Media {session.section}-{j+1}",
                     description=f"This is media upload {j+1} for section {session.section}.",
                     media_type='image',
-                    image_file=f"images/{random.choice(self.IMAGE_FILES)}",
+                    image_file=f"static/video_app/images/{image_name}",  # Updated path
                     uploaded_at=base_date + timedelta(minutes=j),
                     graph_tag=random.choice(self.GRAPH_TAGS) if is_graph else None,
                     is_graph=is_graph,
@@ -121,16 +122,13 @@ class Command(BaseCommand):
                 )
                 media_items.append(media)
                 
-                # Bulk create every 1000 items to manage memory
                 if len(media_items) >= 1000:
                     Media.objects.bulk_create(media_items)
                     media_items = []
         
-        # Create any remaining media items
         if media_items:
             Media.objects.bulk_create(media_items)
             
-        # Return all media items for creating interactions
         return list(Media.objects.all())
 
     def create_interactions(self, students, media_items):
