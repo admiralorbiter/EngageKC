@@ -73,7 +73,8 @@ def start_session(request):
                 
                 logger.info(f"Session '{title}' created successfully with {num_students} students")
                 messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
-                return redirect('teacher_view')
+                # Fixed: using session_pk instead of session_id
+                return redirect('session', session_pk=new_session.id)
             except Exception as e:
                 logger.error(f"Error creating session: {str(e)}")
                 messages.error(request, f"An error occurred while creating the session: {str(e)}")
