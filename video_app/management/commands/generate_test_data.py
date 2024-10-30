@@ -92,7 +92,7 @@ class Command(BaseCommand):
                     section=session,
                     admin=session.created_by,
                     character_description=self.fake.text(max_nb_chars=100),
-                    avatar_image_path=f"test/avatars/avatar{random.randint(1, 10)}.png"
+                    avatar_image_path=f"video_app/images/avatars/avatar{random.randint(1, 10)}.png"
                 )
                 students.append(student)
         return students
