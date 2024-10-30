@@ -128,7 +128,13 @@ class Media(models.Model):
         return self.comments.count()
 
     class Meta:
-        ordering = ['id']  # Default ordering, will be overridden in the view
+        ordering = ['-uploaded_at']
+        indexes = [
+            models.Index(fields=['session', '-uploaded_at']),
+            models.Index(fields=['media_type']),
+            models.Index(fields=['graph_tag']),
+            models.Index(fields=['variable_tag']),
+        ]
 
     def graph_likes_count(self):
         return self.student_interactions.filter(liked_graph=True).count()
@@ -213,9 +219,14 @@ class StudentMediaInteraction(models.Model):
     liked_eye = models.BooleanField(default=False)
     liked_read = models.BooleanField(default=False)
     comment_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('student', 'media')
+        indexes = [
+            models.Index(fields=['student', 'media']),
+        ]
 
     def __str__(self):
         return f"{self.student.name} - {self.media.title} Interaction"
