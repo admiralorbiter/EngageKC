@@ -38,7 +38,6 @@ Thumbs.db
 
 # Django static and media
 /static/
-/media/
 
 # Python distribution / packaging
 .Python

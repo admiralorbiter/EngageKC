@@ -22,12 +22,8 @@ class Command(BaseCommand):
             ('Jefferson Academy', 'Jefferson District'),
         ]
         
-        self.IMAGE_FILES = [
-            'test/images/test1.PNG',
-            'test/images/test2.png', 
-            'test/images/test3.png',
-            'test/images/test4.png'
-        ]
+        self.IMAGE_FILES = ['images/test1.PNG', 'images/test2.png', 'images/test3.png', 'images/test4.png']
+
         self.GRAPH_TAGS = ['box', 'histogram', 'comparison']
         self.VARIABLE_TAGS = [
             'gender', 'languages', 'handedness', 'eye_color', 'hair_color',
@@ -240,5 +236,17 @@ class Command(BaseCommand):
         
         self.stdout.write('Creating comments...')
         self.create_comments(students, media_items)
+
+        # Create superuser
+        self.stdout.write('Creating superuser...')
+        try:
+            self.CustomAdmin.objects.create_superuser(
+                username='admin',
+                email='admin@admin.com',
+                password='admin',
+            )
+            self.stdout.write('Superuser created successfully')
+        except Exception as e:
+            self.stdout.write(f'Failed to create superuser: {str(e)}')
 
         self.stdout.write(self.style.SUCCESS('Successfully generated test data'))
