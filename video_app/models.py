@@ -49,6 +49,7 @@ class CustomAdmin(AbstractUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     media_password = models.CharField(max_length=100, blank=True, null=True)
+    profile_picture = models.CharField(max_length=255, blank=True, null=True)
 
     groups = models.ManyToManyField(
         'auth.Group',

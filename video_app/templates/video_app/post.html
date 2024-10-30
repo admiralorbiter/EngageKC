@@ -18,7 +18,7 @@
                 <!-- Combined poster info and badge buttons -->
                 <div class="d-flex align-items-center my-3">
                     <div class="poster-info d-flex align-items-center">
-                        {% if media.poster_avatar %}
+                        {% if media.poster_avatar and media.poster_avatar != '' %}
                             <img src="{{ media.poster_avatar }}" alt="{{ media.poster_name }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
                         {% else %}
                             <div class="rounded-circle bg-secondary me-2" style="width: 40px; height: 40px;"></div>
