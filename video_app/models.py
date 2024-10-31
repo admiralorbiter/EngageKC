@@ -146,6 +146,7 @@ class Media(models.Model):
         ('climate_change', 'Climate Change'),
         ('reaction_time', 'Reaction Time'),
         ('memory_test', 'Memory Test'),
+        ('sleep_total', 'Sleep Total'),
     ]
 
     # Use CharField for specific graph types
