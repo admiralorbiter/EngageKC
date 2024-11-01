@@ -147,6 +147,7 @@ class Media(models.Model):
         ('reaction_time', 'Reaction Time'),
         ('memory_test', 'Memory Test'),
         ('sleep_total', 'Sleep Total'),
+        ('time_to_school', 'Time to School')
     ]
 
     # Use CharField for specific graph types
