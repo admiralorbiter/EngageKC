@@ -89,8 +89,15 @@ def edit_media(request, pk):
         form = MediaForm(request.POST, request.FILES, instance=media)
         if form.is_valid():
             media = form.save(commit=False)
-            media.graph_tag = form.cleaned_data['graph_tag']
-            media.variable_tag = form.cleaned_data['variable_tag']
+            
+            # Update title using the same logic as upload_media
+            graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
+            variable_tag = dict(Media.VARIABLE_TAG_CHOICES)[form.cleaned_data['variable_tag']]
+            
+            # Get the student name part from the existing title
+            student_name = media.title.split("'s")[0]
+            media.title = f"{student_name}'s {graph_tag} {variable_tag}"
+            
             media.save()
             return redirect('post', id=media.id)
     else:
