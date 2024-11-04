@@ -156,6 +156,7 @@ def session(request, session_pk):
         'variable_choices': variable_choices,
         'selected_graph_tag': graph_tag,
         'selected_variable_tag': variable_tag,
+        'filter_params': f"&graph_tag={graph_tag if graph_tag else ''}&variable_tag={variable_tag if variable_tag else ''}"
     }
     return render(request, 'video_app/session.html', context)
 
