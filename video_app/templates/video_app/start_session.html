@@ -10,8 +10,8 @@
                 <div class="col-md-6">
                     <h2 class="h4 mb-3">Section Information</h2>
                     <div class="mb-3">
-                        <label for="id_section" class="form-label">Hour (Select 'All' for everyone)</label>
-                        <select id="id_section" name="section" class="form-control">
+                        <label for="id_hour" class="form-label">Hour (Select 'All' for everyone)</label>
+                        <select id="id_hour" name="hour" class="form-control">
                             <option value="0">All</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -25,7 +25,7 @@
                             Please select an hour or 'All'.
                         </div>
                         <div class="valid-feedback">
-                            Creating session for all students.
+                            Creating session for selected hour.
                         </div>
                     </div>
                     <div class="mb-3">
@@ -33,6 +33,20 @@
                         {{ form.num_students|add_class:"form-control" }}
                         <div class="invalid-feedback">
                             Please provide the number of students.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_module" class="form-label">Module (Select appropriate module)</label>
+                        <select id="id_module" name="module" class="form-control">
+                            <option value="general">General</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a module.
+                        </div>
+                        <div class="valid-feedback">
+                            Module selected successfully.
                         </div>
                     </div>
                 </div>
