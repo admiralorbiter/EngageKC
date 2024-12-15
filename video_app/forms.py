@@ -17,6 +17,7 @@ class StartSessionForm(forms.ModelForm):
     school = forms.CharField(max_length=100)
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
+    module = forms.ChoiceField(choices=Session.MODULE_CHOICES)
 
     class Meta:
         model = Session

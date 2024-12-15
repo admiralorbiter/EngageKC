@@ -43,6 +43,7 @@ def start_session(request):
                 # Extract form data
                 section = form.cleaned_data['section']
                 num_students = form.cleaned_data['num_students']
+                module = form.cleaned_data['module']
                 
                 # Update teacher information
                 custom_admin.district = form.cleaned_data['district']
@@ -55,17 +56,23 @@ def start_session(request):
                 title = f"{custom_admin.last_name}'s Data Deck Fall 2024"
                 
                 # Check for existing session with the same title and section
-                existing_session = Session.objects.filter(name=title, section=section, created_by=custom_admin).first()
+                existing_session = Session.objects.filter(
+                    name=title, 
+                    section=section, 
+                    created_by=custom_admin
+                ).first()
+                
                 if existing_session:
                     logger.warning(f"Session with title '{title}' and section '{section}' already exists")
                     messages.error(request, f"A session with the title '{title}' and section '{section}' already exists.")
                     return render(request, 'video_app/start_session.html', {'form': form})
                 
-                # Create the session object
+                # Create the session object with module
                 new_session = Session.objects.create(
                     name=title,
                     section=section,
-                    created_by=custom_admin
+                    created_by=custom_admin,
+                    module=module
                 )
                 
                 # Generate students and save them to the database
@@ -73,7 +80,6 @@ def start_session(request):
                 
                 logger.info(f"Session '{title}' created successfully with {num_students} students")
                 messages.success(request, f"Session '{title}' created successfully with {num_students} students.")
-                # Fixed: using session_pk instead of session_id
                 return redirect('session', session_pk=new_session.id)
             except Exception as e:
                 logger.error(f"Error creating session: {str(e)}")
@@ -89,6 +95,7 @@ def start_session(request):
             'school': custom_admin.school,
             'first_name': custom_admin.first_name,
             'last_name': custom_admin.last_name,
+            'module': 'general'
         }
         form = StartSessionForm(initial=initial_data)
     

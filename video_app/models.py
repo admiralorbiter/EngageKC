@@ -16,6 +16,16 @@ class Session(models.Model):
     session_code = models.CharField(max_length=8, unique=True, editable=False)
     section = models.IntegerField()
 
+    MODULE_CHOICES = [
+        ('general', 'Final Project'),
+        ('3', 'Module 3'),
+    ]
+    module = models.CharField(
+        max_length=20,
+        choices=MODULE_CHOICES,
+        default='general'
+    )
+
     def clean(self):
         if self.section < 0:
             raise ValidationError("Section number cannot be negative.")
