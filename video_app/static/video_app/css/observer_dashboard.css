@@ -1,0 +1,100 @@
+/* Add these new styles for observer dashboard */
+.observer-dashboard {
+    padding: 2rem 10%;
+}
+
+.observer-welcome {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,51,76,0.1);
+}
+
+.observer-welcome h1 {
+    color: #00334C;
+    margin-bottom: 0.5rem;
+}
+
+.observer-district {
+    color: #666;
+    font-size: 1.1em;
+}
+
+.sessions-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.teacher-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,51,76,0.1);
+    transition: transform 0.2s ease;
+}
+
+.teacher-section:hover {
+    transform: translateY(-2px);
+}
+
+.teacher-name {
+    color: #00334C;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #E6FDF9;
+    margin-bottom: 1rem;
+}
+
+.period-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.period-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #E6FDF9;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.period-item:hover {
+    background-color: #d0f5ef;
+}
+
+.period-name {
+    flex-grow: 1;
+    color: #00334C;
+    font-weight: 500;
+}
+
+.view-session-btn {
+    background-color: #00334C;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.view-session-btn:hover {
+    background-color: #DB2955;
+    color: white;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .observer-dashboard {
+        padding: 1rem 5%;
+    }
+    
+    .sessions-container {
+        grid-template-columns: 1fr;
+    }
+}

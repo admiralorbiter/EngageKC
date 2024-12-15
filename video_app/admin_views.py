@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password
 def admin_dashboard(request):
     if not isinstance(request.user, CustomAdmin):
         messages.error(request, "You don't have permission to access this page.")
-        return redirect('home')  # or wherever you want to redirect non-admin users
+        return redirect('home')
 
     if request.method == 'POST':
         # Handle observer creation
@@ -17,18 +17,25 @@ def admin_dashboard(request):
         district = request.POST.get('district')
         password = request.POST.get('password')
 
+        print(f"Creating observer with email: {email}")  # Debug print
+
         try:
             # Create observer with hashed password
-            Observer.objects.create(
+            hashed_password = make_password(password)
+            print(f"Hashed password: {hashed_password[:20]}...")  # Debug print
+
+            observer = Observer.objects.create(
                 name=name,
                 email=email,
                 district=district,
-                password=make_password(password),
+                password=hashed_password,
                 created_by=request.user,
                 is_active=True
             )
+            print(f"Observer created successfully: {observer.name}")  # Debug print
             messages.success(request, f"Observer {name} created successfully!")
         except Exception as e:
+            print(f"Error creating observer: {str(e)}")  # Debug print
             messages.error(request, f"Error creating observer: {str(e)}")
         
         return redirect('admin_dashboard')

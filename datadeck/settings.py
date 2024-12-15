@@ -92,6 +92,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'video_app.middleware.ObserverAuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'datadeck.urls'

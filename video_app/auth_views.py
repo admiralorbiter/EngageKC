@@ -1,10 +1,12 @@
-from django.contrib.auth import views
+from django.contrib.auth import views, authenticate
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from .models import Session, Student
+from .models import Session, Student, Observer, CustomAdmin
+from django.contrib.auth.hashers import check_password
+from django import forms
 
 def student_login(request):
     User = get_user_model()
@@ -62,11 +64,70 @@ def student_logout(request):
     logout(request)
     return redirect('home')  # or any other appropriate page after logout
 
+class CustomLoginForm(forms.Form):
+    username = forms.CharField(label='Email/Username')
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.user_cache = None
+        super().__init__(*args, **kwargs)
+
+    def get_user(self):
+        return self.user_cache
+
 class AdminLoginView(views.LoginView):
     template_name = 'video_app/login.html'
     redirect_authenticated_user = True
+    form_class = CustomLoginForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_valid(self, form):
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        
+        # Try to authenticate as observer FIRST
+        try:
+            observer = Observer.objects.get(email=username)
+            
+            if check_password(password, observer.password):
+                if not observer.is_active:
+                    messages.error(self.request, "This observer account is inactive")
+                    return self.form_invalid(form)
+                
+                # Store observer info in session
+                self.request.session['observer_id'] = observer.id
+                self.request.session['observer_name'] = observer.name
+                self.request.session['observer_district'] = observer.district
+                self.request.session.save()
+                
+                return redirect('observer_dashboard')
+            else:
+                messages.error(self.request, "Invalid password for observer account")
+                return self.form_invalid(form)
+                
+        except Observer.DoesNotExist:
+            # If not an observer, try admin authentication
+            user = authenticate(username=username, password=password)
+            if user and isinstance(user, CustomAdmin):
+                form.user_cache = user  # Store the authenticated user
+                login(self.request, user)
+                return redirect('home')
+            else:
+                messages.error(self.request, "Invalid login credentials")
+                return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Invalid login credentials")
+        return super().form_invalid(form)
 
     def get_success_url(self):
+        if 'observer_id' in self.request.session:
+            return reverse_lazy('observer_dashboard')
         return reverse_lazy('home')
     
 @login_required

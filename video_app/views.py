@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Student, StudentMediaInteraction, Comment, Media, Session
+from .models import Student, StudentMediaInteraction, Comment, Media, Session, Observer
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import CommentForm
@@ -229,3 +229,31 @@ def like_media(request, media_id, like_type):
         'read_likes': media.read_likes,
         'user_like': like_type if getattr(interaction, f'liked_{like_type}') else None
     })
+
+def observer_dashboard(request):
+    # Check if user is logged in as observer
+    if 'observer_id' not in request.session:
+        messages.error(request, "Please log in as an observer")
+        return redirect('admin_login')
+
+    try:
+        # Get the observer instance
+        observer = Observer.objects.get(id=request.session['observer_id'])
+        
+        # Get all sessions from teachers in the same district
+        available_sessions = Session.objects.filter(
+            created_by__district=observer.district
+        ).select_related('created_by').order_by('created_by__last_name', 'section')
+
+        context = {
+            'observer_name': observer.name,
+            'observer_district': observer.district,
+            'available_sessions': available_sessions,
+        }
+        
+        return render(request, 'video_app/observer_dashboard.html', context)
+    except Observer.DoesNotExist:
+        # If observer doesn't exist, clear the session and redirect
+        request.session.flush()
+        messages.error(request, "Observer account not found")
+        return redirect('admin_login')

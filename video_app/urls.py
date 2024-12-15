@@ -1,4 +1,6 @@
 from django.urls import path, include
+
+from video_app.observer_views import observer_dashboard
 from . import views
 from .media_views import upload_media, delete_media, edit_media, like_media
 from .session_views import start_session, session, pause_session, delete_session, generate_users_for_section, generate_new_students, check_section_availability
@@ -44,6 +46,8 @@ urlpatterns = [
     # Admin
     path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin/observer/<int:observer_id>/deactivate/', deactivate_observer, name='deactivate_observer'),
+    path('observer/dashboard/', observer_dashboard, name='observer_dashboard'),
+
 
     # Miscellaneous
     path('', views.index, name='home'),

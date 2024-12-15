@@ -1,0 +1,32 @@
+{% extends 'video_app/base.html' %}
+{% load static %}
+
+{% block title %}Observer Dashboard{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'video_app/css/observer_dashboard.css' %}">
+{% endblock %}
+{% block content %}
+<div class="observer-dashboard">
+    <div class="observer-welcome">
+        <h1>Observer Dashboard</h1>
+        <div class="observer-district">{{ observer_district }}</div>
+    </div>
+
+    <div class="sessions-container">
+        {% regroup available_sessions by created_by as teacher_sessions %}
+        {% for teacher in teacher_sessions %}
+            <div class="teacher-section">
+                <div class="teacher-name">{{ teacher.grouper.first_name }} {{ teacher.grouper.last_name }}</div>
+                <div class="period-list">
+                    {% for session in teacher.list %}
+                        <div class="period-item">
+                            <span class="period-name">Period {{ session.section }}</span>
+                            <a href="{% url 'session' session_pk=session.pk %}" class="view-session-btn">View Session</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
