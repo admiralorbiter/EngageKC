@@ -2,63 +2,66 @@
 {% load widget_tweaks %}
 {% load static %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'video_app/css/upload_media.css' %}">
+    <link rel="stylesheet" href="{% static 'video_app/css/upload_project.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="container mt-5 col-3">
-        <h1 class="mb-4">Upload Final Project</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Upload Final Project</h1>
         <form id="project-form" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             {% csrf_token %}
-            <div class="mb-3">
-                <label for="id_image_file" class="form-label">Project Screenshot</label>
-                {{ form.image_file|add_class:"form-control"|attr:"required" }}
-                <div class="invalid-feedback">Please upload an image file.</div>
+            
+            <!-- Image Upload Grid -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="upload-box" id="upload-box-1">
+                        <input type="file" name="image_file_1" class="file-input" accept="image/*" required>
+                        <div class="upload-content">
+                            <div class="upload-icon">+</div>
+                            <p>Drag and Drop or Click<br>to Upload a Picture</p>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                        <button type="button" class="remove-image" style="display: none;">&times;</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="upload-box" id="upload-box-2">
+                        <input type="file" name="image_file_2" class="file-input" accept="image/*" required>
+                        <div class="upload-content">
+                            <div class="upload-icon">+</div>
+                            <p>Drag and Drop or Click<br>to Upload a Picture</p>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                        <button type="button" class="remove-image" style="display: none;">&times;</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="upload-box" id="upload-box-3">
+                        <input type="file" name="image_file_3" class="file-input" accept="image/*" required>
+                        <div class="upload-content">
+                            <div class="upload-icon">+</div>
+                            <p>Drag and Drop or Click<br>to Upload a Picture</p>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                        <button type="button" class="remove-image" style="display: none;">&times;</button>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="id_description" class="form-label">Project Description</label>
-                {{ form.description|add_class:"form-control"|attr:"rows:4" }}
-                <div class="invalid-feedback">Please provide a project description.</div>
+
+            <!-- Add More Images Button -->
+            <div class="text-center mb-4">
+                <button type="button" id="add-more-images" class="btn btn-secondary">
+                    + Add More Images
+                </button>
             </div>
-            <div class="mb-3">
-                <label for="id_graph_tag" class="form-label">Visualization Type</label>
-                {{ form.graph_tag|add_class:"form-select" }}
-                <div class="invalid-feedback">Please select a visualization type.</div>
-            </div>
-            <div class="mb-3">
-                <label for="id_variable_tag" class="form-label">Data Focus</label>
-                {{ form.variable_tag|add_class:"form-select" }}
-                <div class="invalid-feedback">Please select your data focus.</div>
-            </div>
-            <div class="d-flex justify-content-between">
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between mt-4">
                 <a href="{% url 'session' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Submit Project</button>
             </div>
         </form>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.getElementById('project-form').addEventListener('submit', function(event) {
-    const imageFile = document.getElementById('id_image_file');
-    const description = document.getElementById('id_description');
-    
-    if (!imageFile.files || !imageFile.files[0]) {
-        event.preventDefault();
-        event.stopPropagation();
-        imageFile.classList.add('is-invalid');
-    }
-    
-    if (!description.value.trim()) {
-        event.preventDefault();
-        event.stopPropagation();
-        description.classList.add('is-invalid');
-    }
-    
-    this.classList.add('was-validated');
-});
-</script>
-{% endblock %} 
+    <script src="{% static 'video_app/js/upload_project.js' %}"></script>
+{% endblock %}
