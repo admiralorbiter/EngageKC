@@ -73,3 +73,14 @@ class MediaForm(forms.ModelForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+class ProjectForm(forms.ModelForm):
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 4}),
+        required=True,
+        help_text="Describe your final project and its findings"
+    )
+
+    class Meta:
+        model = Media
+        fields = ['description']

@@ -171,6 +171,8 @@ class Media(models.Model):
     student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True, related_name='posted_media')
     posted_by_admin = models.ForeignKey(CustomAdmin, on_delete=models.SET_NULL, null=True, blank=True, related_name='posted_media')
 
+    project_group = models.UUIDField(null=True, blank=True)
+
     def clean(self):
         if self.media_type == 'video' and self.image_file:
             raise ValidationError('Cannot upload an image file for a video media type')

@@ -5,10 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
-from .forms import MediaForm
+from .forms import MediaForm, ProjectForm
 from .models import Media, Student, StudentMediaInteraction, Session
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
+import uuid
 
 @login_required
 def upload_media(request, session_pk):
@@ -163,55 +164,70 @@ def like_media(request, media_id, like_type):
 @login_required
 def upload_project(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
-    User = get_user_model()
-
-    # Verify this is a final project session
-    if session.module != 'general':
-        messages.error(request, 'This session does not accept final project submissions.')
-        return redirect('session', session_pk=session.pk)
 
     if request.method == 'POST':
-        form = MediaForm(request.POST, request.FILES)
-        
-        if not request.FILES.get('image_file'):
-            messages.error(request, 'Please select an image file to upload.')
-            return render(request, 'video_app/upload_project.html', {'form': form, 'session': session})
-            
-        if form.is_valid():
-            media = form.save(commit=False)
-            media.session = session
-            media.media_type = 'image'  # Always an image for projects
+        # Get all image files from the request
+        image_files = {}
+        for key, file in request.FILES.items():
+            if key.startswith('image_file_'):
+                image_files[key] = file
 
-            # Check if a student is logged in
-            student = None
-            if 'student_id' in request.session:
-                student = Student.objects.filter(id=request.session['student_id'], section=session).first()
+        print("Files received:", request.FILES)  # Debug print
+        print("Image files found:", len(image_files))  # Debug print
 
-            if student:
-                student_name = student.name
-                media.submitted_password = student.password
-                media.student = student
-                media.posted_by_admin = None
-            elif request.user.is_staff or request.user.is_superuser:
-                student_name = f"{request.user.username}"
-                media.submitted_password = request.user.media_password
-                media.student = None
-                media.posted_by_admin = request.user
-            else:
-                messages.error(request, 'You do not have permission to upload projects to this session.')
-                return redirect('session', session_pk=session.pk)
+        if len(image_files) < 3:
+            messages.error(request, 'Please upload at least three images for your project.')
+            return render(request, 'video_app/upload_project.html', {'session': session})
 
-            # Generate the title with "Final Project" prefix
-            graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
-            variable_tag = dict(Media.VARIABLE_TAG_CHOICES)[form.cleaned_data['variable_tag']]
-            media.title = f"{student_name}'s Final Project: {graph_tag} {variable_tag}"
+        try:
+            with transaction.atomic():
+                # Check if a student is logged in
+                student = None
+                if 'student_id' in request.session:
+                    student = Student.objects.filter(id=request.session['student_id'], section=session).first()
 
-            media.save()
+                if student:
+                    student_name = student.name
+                    submitted_password = student.password
+                    student_obj = student
+                    posted_by_admin = None
+                elif request.user.is_staff or request.user.is_superuser:
+                    student_name = f"{request.user.username}"
+                    submitted_password = request.user.media_password
+                    student_obj = None
+                    posted_by_admin = request.user
+                else:
+                    messages.error(request, 'You do not have permission to upload projects to this session.')
+                    return redirect('session', session_pk=session.pk)
+
+                # Generate a project group ID
+                project_group_id = uuid.uuid4()
+
+                # Save each image as a separate media object
+                for key, image_file in image_files.items():
+                    index = key.split('_')[-1]  # Get the number from image_file_X
+                    title = f"{student_name}'s Final Project (Part {index})"
+                    
+                    media = Media(
+                        session=session,
+                        title=title,
+                        description=title,  # Use the same text as title for description
+                        media_type='image',
+                        image_file=image_file,
+                        submitted_password=submitted_password,
+                        student=student_obj,
+                        posted_by_admin=posted_by_admin,
+                        project_group=project_group_id
+                    )
+                    media.save()
+                    print(f"Saved media {media.id}")  # Debug print
+
             messages.success(request, 'Final project uploaded successfully.')
             return redirect('session', session_pk=session.pk)
-        else:
-            messages.error(request, 'There was an error with your form. Please check and try again.')
-    else:
-        form = MediaForm()
 
-    return render(request, 'video_app/upload_project.html', {'form': form, 'session': session})
+        except Exception as e:
+            print(f"Error during upload: {str(e)}")  # Debug print
+            messages.error(request, f'An error occurred while uploading: {str(e)}')
+            return render(request, 'video_app/upload_project.html', {'session': session})
+
+    return render(request, 'video_app/upload_project.html', {'session': session})

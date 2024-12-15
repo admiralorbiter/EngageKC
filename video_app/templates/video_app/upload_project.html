@@ -2,6 +2,7 @@
 {% load widget_tweaks %}
 {% load static %}
 {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'video_app/css/upload_media.css' %}">
     <link rel="stylesheet" href="{% static 'video_app/css/upload_project.css' %}">
 {% endblock %}
 {% block content %}
@@ -47,13 +48,13 @@
                 </div>
             </div>
 
-            <!-- Add More Images Button -->
+            <!-- Form Actions -->
             <div class="text-center mb-4">
                 <button type="button" id="add-more-images" class="btn btn-secondary">
                     + Add More Images
                 </button>
             </div>
-            <!-- Form Actions -->
+
             <div class="d-flex justify-content-between mt-4">
                 <a href="{% url 'session' session_pk=session.pk %}" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Submit Project</button>
@@ -63,5 +64,5 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'video_app/js/upload_project.js' %}"></script>
+<script src="{% static 'video_app/js/upload_project.js' %}"></script>
 {% endblock %}
