@@ -173,6 +173,9 @@ class Media(models.Model):
 
     project_group = models.UUIDField(null=True, blank=True)
 
+    project_images = models.JSONField(null=True, blank=True)  # Store paths to additional project images
+    is_project = models.BooleanField(default=False)  # Flag to identify project posts
+
     def clean(self):
         if self.media_type == 'video' and self.image_file:
             raise ValidationError('Cannot upload an image file for a video media type')

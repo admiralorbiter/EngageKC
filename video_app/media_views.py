@@ -10,6 +10,7 @@ from .models import Media, Student, StudentMediaInteraction, Session
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
 import uuid
+from django.core.files.storage import default_storage
 
 @login_required
 def upload_media(request, session_pk):
@@ -172,9 +173,6 @@ def upload_project(request, session_pk):
             if key.startswith('image_file_'):
                 image_files[key] = file
 
-        print("Files received:", request.FILES)  # Debug print
-        print("Image files found:", len(image_files))  # Debug print
-
         if len(image_files) < 3:
             messages.error(request, 'Please upload at least three images for your project.')
             return render(request, 'video_app/upload_project.html', {'session': session})
@@ -200,33 +198,41 @@ def upload_project(request, session_pk):
                     messages.error(request, 'You do not have permission to upload projects to this session.')
                     return redirect('session', session_pk=session.pk)
 
-                # Generate a project group ID
-                project_group_id = uuid.uuid4()
+                # Create a single media object for the project
+                main_image = image_files.pop('image_file_1')  # Use first image as main image
+                title = f"{student_name}'s Final Project"
+                
+                media = Media(
+                    session=session,
+                    title=title,
+                    description=title,
+                    media_type='image',
+                    image_file=main_image,
+                    submitted_password=submitted_password,
+                    student=student_obj,
+                    posted_by_admin=posted_by_admin,
+                    is_project=True,
+                    project_images=[]  # Initialize empty list for additional images
+                )
+                media.save()
 
-                # Save each image as a separate media object
+                # Save additional images and store their paths
+                additional_images = []
                 for key, image_file in image_files.items():
-                    index = key.split('_')[-1]  # Get the number from image_file_X
-                    title = f"{student_name}'s Final Project (Part {index})"
-                    
-                    media = Media(
-                        session=session,
-                        title=title,
-                        description=title,  # Use the same text as title for description
-                        media_type='image',
-                        image_file=image_file,
-                        submitted_password=submitted_password,
-                        student=student_obj,
-                        posted_by_admin=posted_by_admin,
-                        project_group=project_group_id
-                    )
-                    media.save()
-                    print(f"Saved media {media.id}")  # Debug print
+                    # Save the image file
+                    file_path = f'projects/{media.id}/{image_file.name}'
+                    default_storage.save(file_path, image_file)
+                    additional_images.append(file_path)
+
+                # Update the media object with additional image paths
+                media.project_images = additional_images
+                media.save()
 
             messages.success(request, 'Final project uploaded successfully.')
             return redirect('session', session_pk=session.pk)
 
         except Exception as e:
-            print(f"Error during upload: {str(e)}")  # Debug print
+            print(f"Error during upload: {str(e)}")
             messages.error(request, f'An error occurred while uploading: {str(e)}')
             return render(request, 'video_app/upload_project.html', {'session': session})
 
