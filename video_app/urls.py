@@ -10,6 +10,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib import admin
 from .student_management_views import download_students, delete_student, student_detail, character_gallery
 from .admin_views import admin_dashboard, deactivate_observer
+from .media_views import upload_project
 
 urlpatterns = [
     # Admin
@@ -36,6 +37,7 @@ urlpatterns = [
     path('session/<int:session_pk>/delete/', delete_session, name='delete_session'), 
     path('session/<int:session_pk>/pause/', pause_session, name='pause_session'),
     path('join-session/<str:session_code>/', student_login, name='student_login'),
+    path('upload-project/<int:session_pk>/', upload_project, name='upload_project'),
 
     # Students
     path('download-students/', download_students, name='download_students'),

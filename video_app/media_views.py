@@ -159,3 +159,59 @@ def like_media(request, media_id, like_type):
         'read_likes': read_likes,
         'user_like': like_type
     })
+
+@login_required
+def upload_project(request, session_pk):
+    session = get_object_or_404(Session, pk=session_pk)
+    User = get_user_model()
+
+    # Verify this is a final project session
+    if session.module != 'general':
+        messages.error(request, 'This session does not accept final project submissions.')
+        return redirect('session', session_pk=session.pk)
+
+    if request.method == 'POST':
+        form = MediaForm(request.POST, request.FILES)
+        
+        if not request.FILES.get('image_file'):
+            messages.error(request, 'Please select an image file to upload.')
+            return render(request, 'video_app/upload_project.html', {'form': form, 'session': session})
+            
+        if form.is_valid():
+            media = form.save(commit=False)
+            media.session = session
+            media.media_type = 'image'  # Always an image for projects
+
+            # Check if a student is logged in
+            student = None
+            if 'student_id' in request.session:
+                student = Student.objects.filter(id=request.session['student_id'], section=session).first()
+
+            if student:
+                student_name = student.name
+                media.submitted_password = student.password
+                media.student = student
+                media.posted_by_admin = None
+            elif request.user.is_staff or request.user.is_superuser:
+                student_name = f"{request.user.username}"
+                media.submitted_password = request.user.media_password
+                media.student = None
+                media.posted_by_admin = request.user
+            else:
+                messages.error(request, 'You do not have permission to upload projects to this session.')
+                return redirect('session', session_pk=session.pk)
+
+            # Generate the title with "Final Project" prefix
+            graph_tag = dict(Media.GRAPH_TAG_CHOICES)[form.cleaned_data['graph_tag']]
+            variable_tag = dict(Media.VARIABLE_TAG_CHOICES)[form.cleaned_data['variable_tag']]
+            media.title = f"{student_name}'s Final Project: {graph_tag} {variable_tag}"
+
+            media.save()
+            messages.success(request, 'Final project uploaded successfully.')
+            return redirect('session', session_pk=session.pk)
+        else:
+            messages.error(request, 'There was an error with your form. Please check and try again.')
+    else:
+        form = MediaForm()
+
+    return render(request, 'video_app/upload_project.html', {'form': form, 'session': session})
