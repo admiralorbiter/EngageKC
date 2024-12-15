@@ -16,6 +16,7 @@
             </div>
 
             <!-- Filter and upload column -->
+            {% if not 'observer_id' in request.session %}
             <div class="col-12 col-md-3 mb-3 mb-md-0">
                 <div class="filter-section mb-2">
                     {% include "video_app/filter_comp.html" %}
@@ -24,6 +25,7 @@
                     <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button w-100">Upload Your Data Viz</a>
                 </div>
             </div>
+            {% endif %}
 
             <!-- Badge section column -->
             <div class="col-12 col-md-5 badge-section">

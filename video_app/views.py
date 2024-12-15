@@ -9,11 +9,19 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from .decorators import user_or_observer_required
 
 
-@login_required
+@user_or_observer_required
 def post(request, id):
     media = get_object_or_404(Media, id=id)
+    
+    # Check observer district permission
+    if 'observer_id' in request.session:
+        observer = Observer.objects.get(id=request.session['observer_id'])
+        if not observer.can_view_session(media.session):
+            messages.error(request, "You don't have permission to view this content")
+            return redirect('observer_dashboard')
     
     # Add poster information
     if media.student:
@@ -39,7 +47,11 @@ def post(request, id):
     if 'student_id' in request.session:
         student = Student.objects.filter(id=request.session['student_id']).first()
 
-    if request.method == 'POST':
+    # Only show comment form for authenticated users or students, not observers
+    show_comment_form = request.user.is_authenticated or 'student_id' in request.session
+    comment_form = CommentForm() if show_comment_form else None
+
+    if request.method == 'POST' and show_comment_form:
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
@@ -52,7 +64,7 @@ def post(request, id):
             elif request.user.is_staff or request.user.is_superuser:
                 new_comment.name = f"Admin: {request.user.username}"
                 new_comment.is_admin = True
-                new_comment.admin_avatar = request.user.profile_picture  # Assuming CustomAdmin has a profile_picture field
+                new_comment.admin_avatar = request.user.profile_picture
             else:
                 messages.error(request, 'You do not have permission to comment on this media.')
                 return redirect('post', id=media.id)
@@ -63,7 +75,6 @@ def post(request, id):
             
             new_comment.save()
             
-            # Update the comment count for the student's media interaction
             if student:
                 interaction, _ = StudentMediaInteraction.objects.get_or_create(student=student, media=media)
                 interaction.comment_count += 1
@@ -73,8 +84,6 @@ def post(request, id):
             return redirect('post', id=media.id)
         else:
             messages.error(request, 'There was an error with your comment. Please try again.')
-    else:
-        comment_form = CommentForm()
 
     if student:
         interaction = StudentMediaInteraction.objects.filter(student=student, media=media).first()
@@ -87,7 +96,9 @@ def post(request, id):
         'comments': comments,
         'new_comment': new_comment,
         'comment_form': comment_form,
-        'student': student
+        'student': student,
+        'is_observer': 'observer_id' in request.session,
+        'show_comment_form': show_comment_form
     }
 
     return render(request, 'video_app/post.html', context)
