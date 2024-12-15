@@ -259,3 +259,24 @@ class Comment(models.Model):
             return self.student.avatar_image_path
         else:
             return None  # Or a default avatar path
+
+class Observer(models.Model):
+    name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)  # To limit viewing to specific district
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    
+    # Link to the admin who created this observer
+    created_by = models.ForeignKey('CustomAdmin', on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"Observer: {self.name} - {self.district}"
+
+    def can_view_session(self, session):
+        """
+        Check if observer has permission to view a specific session
+        based on district matching
+        """
+        return session.created_by.district == self.district

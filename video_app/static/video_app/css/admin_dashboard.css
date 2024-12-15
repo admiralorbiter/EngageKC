@@ -1,0 +1,75 @@
+.dashboard-title {
+    color: #00334C;
+    margin-bottom: 2rem;
+    font-size: 2.5em;
+}
+
+.dashboard-section {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dashboard-section h2 {
+    color: #00334C;
+    margin-bottom: 1.5rem;
+    font-size: 1.8em;
+}
+
+.observer-form {
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    color: #00334C;
+    font-size: 1.1em;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.observers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.observer-card {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.observer-info h3 {
+    color: #00334C;
+    margin-bottom: 0.5rem;
+}
+
+.observer-info p {
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.btn-danger {
+    background-color: #DB2955;
+}
+
+.btn-danger:hover {
+    background-color: #b52247;
+}

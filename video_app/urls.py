@@ -6,6 +6,7 @@ from .auth_views import student_login, student_logout, update_teacher_info
 from django.contrib.auth import login as auth_login 
 from django.contrib import admin
 from .student_management_views import download_students, delete_student, student_detail, character_gallery
+from .admin_views import admin_dashboard, deactivate_observer
 
 urlpatterns = [
     # Admin
@@ -39,6 +40,10 @@ urlpatterns = [
     path('generate-students/', generate_users_for_section, name='generate_students'),
     path('student/<int:student_id>/', student_detail, name='student_detail'),
     path('generate-new-students', generate_new_students, name='generate_new_students'),
+
+    # Admin
+    path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('admin/observer/<int:observer_id>/deactivate/', deactivate_observer, name='deactivate_observer'),
 
     # Miscellaneous
     path('', views.index, name='home'),
