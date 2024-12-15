@@ -36,3 +36,9 @@ def observer_dashboard(request):
         request.session.flush()
         messages.error(request, "Observer not found")
         return redirect('admin_login') 
+
+def observer_logout(request):
+    if 'observer_id' in request.session:
+        request.session.flush()  # This clears all session data
+    messages.success(request, "Successfully logged out")
+    return redirect('admin_login')

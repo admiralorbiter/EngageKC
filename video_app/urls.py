@@ -1,5 +1,6 @@
 from django.urls import path, include
 
+from video_app import observer_views
 from video_app.observer_views import observer_dashboard
 from . import views
 from .media_views import upload_media, delete_media, edit_media, like_media
@@ -57,4 +58,5 @@ urlpatterns = [
     path('update_teacher_info/', update_teacher_info, name='update_teacher_info'),
     path('check-section-availability/', check_section_availability, name='check_section_availability'),
     path('character-gallery/', character_gallery, name='character_gallery'),
+    path('observer/logout/', observer_views.observer_logout, name='observer_logout'),
 ]
