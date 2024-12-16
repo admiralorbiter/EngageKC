@@ -11,10 +11,28 @@
         <h1>{{ media.title }}</h1>
         <div class="row">
             <div class="col-8 media-content">
-                <!-- Thumbnail -->
+                <!-- Main Image and Gallery Container -->
                 <div class="image-container">
-                    <img src="{{ media.image_file.url }}" alt="{{ media.title }}" class="img-thumbnail" id="mainImage">
+                    <img src="{{ media.image_file.url }}" 
+                         alt="{{ media.title }}" 
+                         class="img-thumbnail" 
+                         id="mainImage"
+                         data-project-images='{{ media.project_images|safe }}'>
+                    
+                    {% if media.is_project and media.project_images %}
+                    <div class="thumbnail-container">
+                        <button class="scroll-button scroll-left">←</button>
+                        <div class="thumbnail-scroll">
+                            <img src="{{ media.image_file.url }}" class="thumbnail active" onclick="switchImage(0)">
+                            {% for image_url in media.project_images %}
+                                <img src="{{ image_url }}" class="thumbnail" onclick="switchImage({{ forloop.counter }})">
+                            {% endfor %}
+                        </div>
+                        <button class="scroll-button scroll-right">→</button>
+                    </div>
+                    {% endif %}
                 </div>
+
                 <!-- Combined poster info and badge buttons -->
                 <div class="d-flex align-items-center my-3">
                     <div class="poster-info d-flex align-items-center">
@@ -40,8 +58,8 @@
                         </button>
                     </div>
                 </div>
-                
-                <!-- New badge explanation section -->
+
+                <!-- Badge explanation section -->
                 <div class="badge-explanation mt-4">
                     <p class="badge-label text-center mb-2">What do these badges mean?</p>
                     <div class="badge-container d-flex justify-content-center">
@@ -76,6 +94,7 @@
         <img class="lightbox-content" id="lightboxImage">
     </div>
 {% endblock %}
+
 {% block extra_js %}
     <script src="{% static 'video_app/js/post.js' %}"></script>
 {% endblock %}

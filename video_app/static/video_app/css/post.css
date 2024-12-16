@@ -261,3 +261,91 @@ body {
     }
 }
 
+/* Add to post.css */
+.media-content {
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.thumbnail-container {
+    position: relative;
+    margin-top: 15px;
+    padding: 0 40px;
+    width: 100%;
+}
+
+.thumbnail-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    -ms-overflow-style: none;  /* Hide scrollbar IE and Edge */
+    scrollbar-width: none;  /* Hide scrollbar Firefox */
+}
+
+.thumbnail-scroll::-webkit-scrollbar {
+    display: none;  /* Hide scrollbar Chrome, Safari, Opera */
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    flex-shrink: 0;  /* Prevent thumbnails from shrinking */
+}
+
+.thumbnail:hover {
+    opacity: 0.8;
+}
+
+.thumbnail.active {
+    opacity: 1;
+    border-color: var(--primary-color);
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: background-color 0.3s ease;
+}
+
+.scroll-left {
+    left: 0;
+}
+
+.scroll-right {
+    right: 0;
+}
+
+.scroll-button:hover {
+    background-color: var(--accent-color);
+}
+
+/* Update existing lightbox styles */
+.lightbox-content {
+    max-height: 80vh;
+    object-fit: contain;
+}
+

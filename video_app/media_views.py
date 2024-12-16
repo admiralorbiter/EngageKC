@@ -167,7 +167,6 @@ def upload_project(request, session_pk):
     session = get_object_or_404(Session, pk=session_pk)
 
     if request.method == 'POST':
-        # Get all image files from the request
         image_files = {}
         for key, file in request.FILES.items():
             if key.startswith('image_file_'):
@@ -199,7 +198,7 @@ def upload_project(request, session_pk):
                     return redirect('session', session_pk=session.pk)
 
                 # Create a single media object for the project
-                main_image = image_files.pop('image_file_1')  # Use first image as main image
+                main_image = image_files.pop('image_file_1')
                 title = f"{student_name}'s Final Project"
                 
                 media = Media(
@@ -212,19 +211,23 @@ def upload_project(request, session_pk):
                     student=student_obj,
                     posted_by_admin=posted_by_admin,
                     is_project=True,
-                    project_images=[]  # Initialize empty list for additional images
+                    project_images=[]
                 )
                 media.save()
 
-                # Save additional images and store their paths
+                # Save additional images using the same storage method as the main image
                 additional_images = []
-                for key, image_file in image_files.items():
-                    # Save the image file
-                    file_path = f'projects/{media.id}/{image_file.name}'
-                    default_storage.save(file_path, image_file)
-                    additional_images.append(file_path)
-
-                # Update the media object with additional image paths
+                for key, image_file in sorted(image_files.items()):
+                    # Create a new unique filename
+                    ext = image_file.name.split('.')[-1]
+                    filename = f'images/project_{media.id}_{uuid.uuid4().hex[:8]}.{ext}'  # Changed path
+                    
+                    # Save using Django's storage system
+                    file_path = default_storage.save(filename, image_file)
+                    # Store the complete URL path
+                    additional_images.append(f'/media/{file_path}')  # Add /media/ prefix
+                
+                # Update the media object with the full URLs
                 media.project_images = additional_images
                 media.save()
 
