@@ -123,6 +123,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update thumbnails
             document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
                 thumb.classList.toggle('active', i === index);
+                
+                // Add click handler to each thumbnail
+                thumb.onclick = function() {
+                    switchImage(i);
+                    // If lightbox is open, update it too
+                    if (lightbox.style.display === "block") {
+                        lightboxImage.src = images[i];
+                    }
+                };
             });
 
             // Scroll thumbnail into view
@@ -227,11 +236,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize everything
+    // Update the lightbox click handler
+    mainImage.onclick = function() {
+        lightbox.style.display = "block";
+        lightboxImage.src = images[currentImageIndex]; // Use current index
+    }
+
+    // Add click handlers for thumbnails in the initialization
+    function initializeThumbnails() {
+        document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+            thumb.onclick = function() {
+                switchImage(i);
+            };
+        });
+    }
+
+    // Update the init function to include thumbnail initialization
     function init() {
         initializeImages();
         setupArrowNavigation();
         setupThumbnailNavigation();
+        initializeThumbnails();
     }
 
     init();

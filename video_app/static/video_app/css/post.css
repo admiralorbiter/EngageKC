@@ -389,3 +389,37 @@ body {
     margin-top: 15px;
 }
 
+.thumbnail {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    width: 100px;  /* or your preferred size */
+    height: 70px;  /* or your preferred size */
+    object-fit: cover;
+    margin: 0 5px;
+}
+
+.thumbnail:hover {
+    transform: scale(1.05);
+    border-color: var(--accent-color);
+}
+
+.thumbnail.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.thumbnail-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    gap: 10px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.thumbnail-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
