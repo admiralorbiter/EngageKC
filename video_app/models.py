@@ -173,8 +173,8 @@ class Media(models.Model):
 
     project_group = models.UUIDField(null=True, blank=True)
 
-    project_images = models.JSONField(null=True, blank=True)  # Store paths to additional project images
-    is_project = models.BooleanField(default=False)  # Flag to identify project posts
+    project_images = models.JSONField(null=True, blank=True)  # Store complete URLs
+    is_project = models.BooleanField(default=False)
 
     def clean(self):
         if self.media_type == 'video' and self.image_file:
@@ -205,6 +205,16 @@ class Media(models.Model):
 
     def read_likes_count(self):
         return self.student_interactions.filter(liked_read=True).count()
+
+    def get_all_images(self):
+        """Return a list of all image URLs for this media item"""
+        images = []
+        if self.image_file:
+            images.append(self.image_file.url)
+        if self.project_images:
+            # Make sure project_images contains complete URLs
+            images.extend(self.project_images)
+        return images
 
 @receiver(pre_delete, sender=Session)
 def delete_associated_media(sender, instance, **kwargs):

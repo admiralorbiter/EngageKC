@@ -10,6 +10,7 @@ from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .decorators import user_or_observer_required
+import json
 
 
 @user_or_observer_required
@@ -91,6 +92,9 @@ def post(request, id):
         media.user_liked_eye = interaction.liked_eye if interaction else False
         media.user_liked_read = interaction.liked_read if interaction else False
     
+    # Serialize the images list to JSON
+    project_images_json = json.dumps(media.get_all_images())
+
     context = {
         'media': media,
         'comments': comments,
@@ -98,7 +102,8 @@ def post(request, id):
         'comment_form': comment_form,
         'student': student,
         'is_observer': 'observer_id' in request.session,
-        'show_comment_form': show_comment_form
+        'show_comment_form': show_comment_form,
+        'project_images_json': project_images_json,
     }
 
     return render(request, 'video_app/post.html', context)

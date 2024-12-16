@@ -17,7 +17,7 @@
                          alt="{{ media.title }}" 
                          class="img-thumbnail" 
                          id="mainImage"
-                         data-project-images='{{ media.project_images|safe }}'>
+                         data-project-images='{{ project_images_json|safe }}'>
                     
                     {% if media.is_project and media.project_images %}
                     <!-- Add main image navigation arrows -->
@@ -27,9 +27,10 @@
                     <div class="thumbnail-container">
                         <button class="scroll-button scroll-left">←</button>
                         <div class="thumbnail-scroll">
-                            <img src="{{ media.image_file.url }}" class="thumbnail active" onclick="switchImage(0)">
-                            {% for image_url in media.project_images %}
-                                <img src="{{ image_url }}" class="thumbnail" onclick="switchImage({{ forloop.counter }})">
+                            {% for image_url in media.get_all_images %}
+                                <img src="{{ image_url }}" 
+                                     class="thumbnail {% if forloop.first %}active{% endif %}" 
+                                     onclick="switchImage({{ forloop.counter0 }})">
                             {% endfor %}
                         </div>
                         <button class="scroll-button scroll-right">→</button>

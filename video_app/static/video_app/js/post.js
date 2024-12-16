@@ -78,75 +78,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Image gallery functionality
     const mainImage = document.getElementById('mainImage');
-    const thumbnailContainer = document.querySelector('.thumbnail-scroll');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightboxImage');
-    
-    let currentImageIndex = 0;
     let images = [];
+    let currentImageIndex = 0;
 
-    // Initialize images array with main image and project images
+    // Initialize images array
     function initializeImages() {
-        images = [mainImage.src];
         const projectImages = mainImage.dataset.projectImages;
         if (projectImages) {
-            images = images.concat(JSON.parse(projectImages));
-        }
-        
-        if (images.length > 1) {
-            createThumbnails();
-            setupScrollButtons();
+            try {
+                images = JSON.parse(projectImages);
+                setupImageNavigation();
+            } catch (e) {
+                console.error('Error parsing project images:', e);
+            }
         }
     }
 
-    function createThumbnails() {
-        const thumbnailScroll = document.createElement('div');
-        thumbnailScroll.className = 'thumbnail-scroll';
+    function setupImageNavigation() {
+        const leftButton = document.querySelector('.main-nav-button.main-nav-left');
+        const rightButton = document.querySelector('.main-nav-button.main-nav-right');
 
-        images.forEach((src, index) => {
-            const thumb = document.createElement('img');
-            thumb.src = src;
-            thumb.className = `thumbnail ${index === 0 ? 'active' : ''}`;
-            thumb.onclick = () => switchImage(index);
-            thumbnailScroll.appendChild(thumb);
-        });
+        if (leftButton) {
+            leftButton.addEventListener('click', () => {
+                if (currentImageIndex > 0) {
+                    switchImage(currentImageIndex - 1);
+                }
+            });
+        }
 
-        const container = document.createElement('div');
-        container.className = 'thumbnail-container';
-        
-        // Add scroll buttons
-        const leftButton = document.createElement('button');
-        leftButton.className = 'scroll-button scroll-left';
-        leftButton.innerHTML = '←';
-        leftButton.onclick = () => scrollThumbnails('left');
-
-        const rightButton = document.createElement('button');
-        rightButton.className = 'scroll-button scroll-right';
-        rightButton.innerHTML = '→';
-        rightButton.onclick = () => scrollThumbnails('right');
-
-        container.appendChild(leftButton);
-        container.appendChild(thumbnailScroll);
-        container.appendChild(rightButton);
-
-        mainImage.parentElement.appendChild(container);
+        if (rightButton) {
+            rightButton.addEventListener('click', () => {
+                if (currentImageIndex < images.length - 1) {
+                    switchImage(currentImageIndex + 1);
+                }
+            });
+        }
     }
 
     function switchImage(index) {
-        if (mainImage && images[index]) {
+        if (images[index]) {
             currentImageIndex = index;
             mainImage.src = images[index];
             
-            // Update lightbox image if it's open
-            if (lightbox.style.display === "block") {
-                lightboxImage.src = images[index];
-            }
-            
-            // Update active thumbnail
+            // Update thumbnails
             document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
                 thumb.classList.toggle('active', i === index);
             });
-            
+
             // Scroll thumbnail into view
             const activeThumb = document.querySelector('.thumbnail.active');
             if (activeThumb) {
@@ -159,16 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function scrollThumbnails(direction) {
-        const scrollAmount = 110; // thumbnail width + gap
-        const container = document.querySelector('.thumbnail-scroll');
-        
-        if (direction === 'left') {
-            container.scrollLeft -= scrollAmount;
-        } else {
-            container.scrollLeft += scrollAmount;
-        }
-    }
+    initializeImages();
 
     // Lightbox functionality
     mainImage.onclick = function() {
