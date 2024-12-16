@@ -137,12 +137,17 @@ document.addEventListener('DOMContentLoaded', function() {
             currentImageIndex = index;
             mainImage.src = images[index];
             
+            // Update lightbox image if it's open
+            if (lightbox.style.display === "block") {
+                lightboxImage.src = images[index];
+            }
+            
             // Update active thumbnail
             document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
                 thumb.classList.toggle('active', i === index);
             });
             
-            // Scroll thumbnail into view if needed
+            // Scroll thumbnail into view
             const activeThumb = document.querySelector('.thumbnail.active');
             if (activeThumb) {
                 activeThumb.scrollIntoView({
@@ -214,4 +219,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     setupThumbnailNavigation();
+
+    // Add arrow navigation for main view (not just lightbox)
+    function setupArrowNavigation() {
+        document.addEventListener('keydown', function(e) {
+            // Handle arrow keys for both main view and lightbox
+            if (e.key === 'ArrowLeft') {
+                if (currentImageIndex > 0) {
+                    switchImage(currentImageIndex - 1);
+                }
+            } else if (e.key === 'ArrowRight') {
+                if (currentImageIndex < images.length - 1) {
+                    switchImage(currentImageIndex + 1);
+                }
+            }
+        });
+
+        // Add click handlers for arrow buttons
+        const leftButton = document.querySelector('.scroll-left');
+        const rightButton = document.querySelector('.scroll-right');
+
+        if (leftButton) {
+            leftButton.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default scroll behavior
+                if (currentImageIndex > 0) {
+                    switchImage(currentImageIndex - 1);
+                }
+            });
+        }
+
+        if (rightButton) {
+            rightButton.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default scroll behavior
+                if (currentImageIndex < images.length - 1) {
+                    switchImage(currentImageIndex + 1);
+                }
+            });
+        }
+    }
+
+    // Initialize everything
+    function init() {
+        initializeImages();
+        setupArrowNavigation();
+        setupThumbnailNavigation();
+    }
+
+    init();
 });

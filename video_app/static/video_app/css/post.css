@@ -349,3 +349,43 @@ body {
     object-fit: contain;
 }
 
+.image-container {
+    position: relative;
+}
+
+.main-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: background-color 0.3s ease;
+    z-index: 3;
+}
+
+.main-nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.main-nav-left {
+    left: 10px;
+}
+
+.main-nav-right {
+    right: 10px;
+}
+
+/* Make sure thumbnails don't overlap with main image */
+.thumbnail-container {
+    margin-top: 15px;
+}
+

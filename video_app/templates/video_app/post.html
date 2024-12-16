@@ -20,6 +20,10 @@
                          data-project-images='{{ media.project_images|safe }}'>
                     
                     {% if media.is_project and media.project_images %}
+                    <!-- Add main image navigation arrows -->
+                    <button class="main-nav-button main-nav-left">←</button>
+                    <button class="main-nav-button main-nav-right">→</button>
+                    
                     <div class="thumbnail-container">
                         <button class="scroll-button scroll-left">←</button>
                         <div class="thumbnail-scroll">
