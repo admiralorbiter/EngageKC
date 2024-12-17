@@ -17,13 +17,13 @@ class Session(models.Model):
     section = models.IntegerField()
 
     MODULE_CHOICES = [
-        ('general', 'Final Project'),
-        ('3', 'Module 3'),
+        ('4', 'Module 4: Think Like a Data Scientist'),
+        ('2', 'Module 2: Classroom Census'),
     ]
     module = models.CharField(
         max_length=20,
         choices=MODULE_CHOICES,
-        default='general'
+        default='4'
     )
 
     def clean(self):

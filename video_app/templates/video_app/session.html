@@ -19,12 +19,12 @@
             {% if not 'observer_id' in request.session %}
             <div class="col-12 col-md-3 mb-3 mb-md-0">
                 <div>
-                    {% if session_instance.module == '3' %}
+                    {% if session_instance.module == '2' %}
                         <div class="filter-section mb-2">
                             {% include "video_app/filter_comp.html" %}
                         </div>
                         <a href="{% url 'upload_media' session_pk=session_instance.pk %}" class="btn btn-primary upload-button w-100">Upload Your Data Viz</a>
-                    {% elif session_instance.module == 'general' %}
+                    {% elif session_instance.module == '4' %}
                         <a href="{% url 'upload_project' session_pk=session_instance.pk %}" class="btn btn-primary upload-button w-100">Upload Final Project</a>
                     {% endif %}
                 </div>
