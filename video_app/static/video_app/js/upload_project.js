@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('project-form');
     const addMoreButton = document.getElementById('add-more-images');
-    let imageCount = 3;
+    let imageCount = 1;
 
     // Handle drag and drop
     document.querySelectorAll('.upload-box').forEach(box => {
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add more images button
     addMoreButton.addEventListener('click', function() {
-        const row = document.querySelector('.row');
+        const row = document.getElementById('upload-grid');
         const newCol = document.createElement('div');
         newCol.className = 'col-md-4';
         imageCount++;
@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         row.appendChild(newCol);
-        setupUploadBox(newCol.querySelector('.upload-box'));
+        const newBox = newCol.querySelector('.upload-box');
+        setupUploadBox(newBox);
     });
 
     function setupUploadBox(box) {
@@ -50,22 +51,41 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             box.classList.remove('dragover');
             if (e.dataTransfer.files[0]) {
+                // Set the file to the input
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(e.dataTransfer.files[0]);
+                input.files = dataTransfer.files;
                 handleFile(e.dataTransfer.files[0]);
+                updateRequiredAttributes();
             }
         });
 
         input.addEventListener('change', (e) => {
             if (e.target.files[0]) {
                 handleFile(e.target.files[0]);
+                updateRequiredAttributes();
             }
         });
 
+        // Only allow clearing for the first box, removing for others
+        const isFirstBox = box.id === 'upload-box-1';
+        
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            input.value = '';
-            preview.style.display = 'none';
-            removeBtn.style.display = 'none';
-            uploadContent.style.display = 'block';
+            if (isFirstBox) {
+                // First box: just clear the image
+                input.value = '';
+                preview.style.display = 'none';
+                removeBtn.style.display = 'none';
+                uploadContent.style.display = 'block';
+            } else {
+                // Other boxes: remove the entire box
+                const col = box.closest('.col-md-4');
+                if (col) {
+                    col.remove();
+                }
+            }
+            updateRequiredAttributes();
         });
 
         function handleFile(file) {
@@ -82,25 +102,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Form validation
-    form.addEventListener('submit', function(event) {
-        let isValid = true;
-        const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+    // Update required attributes dynamically - first input is only required if no other images exist
+    function updateRequiredAttributes() {
+        const allFileInputs = form.querySelectorAll('.file-input');
+        const fileInputsWithFiles = Array.from(allFileInputs).filter(input => input.files && input.files.length > 0);
+        const firstInput = form.querySelector('input[name="image_file_1"]');
         
-        requiredInputs.forEach(input => {
-            if (!input.value) {
-                isValid = false;
-                input.classList.add('is-invalid');
-            } else {
-                input.classList.remove('is-invalid');
-            }
-        });
+        // If there are other images, the first input doesn't need to be required
+        // If no images exist, the first input must be required
+        if (fileInputsWithFiles.length > 0) {
+            firstInput.removeAttribute('required');
+        } else {
+            firstInput.setAttribute('required', 'required');
+        }
+    }
 
-        if (!isValid) {
+    // Form validation - check that at least one image is uploaded
+    form.addEventListener('submit', function(event) {
+        const allFileInputs = form.querySelectorAll('.file-input');
+        const hasAtLeastOneImage = Array.from(allFileInputs).some(input => input.files && input.files.length > 0);
+        
+        if (!hasAtLeastOneImage) {
             event.preventDefault();
             event.stopPropagation();
+            // Show error on first input if no images
+            const firstInput = form.querySelector('input[name="image_file_1"]');
+            if (firstInput) {
+                firstInput.classList.add('is-invalid');
+            }
+            alert('Please upload at least one image for your project.');
+        } else {
+            // Clear any invalid classes
+            allFileInputs.forEach(input => input.classList.remove('is-invalid'));
         }
         
         form.classList.add('was-validated');
     });
+    
+    // Initialize required attributes
+    updateRequiredAttributes();
 });

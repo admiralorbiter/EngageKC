@@ -172,8 +172,8 @@ def upload_project(request, session_pk):
             if key.startswith('image_file_'):
                 image_files[key] = file
 
-        if len(image_files) < 3:
-            messages.error(request, 'Please upload at least three images for your project.')
+        if len(image_files) < 1:
+            messages.error(request, 'Please upload at least one image for your project.')
             return render(request, 'video_app/upload_project.html', {'session': session})
 
         try:
@@ -198,7 +198,15 @@ def upload_project(request, session_pk):
                     return redirect('session', session_pk=session.pk)
 
                 # Create a single media object for the project
-                main_image = image_files.pop('image_file_1')
+                # Get the first available image as the main image (handle cases where image_file_1 might be cleared)
+                if not image_files:
+                    messages.error(request, 'Please upload at least one image for your project.')
+                    return render(request, 'video_app/upload_project.html', {'session': session})
+                
+                # Use the first image (sorted by key) as the main image
+                sorted_keys = sorted(image_files.keys(), key=lambda x: int(x.split('_')[-1]) if x.split('_')[-1].isdigit() else 999)
+                main_image_key = sorted_keys[0]
+                main_image = image_files.pop(main_image_key)
                 title = f"{student_name}'s Final Project"
                 
                 media = Media(
@@ -217,7 +225,7 @@ def upload_project(request, session_pk):
 
                 # Save additional images using the same storage method as the main image
                 additional_images = []
-                for key, image_file in sorted(image_files.items()):
+                for key, image_file in sorted(image_files.items(), key=lambda x: int(x[0].split('_')[-1]) if x[0].split('_')[-1].isdigit() else 999):
                     # Create a new unique filename
                     ext = image_file.name.split('.')[-1]
                     filename = f'images/project_{media.id}_{uuid.uuid4().hex[:8]}.{ext}'  # Changed path

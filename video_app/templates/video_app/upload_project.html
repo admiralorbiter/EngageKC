@@ -11,32 +11,10 @@
             {% csrf_token %}
             
             <!-- Image Upload Grid -->
-            <div class="row mb-4">
+            <div class="row mb-4" id="upload-grid">
                 <div class="col-md-4">
                     <div class="upload-box" id="upload-box-1">
                         <input type="file" name="image_file_1" class="file-input" accept="image/*" required>
-                        <div class="upload-content">
-                            <div class="upload-icon">+</div>
-                            <p>Drag and Drop or Click<br>to Upload a Picture</p>
-                        </div>
-                        <img class="preview-image" style="display: none;">
-                        <button type="button" class="remove-image" style="display: none;">&times;</button>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="upload-box" id="upload-box-2">
-                        <input type="file" name="image_file_2" class="file-input" accept="image/*" required>
-                        <div class="upload-content">
-                            <div class="upload-icon">+</div>
-                            <p>Drag and Drop or Click<br>to Upload a Picture</p>
-                        </div>
-                        <img class="preview-image" style="display: none;">
-                        <button type="button" class="remove-image" style="display: none;">&times;</button>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="upload-box" id="upload-box-3">
-                        <input type="file" name="image_file_3" class="file-input" accept="image/*" required>
                         <div class="upload-content">
                             <div class="upload-icon">+</div>
                             <p>Drag and Drop or Click<br>to Upload a Picture</p>
