@@ -191,7 +191,11 @@ STATIC_URL = '/static/'
 
 # Add this if you want to collect static files into a single directory (e.g., for deployment)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Additional locations of static files
 STATICFILES_DIRS = [
